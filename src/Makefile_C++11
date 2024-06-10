@@ -4,7 +4,6 @@ CXXFLAGS      = -O3 \
                 -qopenmp \
                 -DNDEBUG \
                 -D_USE_OMP \
-                -D_MERSENNE_TWISTER_ORIGINAL \
                 -I./include
 DEST          = ./
 LIB_DIR       = ./lib
@@ -34,8 +33,7 @@ OBJS          = Analysis.cpp \
 		RobustWeightTukeysBiweights.cpp \
 		Util.cpp \
 		UtilRobust.cpp \
-		main.cpp \
-		mt19937-64.cpp
+		main.cpp
 PROGRAM       = TRACMT
 
 all:            $(PROGRAM)
