@@ -1,2 +1,2 @@
 # TRACMT
-Robust transfer function estimation code for magnetotellurics
+Robust transfer function analysis code for magnetotellurics
