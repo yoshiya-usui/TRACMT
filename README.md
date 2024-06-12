@@ -17,8 +17,11 @@ field.
 
 # Functional overview
 **Input file format**: Text (Ascii) file / .ats files of Metronix instruments / .dat files of ELOG-MT
+
 **Prewhitening**: Non-robust prewhitening / Robust prewhitening / Robust prewhitening with robust filter
+
 **Transfer function estimation method**: OLS / Non-robust remote reference / Robust remote reference / RRMS estimator
+
 **Error estimation method**: Parametric approach / Bootstrap method / Jackknife method
 
 # Release note
