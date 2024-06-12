@@ -1,0 +1,2549 @@
+================================================================================
+Now Frequency(Hz): 0.00146484, Period(s): 682.667
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 83
+	Squared coherence: 0.901871
+	Estimated response function: (  3.9934e-01,  3.9695e-01), (  3.4905e-01,  4.7783e-01)
+	Amplitude of the estimated response function:  5.6307e-01,  5.9174e-01
+	Phase(deg.) of the estimated response function:   44.8,   53.9
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.0209076
+	Sum of weights: 82.781
+	Squared coherence: 0.903273
+	Estimated response function: (  3.9957e-01,  3.9711e-01), (  3.4910e-01,  4.7718e-01)
+	Amplitude of the estimated response function:  5.6334e-01,  5.9125e-01
+	Phase(deg.) of the estimated response function:   44.8,   53.8
+	Weighted residual power: 0.000825361
+Iteration number = 1
+	Scale factor: 0.0210864
+	Sum of weights: 82.7963
+	Squared coherence: 0.903193
+	Estimated response function: (  3.9963e-01,  3.9708e-01), (  3.4910e-01,  4.7720e-01)
+	Amplitude of the estimated response function:  5.6336e-01,  5.9126e-01
+	Phase(deg.) of the estimated response function:   44.8,   53.8
+	Weighted residual power: 0.000826124
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.0210864
+	Parameter c: 2.72115
+	Sum of weights: 54.1095
+	Squared coherence: 0.952987
+	Estimated response function: (  3.9378e-01,  3.9669e-01), (  3.4086e-01,  4.8042e-01)
+	Amplitude of the estimated response function:  5.5895e-01,  5.8906e-01
+	Phase(deg.) of the estimated response function:   45.2,   54.6
+	Weighted residual power: 0.000372634
+Iteration number = 1
+	Scale factor: 0.0210864
+	Parameter c: 2.72115
+	Sum of weights: 54.1659
+	Squared coherence: 0.952679
+	Estimated response function: (  3.9175e-01,  3.9556e-01), (  3.3812e-01,  4.8098e-01)
+	Amplitude of the estimated response function:  5.5672e-01,  5.8794e-01
+	Phase(deg.) of the estimated response function:   45.3,   54.9
+	Weighted residual power: 0.000371962
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 83
+	Squared coherence: 0.944053
+	Estimated response function: ( -7.2071e-01, -8.1857e-01), ( -1.6162e-01, -1.7536e-01)
+	Amplitude of the estimated response function:  1.0906e+00,  2.3848e-01
+	Phase(deg.) of the estimated response function: -131.4, -132.7
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.023205
+	Sum of weights: 82.847
+	Squared coherence: 0.944718
+	Estimated response function: ( -7.1975e-01, -8.1915e-01), ( -1.6255e-01, -1.7362e-01)
+	Amplitude of the estimated response function:  1.0904e+00,  2.3784e-01
+	Phase(deg.) of the estimated response function: -131.3, -133.1
+	Weighted residual power: 0.000893052
+Iteration number = 1
+	Scale factor: 0.0228733
+	Sum of weights: 82.8313
+	Squared coherence: 0.944787
+	Estimated response function: ( -7.1965e-01, -8.1921e-01), ( -1.6265e-01, -1.7344e-01)
+	Amplitude of the estimated response function:  1.0904e+00,  2.3777e-01
+	Phase(deg.) of the estimated response function: -131.3, -133.2
+	Weighted residual power: 0.000891932
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.0228733
+	Parameter c: 2.72115
+	Sum of weights: 55.7111
+	Squared coherence: 0.971303
+	Estimated response function: ( -7.2397e-01, -8.0804e-01), ( -1.5517e-01, -1.6493e-01)
+	Amplitude of the estimated response function:  1.0849e+00,  2.2645e-01
+	Phase(deg.) of the estimated response function: -131.9, -133.3
+	Weighted residual power: 0.000441335
+Iteration number = 1
+	Scale factor: 0.0228733
+	Parameter c: 2.72115
+	Sum of weights: 55.7774
+	Squared coherence: 0.971584
+	Estimated response function: ( -7.2574e-01, -8.0422e-01), ( -1.5312e-01, -1.6260e-01)
+	Amplitude of the estimated response function:  1.0833e+00,  2.2335e-01
+	Phase(deg.) of the estimated response function: -132.1, -133.3
+	Weighted residual power: 0.000435725
+Iteration number = 2
+	Scale factor: 0.0228733
+	Parameter c: 2.72115
+	Sum of weights: 55.7621
+	Squared coherence: 0.971668
+	Estimated response function: ( -7.2645e-01, -8.0292e-01), ( -1.5261e-01, -1.6193e-01)
+	Amplitude of the estimated response function:  1.0828e+00,  2.2251e-01
+	Phase(deg.) of the estimated response function: -132.1, -133.3
+	Weighted residual power: 0.000433826
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Estimate errors by fixed-weights bootstrap
+--------------------------------------------------------------------------------
+================================================================================
+Now Frequency(Hz): 0.00195312, Period(s): 512
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 83
+	Squared coherence: 0.88643
+	Estimated response function: (  4.6268e-01,  4.7566e-01), (  4.0751e-01,  5.5519e-01)
+	Amplitude of the estimated response function:  6.6357e-01,  6.8869e-01
+	Phase(deg.) of the estimated response function:   45.8,   53.7
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.0219114
+	Sum of weights: 82.5223
+	Squared coherence: 0.889853
+	Estimated response function: (  4.6231e-01,  4.7657e-01), (  4.0745e-01,  5.5538e-01)
+	Amplitude of the estimated response function:  6.6397e-01,  6.8882e-01
+	Phase(deg.) of the estimated response function:   45.9,   53.7
+	Weighted residual power: 0.000908642
+Iteration number = 1
+	Scale factor: 0.0219101
+	Sum of weights: 82.5216
+	Squared coherence: 0.889863
+	Estimated response function: (  4.6231e-01,  4.7658e-01), (  4.0747e-01,  5.5540e-01)
+	Amplitude of the estimated response function:  6.6398e-01,  6.8884e-01
+	Phase(deg.) of the estimated response function:   45.9,   53.7
+	Weighted residual power: 0.000908597
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.0219101
+	Parameter c: 2.72115
+	Sum of weights: 53.9672
+	Squared coherence: 0.946333
+	Estimated response function: (  4.6769e-01,  4.6881e-01), (  4.1430e-01,  5.5402e-01)
+	Amplitude of the estimated response function:  6.6221e-01,  6.9180e-01
+	Phase(deg.) of the estimated response function:   45.1,   53.2
+	Weighted residual power: 0.000420886
+Iteration number = 1
+	Scale factor: 0.0219101
+	Parameter c: 2.72115
+	Sum of weights: 54.0024
+	Squared coherence: 0.946584
+	Estimated response function: (  4.7073e-01,  4.6538e-01), (  4.1668e-01,  5.5370e-01)
+	Amplitude of the estimated response function:  6.6195e-01,  6.9297e-01
+	Phase(deg.) of the estimated response function:   44.7,   53.0
+	Weighted residual power: 0.000418964
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 83
+	Squared coherence: 0.950281
+	Estimated response function: ( -8.1849e-01, -1.0167e+00), ( -1.9619e-01, -2.0165e-01)
+	Amplitude of the estimated response function:  1.3052e+00,  2.8134e-01
+	Phase(deg.) of the estimated response function: -128.8, -134.2
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.0149066
+	Sum of weights: 81.6009
+	Squared coherence: 0.955587
+	Estimated response function: ( -8.2302e-01, -1.0203e+00), ( -1.8942e-01, -1.9603e-01)
+	Amplitude of the estimated response function:  1.3109e+00,  2.7259e-01
+	Phase(deg.) of the estimated response function: -128.9, -134.0
+	Weighted residual power: 0.000695709
+Iteration number = 1
+	Scale factor: 0.0157341
+	Sum of weights: 81.8158
+	Squared coherence: 0.955054
+	Estimated response function: ( -8.2304e-01, -1.0200e+00), ( -1.8933e-01, -1.9631e-01)
+	Amplitude of the estimated response function:  1.3106e+00,  2.7273e-01
+	Phase(deg.) of the estimated response function: -128.9, -134.0
+	Weighted residual power: 0.000703414
+Iteration number = 2
+	Scale factor: 0.015773
+	Sum of weights: 81.8259
+	Squared coherence: 0.955026
+	Estimated response function: ( -8.2303e-01, -1.0200e+00), ( -1.8933e-01, -1.9634e-01)
+	Amplitude of the estimated response function:  1.3106e+00,  2.7276e-01
+	Phase(deg.) of the estimated response function: -128.9, -134.0
+	Weighted residual power: 0.000703817
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.015773
+	Parameter c: 2.72115
+	Sum of weights: 43.9853
+	Squared coherence: 0.980028
+	Estimated response function: ( -8.1051e-01, -1.0113e+00), ( -1.8691e-01, -1.6807e-01)
+	Amplitude of the estimated response function:  1.2960e+00,  2.5136e-01
+	Phase(deg.) of the estimated response function: -128.7, -138.0
+	Weighted residual power: 0.000308713
+Iteration number = 1
+	Scale factor: 0.015773
+	Parameter c: 2.72115
+	Sum of weights: 44.4865
+	Squared coherence: 0.9805
+	Estimated response function: ( -8.0299e-01, -1.0086e+00), ( -1.8890e-01, -1.5262e-01)
+	Amplitude of the estimated response function:  1.2892e+00,  2.4285e-01
+	Phase(deg.) of the estimated response function: -128.5, -141.1
+	Weighted residual power: 0.000294899
+Iteration number = 2
+	Scale factor: 0.015773
+	Parameter c: 2.72115
+	Sum of weights: 44.5499
+	Squared coherence: 0.980792
+	Estimated response function: ( -7.9890e-01, -1.0081e+00), ( -1.9163e-01, -1.4485e-01)
+	Amplitude of the estimated response function:  1.2863e+00,  2.4021e-01
+	Phase(deg.) of the estimated response function: -128.4, -142.9
+	Weighted residual power: 0.000288198
+Iteration number = 3
+	Scale factor: 0.015773
+	Parameter c: 2.72115
+	Sum of weights: 44.5331
+	Squared coherence: 0.980954
+	Estimated response function: ( -7.9673e-01, -1.0083e+00), ( -1.9372e-01, -1.4104e-01)
+	Amplitude of the estimated response function:  1.2851e+00,  2.3962e-01
+	Phase(deg.) of the estimated response function: -128.3, -143.9
+	Weighted residual power: 0.000285171
+Iteration number = 4
+	Scale factor: 0.015773
+	Parameter c: 2.72115
+	Sum of weights: 44.5116
+	Squared coherence: 0.981043
+	Estimated response function: ( -7.9553e-01, -1.0086e+00), ( -1.9505e-01, -1.3915e-01)
+	Amplitude of the estimated response function:  1.2846e+00,  2.3960e-01
+	Phase(deg.) of the estimated response function: -128.3, -144.5
+	Weighted residual power: 0.000283725
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Estimate errors by fixed-weights bootstrap
+--------------------------------------------------------------------------------
+================================================================================
+Now Frequency(Hz): 0.00292969, Period(s): 341.333
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 167
+	Squared coherence: 0.806035
+	Estimated response function: (  4.9956e-01,  5.8776e-01), (  4.6078e-01,  7.8202e-01)
+	Amplitude of the estimated response function:  7.7138e-01,  9.0767e-01
+	Phase(deg.) of the estimated response function:   49.6,   59.5
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.026021
+	Sum of weights: 165.641
+	Squared coherence: 0.813157
+	Estimated response function: (  4.9945e-01,  5.9031e-01), (  4.6824e-01,  7.7802e-01)
+	Amplitude of the estimated response function:  7.7325e-01,  9.0805e-01
+	Phase(deg.) of the estimated response function:   49.8,   59.0
+	Weighted residual power: 0.00176173
+Iteration number = 1
+	Scale factor: 0.0260807
+	Sum of weights: 165.63
+	Squared coherence: 0.813219
+	Estimated response function: (  4.9945e-01,  5.9033e-01), (  4.6833e-01,  7.7798e-01)
+	Amplitude of the estimated response function:  7.7326e-01,  9.0807e-01
+	Phase(deg.) of the estimated response function:   49.8,   59.0
+	Weighted residual power: 0.00176115
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.0260807
+	Parameter c: 2.69063
+	Sum of weights: 92.2367
+	Squared coherence: 0.90252
+	Estimated response function: (  5.0983e-01,  5.8605e-01), (  4.9332e-01,  7.4584e-01)
+	Amplitude of the estimated response function:  7.7678e-01,  8.9423e-01
+	Phase(deg.) of the estimated response function:   49.0,   56.5
+	Weighted residual power: 0.000729423
+Iteration number = 1
+	Scale factor: 0.0260807
+	Parameter c: 2.69063
+	Sum of weights: 92.8106
+	Squared coherence: 0.9034
+	Estimated response function: (  5.1429e-01,  5.8585e-01), (  5.0720e-01,  7.3283e-01)
+	Amplitude of the estimated response function:  7.7956e-01,  8.9123e-01
+	Phase(deg.) of the estimated response function:   48.7,   55.3
+	Weighted residual power: 0.000725822
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 167
+	Squared coherence: 0.919768
+	Estimated response function: ( -9.7967e-01, -1.3105e+00), ( -2.0590e-01, -2.3050e-01)
+	Amplitude of the estimated response function:  1.6362e+00,  3.0907e-01
+	Phase(deg.) of the estimated response function: -126.8, -131.8
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.0278371
+	Sum of weights: 166.432
+	Squared coherence: 0.920896
+	Estimated response function: ( -9.7891e-01, -1.3102e+00), ( -2.0398e-01, -2.2972e-01)
+	Amplitude of the estimated response function:  1.6355e+00,  3.0721e-01
+	Phase(deg.) of the estimated response function: -126.8, -131.6
+	Weighted residual power: 0.00164887
+Iteration number = 1
+	Scale factor: 0.0279882
+	Sum of weights: 166.459
+	Squared coherence: 0.920843
+	Estimated response function: ( -9.7894e-01, -1.3102e+00), ( -2.0402e-01, -2.2963e-01)
+	Amplitude of the estimated response function:  1.6355e+00,  3.0718e-01
+	Phase(deg.) of the estimated response function: -126.8, -131.6
+	Weighted residual power: 0.00164996
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.0279882
+	Parameter c: 2.69063
+	Sum of weights: 102.547
+	Squared coherence: 0.965407
+	Estimated response function: ( -9.8614e-01, -1.3203e+00), ( -1.8584e-01, -2.2203e-01)
+	Amplitude of the estimated response function:  1.6480e+00,  2.8954e-01
+	Phase(deg.) of the estimated response function: -126.8, -129.9
+	Weighted residual power: 0.000715998
+Iteration number = 1
+	Scale factor: 0.0279882
+	Parameter c: 2.69063
+	Sum of weights: 102.744
+	Squared coherence: 0.965602
+	Estimated response function: ( -9.8792e-01, -1.3240e+00), ( -1.7762e-01, -2.1990e-01)
+	Amplitude of the estimated response function:  1.6520e+00,  2.8267e-01
+	Phase(deg.) of the estimated response function: -126.7, -128.9
+	Weighted residual power: 0.000715321
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Estimate errors by fixed-weights bootstrap
+--------------------------------------------------------------------------------
+================================================================================
+Now Frequency(Hz): 0.00390625, Period(s): 256
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 167
+	Squared coherence: 0.796662
+	Estimated response function: (  6.1578e-01,  7.1217e-01), (  4.7193e-01,  9.1307e-01)
+	Amplitude of the estimated response function:  9.4147e-01,  1.0278e+00
+	Phase(deg.) of the estimated response function:   49.2,   62.7
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.0326429
+	Sum of weights: 166.946
+	Squared coherence: 0.796936
+	Estimated response function: (  6.1582e-01,  7.1202e-01), (  4.7191e-01,  9.1286e-01)
+	Amplitude of the estimated response function:  9.4138e-01,  1.0276e+00
+	Phase(deg.) of the estimated response function:   49.1,   62.7
+	Weighted residual power: 0.00163416
+Iteration number = 1
+	Scale factor: 0.0326242
+	Sum of weights: 166.945
+	Squared coherence: 0.796942
+	Estimated response function: (  6.1582e-01,  7.1201e-01), (  4.7191e-01,  9.1286e-01)
+	Amplitude of the estimated response function:  9.4138e-01,  1.0276e+00
+	Phase(deg.) of the estimated response function:   49.1,   62.7
+	Weighted residual power: 0.0016341
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.0326242
+	Parameter c: 2.69063
+	Sum of weights: 113.338
+	Squared coherence: 0.88344
+	Estimated response function: (  6.4246e-01,  6.9654e-01), (  4.7608e-01,  9.1022e-01)
+	Amplitude of the estimated response function:  9.4759e-01,  1.0272e+00
+	Phase(deg.) of the estimated response function:   47.3,   62.4
+	Weighted residual power: 0.000882008
+Iteration number = 1
+	Scale factor: 0.0326242
+	Parameter c: 2.69063
+	Sum of weights: 113.454
+	Squared coherence: 0.884057
+	Estimated response function: (  6.5292e-01,  6.9080e-01), (  4.7854e-01,  9.0819e-01)
+	Amplitude of the estimated response function:  9.5053e-01,  1.0265e+00
+	Phase(deg.) of the estimated response function:   46.6,   62.2
+	Weighted residual power: 0.000878239
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 167
+	Squared coherence: 0.903605
+	Estimated response function: ( -1.2412e+00, -1.5313e+00), ( -2.1321e-01, -3.0097e-01)
+	Amplitude of the estimated response function:  1.9712e+00,  3.6884e-01
+	Phase(deg.) of the estimated response function: -129.0, -125.3
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.0332554
+	Sum of weights: 166.745
+	Squared coherence: 0.904561
+	Estimated response function: ( -1.2408e+00, -1.5315e+00), ( -2.1247e-01, -2.9870e-01)
+	Amplitude of the estimated response function:  1.9710e+00,  3.6656e-01
+	Phase(deg.) of the estimated response function: -129.0, -125.4
+	Weighted residual power: 0.00165571
+Iteration number = 1
+	Scale factor: 0.0332658
+	Sum of weights: 166.744
+	Squared coherence: 0.904565
+	Estimated response function: ( -1.2408e+00, -1.5314e+00), ( -2.1247e-01, -2.9868e-01)
+	Amplitude of the estimated response function:  1.9710e+00,  3.6654e-01
+	Phase(deg.) of the estimated response function: -129.0, -125.4
+	Weighted residual power: 0.00165563
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.0332658
+	Parameter c: 2.69063
+	Sum of weights: 115.717
+	Squared coherence: 0.952525
+	Estimated response function: ( -1.2362e+00, -1.5471e+00), ( -2.0471e-01, -3.1381e-01)
+	Amplitude of the estimated response function:  1.9803e+00,  3.7468e-01
+	Phase(deg.) of the estimated response function: -128.6, -123.1
+	Weighted residual power: 0.000848092
+Iteration number = 1
+	Scale factor: 0.0332658
+	Parameter c: 2.69063
+	Sum of weights: 115.732
+	Squared coherence: 0.952877
+	Estimated response function: ( -1.2350e+00, -1.5511e+00), ( -2.0267e-01, -3.1892e-01)
+	Amplitude of the estimated response function:  1.9827e+00,  3.7786e-01
+	Phase(deg.) of the estimated response function: -128.5, -122.4
+	Weighted residual power: 0.000844168
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Estimate errors by fixed-weights bootstrap
+--------------------------------------------------------------------------------
+================================================================================
+Now Frequency(Hz): 0.00585938, Period(s): 170.667
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 336
+	Squared coherence: 0.69643
+	Estimated response function: (  8.5334e-01,  9.0990e-01), (  6.8002e-01,  1.1115e+00)
+	Amplitude of the estimated response function:  1.2474e+00,  1.3030e+00
+	Phase(deg.) of the estimated response function:   46.8,   58.5
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.0484071
+	Sum of weights: 335.066
+	Squared coherence: 0.701773
+	Estimated response function: (  8.4957e-01,  9.1408e-01), (  6.8119e-01,  1.1151e+00)
+	Amplitude of the estimated response function:  1.2479e+00,  1.3067e+00
+	Phase(deg.) of the estimated response function:   47.1,   58.6
+	Weighted residual power: 0.00364271
+Iteration number = 1
+	Scale factor: 0.0478256
+	Sum of weights: 334.986
+	Squared coherence: 0.70214
+	Estimated response function: (  8.4924e-01,  9.1434e-01), (  6.8114e-01,  1.1154e+00)
+	Amplitude of the estimated response function:  1.2479e+00,  1.3069e+00
+	Phase(deg.) of the estimated response function:   47.1,   58.6
+	Weighted residual power: 0.00363674
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.0478256
+	Parameter c: 2.67584
+	Sum of weights: 229.952
+	Squared coherence: 0.830307
+	Estimated response function: (  8.5487e-01,  9.0139e-01), (  6.9056e-01,  1.1069e+00)
+	Amplitude of the estimated response function:  1.2423e+00,  1.3047e+00
+	Phase(deg.) of the estimated response function:   46.5,   58.0
+	Weighted residual power: 0.00176296
+Iteration number = 1
+	Scale factor: 0.0478256
+	Parameter c: 2.67584
+	Sum of weights: 229.942
+	Squared coherence: 0.830281
+	Estimated response function: (  8.5704e-01,  8.9661e-01), (  6.9310e-01,  1.1036e+00)
+	Amplitude of the estimated response function:  1.2403e+00,  1.3032e+00
+	Phase(deg.) of the estimated response function:   46.3,   57.9
+	Weighted residual power: 0.00175854
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 336
+	Squared coherence: 0.858501
+	Estimated response function: ( -1.6036e+00, -1.8501e+00), ( -3.1005e-01, -3.3065e-01)
+	Amplitude of the estimated response function:  2.4483e+00,  4.5328e-01
+	Phase(deg.) of the estimated response function: -130.9, -133.2
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.0436579
+	Sum of weights: 334.546
+	Squared coherence: 0.862126
+	Estimated response function: ( -1.6037e+00, -1.8551e+00), ( -3.0797e-01, -3.3145e-01)
+	Amplitude of the estimated response function:  2.4522e+00,  4.5244e-01
+	Phase(deg.) of the estimated response function: -130.8, -132.9
+	Weighted residual power: 0.0034813
+Iteration number = 1
+	Scale factor: 0.0439281
+	Sum of weights: 334.603
+	Squared coherence: 0.862013
+	Estimated response function: ( -1.6037e+00, -1.8551e+00), ( -3.0806e-01, -3.3138e-01)
+	Amplitude of the estimated response function:  2.4522e+00,  4.5246e-01
+	Phase(deg.) of the estimated response function: -130.8, -132.9
+	Weighted residual power: 0.00348444
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.0439281
+	Parameter c: 2.67584
+	Sum of weights: 222.062
+	Squared coherence: 0.936155
+	Estimated response function: ( -1.6046e+00, -1.8862e+00), ( -2.9094e-01, -3.5958e-01)
+	Amplitude of the estimated response function:  2.4764e+00,  4.6253e-01
+	Phase(deg.) of the estimated response function: -130.4, -129.0
+	Weighted residual power: 0.00152155
+Iteration number = 1
+	Scale factor: 0.0439281
+	Parameter c: 2.67584
+	Sum of weights: 222.106
+	Squared coherence: 0.936768
+	Estimated response function: ( -1.6040e+00, -1.8954e+00), ( -2.8654e-01, -3.6751e-01)
+	Amplitude of the estimated response function:  2.4830e+00,  4.6602e-01
+	Phase(deg.) of the estimated response function: -130.2, -127.9
+	Weighted residual power: 0.00151453
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Estimate errors by fixed-weights bootstrap
+--------------------------------------------------------------------------------
+================================================================================
+Now Frequency(Hz): 0.0078125, Period(s): 128
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 336
+	Squared coherence: 0.664453
+	Estimated response function: (  1.0431e+00,  1.0375e+00), (  8.6368e-01,  1.3689e+00)
+	Amplitude of the estimated response function:  1.4712e+00,  1.6186e+00
+	Phase(deg.) of the estimated response function:   44.8,   57.8
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.0454248
+	Sum of weights: 335.113
+	Squared coherence: 0.668934
+	Estimated response function: (  1.0452e+00,  1.0425e+00), (  8.6250e-01,  1.3603e+00)
+	Amplitude of the estimated response function:  1.4762e+00,  1.6107e+00
+	Phase(deg.) of the estimated response function:   44.9,   57.6
+	Weighted residual power: 0.00335025
+Iteration number = 1
+	Scale factor: 0.0451014
+	Sum of weights: 335.055
+	Squared coherence: 0.669199
+	Estimated response function: (  1.0452e+00,  1.0428e+00), (  8.6242e-01,  1.3601e+00)
+	Amplitude of the estimated response function:  1.4765e+00,  1.6105e+00
+	Phase(deg.) of the estimated response function:   44.9,   57.6
+	Weighted residual power: 0.00334665
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.0451014
+	Parameter c: 2.67584
+	Sum of weights: 228.85
+	Squared coherence: 0.817254
+	Estimated response function: (  1.0158e+00,  1.0691e+00), (  8.8354e-01,  1.3175e+00)
+	Amplitude of the estimated response function:  1.4747e+00,  1.5863e+00
+	Phase(deg.) of the estimated response function:   46.5,   56.2
+	Weighted residual power: 0.00155632
+Iteration number = 1
+	Scale factor: 0.0451014
+	Parameter c: 2.67584
+	Sum of weights: 229.175
+	Squared coherence: 0.817366
+	Estimated response function: (  1.0070e+00,  1.0760e+00), (  8.8993e-01,  1.3075e+00)
+	Amplitude of the estimated response function:  1.4737e+00,  1.5816e+00
+	Phase(deg.) of the estimated response function:   46.9,   55.8
+	Weighted residual power: 0.00155072
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 336
+	Squared coherence: 0.815407
+	Estimated response function: ( -1.8135e+00, -2.2327e+00), ( -4.0674e-01, -3.9502e-01)
+	Amplitude of the estimated response function:  2.8764e+00,  5.6699e-01
+	Phase(deg.) of the estimated response function: -129.1, -135.8
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.0463357
+	Sum of weights: 335.289
+	Squared coherence: 0.81739
+	Estimated response function: ( -1.8126e+00, -2.2284e+00), ( -4.0644e-01, -3.9534e-01)
+	Amplitude of the estimated response function:  2.8724e+00,  5.6700e-01
+	Phase(deg.) of the estimated response function: -129.1, -135.8
+	Weighted residual power: 0.00352279
+Iteration number = 1
+	Scale factor: 0.0460312
+	Sum of weights: 335.259
+	Squared coherence: 0.817471
+	Estimated response function: ( -1.8126e+00, -2.2282e+00), ( -4.0644e-01, -3.9534e-01)
+	Amplitude of the estimated response function:  2.8723e+00,  5.6700e-01
+	Phase(deg.) of the estimated response function: -129.1, -135.8
+	Weighted residual power: 0.00352072
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.0460312
+	Parameter c: 2.67584
+	Sum of weights: 226.115
+	Squared coherence: 0.910435
+	Estimated response function: ( -1.8484e+00, -2.2755e+00), ( -3.8831e-01, -4.1617e-01)
+	Amplitude of the estimated response function:  2.9316e+00,  5.6919e-01
+	Phase(deg.) of the estimated response function: -129.1, -133.0
+	Weighted residual power: 0.00164924
+Iteration number = 1
+	Scale factor: 0.0460312
+	Parameter c: 2.67584
+	Sum of weights: 226.053
+	Squared coherence: 0.911902
+	Estimated response function: ( -1.8577e+00, -2.2910e+00), ( -3.8178e-01, -4.2082e-01)
+	Amplitude of the estimated response function:  2.9495e+00,  5.6820e-01
+	Phase(deg.) of the estimated response function: -129.0, -132.2
+	Weighted residual power: 0.00163469
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Estimate errors by fixed-weights bootstrap
+--------------------------------------------------------------------------------
+================================================================================
+Now Frequency(Hz): 0.0117188, Period(s): 85.3333
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 674
+	Squared coherence: 0.560924
+	Estimated response function: (  1.4098e+00,  1.2116e+00), (  1.0910e+00,  1.7930e+00)
+	Amplitude of the estimated response function:  1.8589e+00,  2.0988e+00
+	Phase(deg.) of the estimated response function:   40.7,   58.7
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.0748597
+	Sum of weights: 673.01
+	Squared coherence: 0.563923
+	Estimated response function: (  1.4100e+00,  1.2104e+00), (  1.0907e+00,  1.7963e+00)
+	Amplitude of the estimated response function:  1.8583e+00,  2.1015e+00
+	Phase(deg.) of the estimated response function:   40.6,   58.7
+	Weighted residual power: 0.00746403
+Iteration number = 1
+	Scale factor: 0.0750178
+	Sum of weights: 673.027
+	Squared coherence: 0.563875
+	Estimated response function: (  1.4099e+00,  1.2104e+00), (  1.0907e+00,  1.7963e+00)
+	Amplitude of the estimated response function:  1.8582e+00,  2.1015e+00
+	Phase(deg.) of the estimated response function:   40.6,   58.7
+	Weighted residual power: 0.00746539
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.0750178
+	Parameter c: 2.66852
+	Sum of weights: 490.887
+	Squared coherence: 0.741816
+	Estimated response function: (  1.3877e+00,  1.2148e+00), (  1.1337e+00,  1.7753e+00)
+	Amplitude of the estimated response function:  1.8443e+00,  2.1064e+00
+	Phase(deg.) of the estimated response function:   41.2,   57.4
+	Weighted residual power: 0.00354565
+Iteration number = 1
+	Scale factor: 0.0750178
+	Parameter c: 2.66852
+	Sum of weights: 491.081
+	Squared coherence: 0.741804
+	Estimated response function: (  1.3822e+00,  1.2155e+00), (  1.1448e+00,  1.7717e+00)
+	Amplitude of the estimated response function:  1.8406e+00,  2.1094e+00
+	Phase(deg.) of the estimated response function:   41.3,   57.1
+	Weighted residual power: 0.00354268
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 674
+	Squared coherence: 0.761092
+	Estimated response function: ( -2.4922e+00, -2.9073e+00), ( -4.4663e-01, -5.7216e-01)
+	Amplitude of the estimated response function:  3.8293e+00,  7.2585e-01
+	Phase(deg.) of the estimated response function: -130.6, -128.0
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.0701711
+	Sum of weights: 672.477
+	Squared coherence: 0.764271
+	Estimated response function: ( -2.4857e+00, -2.9140e+00), ( -4.5065e-01, -5.7334e-01)
+	Amplitude of the estimated response function:  3.8301e+00,  7.2925e-01
+	Phase(deg.) of the estimated response function: -130.5, -128.2
+	Weighted residual power: 0.00759164
+Iteration number = 1
+	Scale factor: 0.0700723
+	Sum of weights: 672.456
+	Squared coherence: 0.764311
+	Estimated response function: ( -2.4856e+00, -2.9141e+00), ( -4.5070e-01, -5.7338e-01)
+	Amplitude of the estimated response function:  3.8301e+00,  7.2931e-01
+	Phase(deg.) of the estimated response function: -130.5, -128.2
+	Weighted residual power: 0.00758991
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.0700723
+	Parameter c: 2.66852
+	Sum of weights: 465.168
+	Squared coherence: 0.876317
+	Estimated response function: ( -2.4968e+00, -2.9232e+00), ( -4.7043e-01, -6.0080e-01)
+	Amplitude of the estimated response function:  3.8444e+00,  7.6306e-01
+	Phase(deg.) of the estimated response function: -130.5, -128.1
+	Weighted residual power: 0.00363019
+Iteration number = 1
+	Scale factor: 0.0700723
+	Parameter c: 2.66852
+	Sum of weights: 464.957
+	Squared coherence: 0.876688
+	Estimated response function: ( -2.5000e+00, -2.9260e+00), ( -4.7552e-01, -6.0994e-01)
+	Amplitude of the estimated response function:  3.8486e+00,  7.7339e-01
+	Phase(deg.) of the estimated response function: -130.5, -127.9
+	Weighted residual power: 0.00362765
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Estimate errors by fixed-weights bootstrap
+--------------------------------------------------------------------------------
+================================================================================
+Now Frequency(Hz): 0.015625, Period(s): 64
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 674
+	Squared coherence: 0.489021
+	Estimated response function: (  1.5261e+00,  1.3115e+00), (  1.3647e+00,  2.1210e+00)
+	Amplitude of the estimated response function:  2.0122e+00,  2.5221e+00
+	Phase(deg.) of the estimated response function:   40.7,   57.2
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.0724627
+	Sum of weights: 673.12
+	Squared coherence: 0.492283
+	Estimated response function: (  1.5294e+00,  1.3082e+00), (  1.3638e+00,  2.1181e+00)
+	Amplitude of the estimated response function:  2.0126e+00,  2.5192e+00
+	Phase(deg.) of the estimated response function:   40.5,   57.2
+	Weighted residual power: 0.00707829
+Iteration number = 1
+	Scale factor: 0.0724565
+	Sum of weights: 673.118
+	Squared coherence: 0.492288
+	Estimated response function: (  1.5294e+00,  1.3082e+00), (  1.3638e+00,  2.1181e+00)
+	Amplitude of the estimated response function:  2.0126e+00,  2.5192e+00
+	Phase(deg.) of the estimated response function:   40.5,   57.2
+	Weighted residual power: 0.00707813
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.0724565
+	Parameter c: 2.66852
+	Sum of weights: 485.151
+	Squared coherence: 0.673558
+	Estimated response function: (  1.5492e+00,  1.3208e+00), (  1.3725e+00,  2.0769e+00)
+	Amplitude of the estimated response function:  2.0358e+00,  2.4894e+00
+	Phase(deg.) of the estimated response function:   40.5,   56.5
+	Weighted residual power: 0.00356235
+Iteration number = 1
+	Scale factor: 0.0724565
+	Parameter c: 2.66852
+	Sum of weights: 485.296
+	Squared coherence: 0.673613
+	Estimated response function: (  1.5550e+00,  1.3245e+00), (  1.3753e+00,  2.0651e+00)
+	Amplitude of the estimated response function:  2.0426e+00,  2.4812e+00
+	Phase(deg.) of the estimated response function:   40.4,   56.3
+	Weighted residual power: 0.00356118
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 674
+	Squared coherence: 0.672333
+	Estimated response function: ( -2.9628e+00, -3.2191e+00), ( -5.6934e-01, -5.6898e-01)
+	Amplitude of the estimated response function:  4.3750e+00,  8.0492e-01
+	Phase(deg.) of the estimated response function: -132.6, -135.0
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.0687381
+	Sum of weights: 671.982
+	Squared coherence: 0.677539
+	Estimated response function: ( -2.9589e+00, -3.2273e+00), ( -5.7517e-01, -5.7291e-01)
+	Amplitude of the estimated response function:  4.3784e+00,  8.1182e-01
+	Phase(deg.) of the estimated response function: -132.5, -135.1
+	Weighted residual power: 0.00823972
+Iteration number = 1
+	Scale factor: 0.0691834
+	Sum of weights: 672.093
+	Squared coherence: 0.67731
+	Estimated response function: ( -2.9589e+00, -3.2271e+00), ( -5.7504e-01, -5.7297e-01)
+	Amplitude of the estimated response function:  4.3783e+00,  8.1177e-01
+	Phase(deg.) of the estimated response function: -132.5, -135.1
+	Weighted residual power: 0.00824694
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.0691834
+	Parameter c: 2.66852
+	Sum of weights: 455.966
+	Squared coherence: 0.839174
+	Estimated response function: ( -2.9536e+00, -3.2230e+00), ( -5.8803e-01, -6.1806e-01)
+	Amplitude of the estimated response function:  4.3717e+00,  8.5310e-01
+	Phase(deg.) of the estimated response function: -132.5, -133.6
+	Weighted residual power: 0.00351616
+Iteration number = 1
+	Scale factor: 0.0691834
+	Parameter c: 2.66852
+	Sum of weights: 456.07
+	Squared coherence: 0.839245
+	Estimated response function: ( -2.9519e+00, -3.2221e+00), ( -5.9265e-01, -6.3148e-01)
+	Amplitude of the estimated response function:  4.3699e+00,  8.6603e-01
+	Phase(deg.) of the estimated response function: -132.5, -133.2
+	Weighted residual power: 0.00351532
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Estimate errors by fixed-weights bootstrap
+--------------------------------------------------------------------------------
+================================================================================
+Now Frequency(Hz): 0.0234375, Period(s): 42.6667
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 1349
+	Squared coherence: 0.285296
+	Estimated response function: (  1.8164e+00,  1.5316e+00), (  1.8165e+00,  2.6996e+00)
+	Amplitude of the estimated response function:  2.3759e+00,  3.2539e+00
+	Phase(deg.) of the estimated response function:   40.1,   56.1
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.114133
+	Sum of weights: 1347.55
+	Squared coherence: 0.289138
+	Estimated response function: (  1.8179e+00,  1.5295e+00), (  1.8178e+00,  2.7047e+00)
+	Amplitude of the estimated response function:  2.3757e+00,  3.2588e+00
+	Phase(deg.) of the estimated response function:   40.1,   56.1
+	Weighted residual power: 0.0160856
+Iteration number = 1
+	Scale factor: 0.114224
+	Sum of weights: 1347.56
+	Squared coherence: 0.289124
+	Estimated response function: (  1.8179e+00,  1.5294e+00), (  1.8178e+00,  2.7048e+00)
+	Amplitude of the estimated response function:  2.3757e+00,  3.2589e+00
+	Phase(deg.) of the estimated response function:   40.1,   56.1
+	Weighted residual power: 0.0160866
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.114224
+	Parameter c: 2.66487
+	Sum of weights: 1001.08
+	Squared coherence: 0.527728
+	Estimated response function: (  1.9150e+00,  1.5840e+00), (  1.8838e+00,  2.7024e+00)
+	Amplitude of the estimated response function:  2.4852e+00,  3.2942e+00
+	Phase(deg.) of the estimated response function:   39.6,   55.1
+	Weighted residual power: 0.00813588
+Iteration number = 1
+	Scale factor: 0.114224
+	Parameter c: 2.66487
+	Sum of weights: 998.768
+	Squared coherence: 0.531714
+	Estimated response function: (  1.9354e+00,  1.5956e+00), (  1.8973e+00,  2.7005e+00)
+	Amplitude of the estimated response function:  2.5083e+00,  3.3004e+00
+	Phase(deg.) of the estimated response function:   39.5,   54.9
+	Weighted residual power: 0.00811002
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 1349
+	Squared coherence: 0.541786
+	Estimated response function: ( -3.7872e+00, -3.8867e+00), ( -8.5067e-01, -9.3922e-01)
+	Amplitude of the estimated response function:  5.4268e+00,  1.2672e+00
+	Phase(deg.) of the estimated response function: -134.3, -132.2
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.120367
+	Sum of weights: 1347.29
+	Squared coherence: 0.547046
+	Estimated response function: ( -3.7847e+00, -3.8879e+00), ( -8.4544e-01, -9.4380e-01)
+	Amplitude of the estimated response function:  5.4259e+00,  1.2671e+00
+	Phase(deg.) of the estimated response function: -134.2, -131.9
+	Weighted residual power: 0.0189326
+Iteration number = 1
+	Scale factor: 0.120594
+	Sum of weights: 1347.31
+	Squared coherence: 0.546996
+	Estimated response function: ( -3.7848e+00, -3.8880e+00), ( -8.4551e-01, -9.4383e-01)
+	Amplitude of the estimated response function:  5.4259e+00,  1.2672e+00
+	Phase(deg.) of the estimated response function: -134.2, -131.9
+	Weighted residual power: 0.0189354
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.120594
+	Parameter c: 2.66487
+	Sum of weights: 989.756
+	Squared coherence: 0.753012
+	Estimated response function: ( -3.7524e+00, -3.8359e+00), ( -8.3187e-01, -1.0121e+00)
+	Amplitude of the estimated response function:  5.3660e+00,  1.3101e+00
+	Phase(deg.) of the estimated response function: -134.4, -129.4
+	Weighted residual power: 0.00881587
+Iteration number = 1
+	Scale factor: 0.120594
+	Parameter c: 2.66487
+	Sum of weights: 990.712
+	Squared coherence: 0.752178
+	Estimated response function: ( -3.7463e+00, -3.8251e+00), ( -8.2815e-01, -1.0261e+00)
+	Amplitude of the estimated response function:  5.3541e+00,  1.3186e+00
+	Phase(deg.) of the estimated response function: -134.4, -128.9
+	Weighted residual power: 0.00882266
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Estimate errors by fixed-weights bootstrap
+--------------------------------------------------------------------------------
+================================================================================
+Now Frequency(Hz): 0.03125, Period(s): 32
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 1349
+	Squared coherence: 0.182813
+	Estimated response function: (  2.4092e+00,  1.6994e+00), (  2.2787e+00,  3.3919e+00)
+	Amplitude of the estimated response function:  2.9483e+00,  4.0863e+00
+	Phase(deg.) of the estimated response function:   35.2,   56.1
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.117466
+	Sum of weights: 1347.67
+	Squared coherence: 0.186655
+	Estimated response function: (  2.4041e+00,  1.7014e+00), (  2.2756e+00,  3.3994e+00)
+	Amplitude of the estimated response function:  2.9452e+00,  4.0908e+00
+	Phase(deg.) of the estimated response function:   35.3,   56.2
+	Weighted residual power: 0.0178821
+Iteration number = 1
+	Scale factor: 0.117313
+	Sum of weights: 1347.66
+	Squared coherence: 0.186696
+	Estimated response function: (  2.4040e+00,  1.7014e+00), (  2.2755e+00,  3.3994e+00)
+	Amplitude of the estimated response function:  2.9452e+00,  4.0908e+00
+	Phase(deg.) of the estimated response function:   35.3,   56.2
+	Weighted residual power: 0.0178805
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.117313
+	Parameter c: 2.66487
+	Sum of weights: 988.458
+	Squared coherence: 0.468513
+	Estimated response function: (  2.3812e+00,  1.7509e+00), (  2.3339e+00,  3.3818e+00)
+	Amplitude of the estimated response function:  2.9556e+00,  4.1090e+00
+	Phase(deg.) of the estimated response function:   36.3,   55.4
+	Weighted residual power: 0.00844258
+Iteration number = 1
+	Scale factor: 0.117313
+	Parameter c: 2.66487
+	Sum of weights: 987.991
+	Squared coherence: 0.469381
+	Estimated response function: (  2.3745e+00,  1.7637e+00), (  2.3499e+00,  3.3798e+00)
+	Amplitude of the estimated response function:  2.9579e+00,  4.1164e+00
+	Phase(deg.) of the estimated response function:   36.6,   55.2
+	Weighted residual power: 0.00843569
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 1349
+	Squared coherence: 0.418322
+	Estimated response function: ( -4.5618e+00, -4.3392e+00), ( -1.0301e+00, -1.1188e+00)
+	Amplitude of the estimated response function:  6.2959e+00,  1.5208e+00
+	Phase(deg.) of the estimated response function: -136.4, -132.6
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.131772
+	Sum of weights: 1348.21
+	Squared coherence: 0.42106
+	Estimated response function: ( -4.5688e+00, -4.3335e+00), ( -1.0230e+00, -1.1181e+00)
+	Amplitude of the estimated response function:  6.2971e+00,  1.5155e+00
+	Phase(deg.) of the estimated response function: -136.5, -132.5
+	Weighted residual power: 0.0196238
+Iteration number = 1
+	Scale factor: 0.131575
+	Sum of weights: 1348.2
+	Squared coherence: 0.421092
+	Estimated response function: ( -4.5688e+00, -4.3334e+00), ( -1.0229e+00, -1.1180e+00)
+	Amplitude of the estimated response function:  6.2970e+00,  1.5154e+00
+	Phase(deg.) of the estimated response function: -136.5, -132.5
+	Weighted residual power: 0.0196223
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.131575
+	Parameter c: 2.66487
+	Sum of weights: 1020.55
+	Squared coherence: 0.652145
+	Estimated response function: ( -4.4617e+00, -4.3022e+00), ( -9.1410e-01, -1.0408e+00)
+	Amplitude of the estimated response function:  6.1981e+00,  1.3852e+00
+	Phase(deg.) of the estimated response function: -136.0, -131.3
+	Weighted residual power: 0.00997048
+Iteration number = 1
+	Scale factor: 0.131575
+	Parameter c: 2.66487
+	Sum of weights: 1024.12
+	Squared coherence: 0.649837
+	Estimated response function: ( -4.4398e+00, -4.2956e+00), ( -8.9403e-01, -1.0191e+00)
+	Amplitude of the estimated response function:  6.1777e+00,  1.3556e+00
+	Phase(deg.) of the estimated response function: -135.9, -131.3
+	Weighted residual power: 0.0100064
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Estimate errors by fixed-weights bootstrap
+--------------------------------------------------------------------------------
+================================================================================
+Now Frequency(Hz): 0.046875, Period(s): 21.3333
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 2699
+	Squared coherence: 0
+	Estimated response function: (  3.5165e+00,  2.0850e+00), (  2.7673e+00,  4.2529e+00)
+	Amplitude of the estimated response function:  4.0882e+00,  5.0739e+00
+	Phase(deg.) of the estimated response function:   30.7,   56.9
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.190357
+	Sum of weights: 2696.81
+	Squared coherence: 0
+	Estimated response function: (  3.5118e+00,  2.0787e+00), (  2.7437e+00,  4.2379e+00)
+	Amplitude of the estimated response function:  4.0809e+00,  5.0485e+00
+	Phase(deg.) of the estimated response function:   30.6,   57.1
+	Weighted residual power: 0.041596
+Iteration number = 1
+	Scale factor: 0.19029
+	Sum of weights: 2696.81
+	Squared coherence: 0
+	Estimated response function: (  3.5118e+00,  2.0787e+00), (  2.7437e+00,  4.2378e+00)
+	Amplitude of the estimated response function:  4.0809e+00,  5.0484e+00
+	Phase(deg.) of the estimated response function:   30.6,   57.1
+	Weighted residual power: 0.0415963
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.19029
+	Parameter c: 2.66305
+	Sum of weights: 2039.72
+	Squared coherence: 0.251443
+	Estimated response function: (  3.4246e+00,  2.0503e+00), (  2.6571e+00,  4.2005e+00)
+	Amplitude of the estimated response function:  3.9914e+00,  4.9703e+00
+	Phase(deg.) of the estimated response function:   30.9,   57.7
+	Weighted residual power: 0.0204081
+Iteration number = 1
+	Scale factor: 0.19029
+	Parameter c: 2.66305
+	Sum of weights: 2046.12
+	Squared coherence: 0.246915
+	Estimated response function: (  3.4033e+00,  2.0451e+00), (  2.6361e+00,  4.1926e+00)
+	Amplitude of the estimated response function:  3.9705e+00,  4.9524e+00
+	Phase(deg.) of the estimated response function:   31.0,   57.8
+	Weighted residual power: 0.0204841
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 2699
+	Squared coherence: 0.134843
+	Estimated response function: ( -5.7353e+00, -4.7692e+00), ( -1.0946e+00, -9.2416e-01)
+	Amplitude of the estimated response function:  7.4592e+00,  1.4326e+00
+	Phase(deg.) of the estimated response function: -140.3, -139.8
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.209169
+	Sum of weights: 2697.74
+	Squared coherence: 0.138161
+	Estimated response function: ( -5.7307e+00, -4.7763e+00), ( -1.1016e+00, -9.3182e-01)
+	Amplitude of the estimated response function:  7.4601e+00,  1.4428e+00
+	Phase(deg.) of the estimated response function: -140.2, -139.8
+	Weighted residual power: 0.0454608
+Iteration number = 1
+	Scale factor: 0.209208
+	Sum of weights: 2697.74
+	Squared coherence: 0.138162
+	Estimated response function: ( -5.7307e+00, -4.7763e+00), ( -1.1016e+00, -9.3182e-01)
+	Amplitude of the estimated response function:  7.4602e+00,  1.4428e+00
+	Phase(deg.) of the estimated response function: -140.2, -139.8
+	Weighted residual power: 0.0454607
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.209208
+	Parameter c: 2.66305
+	Sum of weights: 2086.13
+	Squared coherence: 0.441335
+	Estimated response function: ( -5.6685e+00, -4.8900e+00), ( -9.2544e-01, -1.0784e+00)
+	Amplitude of the estimated response function:  7.4863e+00,  1.4211e+00
+	Phase(deg.) of the estimated response function: -139.2, -130.6
+	Weighted residual power: 0.0238896
+Iteration number = 1
+	Scale factor: 0.209208
+	Parameter c: 2.66305
+	Sum of weights: 2085.48
+	Squared coherence: 0.442154
+	Estimated response function: ( -5.6551e+00, -4.9152e+00), ( -8.8696e-01, -1.1013e+00)
+	Amplitude of the estimated response function:  7.4926e+00,  1.4141e+00
+	Phase(deg.) of the estimated response function: -139.0, -128.8
+	Weighted residual power: 0.0238508
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Estimate errors by fixed-weights bootstrap
+--------------------------------------------------------------------------------
+================================================================================
+Now Frequency(Hz): 0.0625, Period(s): 16
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 2699
+	Squared coherence: 0
+	Estimated response function: (  3.8873e+00,  2.4429e+00), (  3.8359e+00,  5.6420e+00)
+	Amplitude of the estimated response function:  4.5912e+00,  6.8225e+00
+	Phase(deg.) of the estimated response function:   32.1,   55.8
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.214731
+	Sum of weights: 2696.69
+	Squared coherence: 0
+	Estimated response function: (  3.8770e+00,  2.4413e+00), (  3.7854e+00,  5.6491e+00)
+	Amplitude of the estimated response function:  4.5816e+00,  6.8001e+00
+	Phase(deg.) of the estimated response function:   32.2,   56.2
+	Weighted residual power: 0.0496728
+Iteration number = 1
+	Scale factor: 0.214501
+	Sum of weights: 2696.68
+	Squared coherence: 0
+	Estimated response function: (  3.8770e+00,  2.4411e+00), (  3.7851e+00,  5.6489e+00)
+	Amplitude of the estimated response function:  4.5815e+00,  6.7998e+00
+	Phase(deg.) of the estimated response function:   32.2,   56.2
+	Weighted residual power: 0.0496698
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.214501
+	Parameter c: 2.66305
+	Sum of weights: 2075.37
+	Squared coherence: 0.0335645
+	Estimated response function: (  3.9451e+00,  2.4204e+00), (  3.3036e+00,  5.5088e+00)
+	Amplitude of the estimated response function:  4.6284e+00,  6.4235e+00
+	Phase(deg.) of the estimated response function:   31.5,   59.0
+	Weighted residual power: 0.0246498
+Iteration number = 1
+	Scale factor: 0.214501
+	Parameter c: 2.66305
+	Sum of weights: 2088.6
+	Squared coherence: 0.0230336
+	Estimated response function: (  3.9652e+00,  2.4168e+00), (  3.2005e+00,  5.4756e+00)
+	Amplitude of the estimated response function:  4.6437e+00,  6.3424e+00
+	Phase(deg.) of the estimated response function:   31.4,   59.7
+	Weighted residual power: 0.0248878
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 2699
+	Squared coherence: 0
+	Estimated response function: ( -5.7813e+00, -5.9123e+00), ( -1.3875e+00, -1.3241e+00)
+	Amplitude of the estimated response function:  8.2691e+00,  1.9179e+00
+	Phase(deg.) of the estimated response function: -134.4, -136.3
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.219452
+	Sum of weights: 2698.47
+	Squared coherence: 0
+	Estimated response function: ( -5.7834e+00, -5.9056e+00), ( -1.4075e+00, -1.3315e+00)
+	Amplitude of the estimated response function:  8.2658e+00,  1.9376e+00
+	Phase(deg.) of the estimated response function: -134.4, -136.6
+	Weighted residual power: 0.0499886
+Iteration number = 1
+	Scale factor: 0.218685
+	Sum of weights: 2698.46
+	Squared coherence: 0
+	Estimated response function: ( -5.7835e+00, -5.9054e+00), ( -1.4078e+00, -1.3318e+00)
+	Amplitude of the estimated response function:  8.2657e+00,  1.9379e+00
+	Phase(deg.) of the estimated response function: -134.4, -136.6
+	Weighted residual power: 0.0499857
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.218685
+	Parameter c: 2.66305
+	Sum of weights: 2085.38
+	Squared coherence: 0.250343
+	Estimated response function: ( -6.0469e+00, -5.7742e+00), ( -1.3992e+00, -1.4447e+00)
+	Amplitude of the estimated response function:  8.3610e+00,  2.0112e+00
+	Phase(deg.) of the estimated response function: -136.3, -134.1
+	Weighted residual power: 0.026256
+Iteration number = 1
+	Scale factor: 0.218685
+	Parameter c: 2.66305
+	Sum of weights: 2079.86
+	Squared coherence: 0.255703
+	Estimated response function: ( -6.1033e+00, -5.7354e+00), ( -1.4119e+00, -1.4563e+00)
+	Amplitude of the estimated response function:  8.3753e+00,  2.0284e+00
+	Phase(deg.) of the estimated response function: -136.8, -134.1
+	Weighted residual power: 0.0261017
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Estimate errors by fixed-weights bootstrap
+--------------------------------------------------------------------------------
+================================================================================
+Now Frequency(Hz): 0.09375, Period(s): 10.6667
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 5399
+	Squared coherence: 0
+	Estimated response function: (  3.9163e+00,  2.2256e+00), (  4.4864e+00,  7.3892e+00)
+	Amplitude of the estimated response function:  4.5045e+00,  8.6445e+00
+	Phase(deg.) of the estimated response function:   29.6,   58.7
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.331394
+	Sum of weights: 5394.66
+	Squared coherence: 0
+	Estimated response function: (  3.9092e+00,  2.2424e+00), (  4.4433e+00,  7.4049e+00)
+	Amplitude of the estimated response function:  4.5067e+00,  8.6357e+00
+	Phase(deg.) of the estimated response function:   29.8,   59.0
+	Weighted residual power: 0.118797
+Iteration number = 1
+	Scale factor: 0.331072
+	Sum of weights: 5394.64
+	Squared coherence: 0
+	Estimated response function: (  3.9092e+00,  2.2424e+00), (  4.4432e+00,  7.4051e+00)
+	Amplitude of the estimated response function:  4.5067e+00,  8.6358e+00
+	Phase(deg.) of the estimated response function:   29.8,   59.0
+	Weighted residual power: 0.118793
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.331072
+	Parameter c: 2.66214
+	Sum of weights: 4163.43
+	Squared coherence: 0
+	Estimated response function: (  3.9027e+00,  2.0650e+00), (  4.5734e+00,  7.2018e+00)
+	Amplitude of the estimated response function:  4.4153e+00,  8.5312e+00
+	Phase(deg.) of the estimated response function:   27.9,   57.6
+	Weighted residual power: 0.0555441
+Iteration number = 1
+	Scale factor: 0.331072
+	Parameter c: 2.66214
+	Sum of weights: 4177.25
+	Squared coherence: 0
+	Estimated response function: (  3.9063e+00,  2.0335e+00), (  4.6050e+00,  7.1679e+00)
+	Amplitude of the estimated response function:  4.4039e+00,  8.5197e+00
+	Phase(deg.) of the estimated response function:   27.5,   57.3
+	Weighted residual power: 0.0559789
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 5399
+	Squared coherence: 0
+	Estimated response function: ( -6.7957e+00, -7.1717e+00), ( -4.4016e-01, -2.4820e+00)
+	Amplitude of the estimated response function:  9.8800e+00,  2.5207e+00
+	Phase(deg.) of the estimated response function: -133.5, -100.1
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.305579
+	Sum of weights: 5391.44
+	Squared coherence: 0
+	Estimated response function: ( -6.7743e+00, -7.2097e+00), ( -4.5209e-01, -2.5677e+00)
+	Amplitude of the estimated response function:  9.8930e+00,  2.6072e+00
+	Phase(deg.) of the estimated response function: -133.2, -100.0
+	Weighted residual power: 0.120794
+Iteration number = 1
+	Scale factor: 0.307367
+	Sum of weights: 5391.64
+	Squared coherence: 0
+	Estimated response function: ( -6.7752e+00, -7.2098e+00), ( -4.5222e-01, -2.5677e+00)
+	Amplitude of the estimated response function:  9.8937e+00,  2.6073e+00
+	Phase(deg.) of the estimated response function: -133.2, -100.0
+	Weighted residual power: 0.120842
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.307367
+	Parameter c: 2.66214
+	Sum of weights: 4010.39
+	Squared coherence: 0.0833156
+	Estimated response function: ( -6.8496e+00, -6.9118e+00), ( -1.2865e+00, -2.5211e+00)
+	Amplitude of the estimated response function:  9.7309e+00,  2.8304e+00
+	Phase(deg.) of the estimated response function: -134.7, -117.0
+	Weighted residual power: 0.0492608
+Iteration number = 1
+	Scale factor: 0.307367
+	Parameter c: 2.66214
+	Sum of weights: 4023.03
+	Squared coherence: 0.0727584
+	Estimated response function: ( -6.8843e+00, -6.8642e+00), ( -1.4678e+00, -2.5233e+00)
+	Amplitude of the estimated response function:  9.7216e+00,  2.9191e+00
+	Phase(deg.) of the estimated response function: -135.1, -120.2
+	Weighted residual power: 0.0498564
+Iteration number = 2
+	Scale factor: 0.307367
+	Parameter c: 2.66214
+	Sum of weights: 4021.42
+	Squared coherence: 0.0723062
+	Estimated response function: ( -6.8966e+00, -6.8577e+00), ( -1.5094e+00, -2.5264e+00)
+	Amplitude of the estimated response function:  9.7258e+00,  2.9429e+00
+	Phase(deg.) of the estimated response function: -135.2, -120.9
+	Weighted residual power: 0.0498897
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Estimate errors by fixed-weights bootstrap
+--------------------------------------------------------------------------------
+================================================================================
+Now Frequency(Hz): 0.125, Period(s): 8
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 5399
+	Squared coherence: 0
+	Estimated response function: (  5.2649e+00,  1.8811e+00), (  5.8700e+00,  7.6395e+00)
+	Amplitude of the estimated response function:  5.5909e+00,  9.6343e+00
+	Phase(deg.) of the estimated response function:   19.7,   52.5
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.364101
+	Sum of weights: 5397.15
+	Squared coherence: 0
+	Estimated response function: (  5.2552e+00,  1.8558e+00), (  5.8564e+00,  7.6630e+00)
+	Amplitude of the estimated response function:  5.5732e+00,  9.6446e+00
+	Phase(deg.) of the estimated response function:   19.4,   52.6
+	Weighted residual power: 0.137455
+Iteration number = 1
+	Scale factor: 0.363211
+	Sum of weights: 5397.09
+	Squared coherence: 0
+	Estimated response function: (  5.2552e+00,  1.8549e+00), (  5.8566e+00,  7.6639e+00)
+	Amplitude of the estimated response function:  5.5729e+00,  9.6455e+00
+	Phase(deg.) of the estimated response function:   19.4,   52.6
+	Weighted residual power: 0.137452
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.363211
+	Parameter c: 2.66214
+	Sum of weights: 4187.58
+	Squared coherence: 0
+	Estimated response function: (  4.7029e+00,  2.0267e+00), (  5.8773e+00,  7.9252e+00)
+	Amplitude of the estimated response function:  5.1210e+00,  9.8667e+00
+	Phase(deg.) of the estimated response function:   23.3,   53.4
+	Weighted residual power: 0.0678411
+Iteration number = 1
+	Scale factor: 0.363211
+	Parameter c: 2.66214
+	Sum of weights: 4190.81
+	Squared coherence: 0
+	Estimated response function: (  4.6186e+00,  2.0567e+00), (  5.8531e+00,  8.0003e+00)
+	Amplitude of the estimated response function:  5.0558e+00,  9.9128e+00
+	Phase(deg.) of the estimated response function:   24.0,   53.8
+	Weighted residual power: 0.0678071
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 5399
+	Squared coherence: 0
+	Estimated response function: ( -9.2734e+00, -8.4869e+00), (  4.2138e-02, -1.5846e+00)
+	Amplitude of the estimated response function:  1.2571e+01,  1.5852e+00
+	Phase(deg.) of the estimated response function: -137.5,  -88.5
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.344847
+	Sum of weights: 5390.06
+	Squared coherence: 0
+	Estimated response function: ( -9.2523e+00, -8.5278e+00), ( -2.0032e-02, -1.4947e+00)
+	Amplitude of the estimated response function:  1.2583e+01,  1.4948e+00
+	Phase(deg.) of the estimated response function: -137.3,  -90.8
+	Weighted residual power: 0.154943
+Iteration number = 1
+	Scale factor: 0.344868
+	Sum of weights: 5390.07
+	Squared coherence: 0
+	Estimated response function: ( -9.2518e+00, -8.5294e+00), ( -1.9708e-02, -1.4915e+00)
+	Amplitude of the estimated response function:  1.2584e+01,  1.4916e+00
+	Phase(deg.) of the estimated response function: -137.3,  -90.8
+	Weighted residual power: 0.154949
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.344868
+	Parameter c: 2.66214
+	Sum of weights: 4013.4
+	Squared coherence: 0
+	Estimated response function: ( -8.1383e+00, -7.9724e+00), ( -8.0344e-01, -2.1846e+00)
+	Amplitude of the estimated response function:  1.1393e+01,  2.3276e+00
+	Phase(deg.) of the estimated response function: -135.6, -110.2
+	Weighted residual power: 0.0558181
+Iteration number = 1
+	Scale factor: 0.344868
+	Parameter c: 2.66214
+	Sum of weights: 4111.38
+	Squared coherence: 0
+	Estimated response function: ( -8.0020e+00, -7.8335e+00), ( -9.6739e-01, -2.3034e+00)
+	Amplitude of the estimated response function:  1.1198e+01,  2.4983e+00
+	Phase(deg.) of the estimated response function: -135.6, -112.8
+	Weighted residual power: 0.0592506
+Iteration number = 2
+	Scale factor: 0.344868
+	Parameter c: 2.66214
+	Sum of weights: 4125.26
+	Squared coherence: 0
+	Estimated response function: ( -7.9876e+00, -7.8009e+00), ( -9.9915e-01, -2.3234e+00)
+	Amplitude of the estimated response function:  1.1165e+01,  2.5291e+00
+	Phase(deg.) of the estimated response function: -135.7, -113.3
+	Weighted residual power: 0.0598214
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Estimate errors by fixed-weights bootstrap
+--------------------------------------------------------------------------------
+================================================================================
+Now Frequency(Hz): 0.1875, Period(s): 5.33333
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 10799
+	Squared coherence: 0
+	Estimated response function: (  4.7158e+00,  3.6949e+00), (  8.4148e+00,  9.6553e+00)
+	Amplitude of the estimated response function:  5.9909e+00,  1.2808e+01
+	Phase(deg.) of the estimated response function:   38.1,   48.9
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.502311
+	Sum of weights: 10759
+	Squared coherence: 0
+	Estimated response function: (  4.5821e+00,  3.4752e+00), (  8.5017e+00,  9.7599e+00)
+	Amplitude of the estimated response function:  5.7509e+00,  1.2944e+01
+	Phase(deg.) of the estimated response function:   37.2,   48.9
+	Weighted residual power: 0.372569
+Iteration number = 1
+	Scale factor: 0.501461
+	Sum of weights: 10757.9
+	Squared coherence: 0
+	Estimated response function: (  4.5799e+00,  3.4664e+00), (  8.5039e+00,  9.7638e+00)
+	Amplitude of the estimated response function:  5.7438e+00,  1.2948e+01
+	Phase(deg.) of the estimated response function:   37.1,   48.9
+	Weighted residual power: 0.372292
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.501461
+	Parameter c: 2.66169
+	Sum of weights: 7876.35
+	Squared coherence: 0
+	Estimated response function: (  4.2961e+00,  2.5609e+00), (  7.6452e+00,  1.0853e+01)
+	Amplitude of the estimated response function:  5.0014e+00,  1.3276e+01
+	Phase(deg.) of the estimated response function:   30.8,   54.8
+	Weighted residual power: 0.124939
+Iteration number = 1
+	Scale factor: 0.501461
+	Parameter c: 2.66169
+	Sum of weights: 7885.53
+	Squared coherence: 0
+	Estimated response function: (  4.2244e+00,  2.4948e+00), (  7.3498e+00,  1.1027e+01)
+	Amplitude of the estimated response function:  4.9061e+00,  1.3252e+01
+	Phase(deg.) of the estimated response function:   30.6,   56.3
+	Weighted residual power: 0.123269
+Iteration number = 2
+	Scale factor: 0.501461
+	Parameter c: 2.66169
+	Sum of weights: 7895.81
+	Squared coherence: 0
+	Estimated response function: (  4.1994e+00,  2.4892e+00), (  7.2714e+00,  1.1058e+01)
+	Amplitude of the estimated response function:  4.8817e+00,  1.3235e+01
+	Phase(deg.) of the estimated response function:   30.7,   56.7
+	Weighted residual power: 0.123522
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 10799
+	Squared coherence: 0
+	Estimated response function: ( -1.0845e+01, -1.1338e+01), ( -2.0456e-01, -8.9966e-01)
+	Amplitude of the estimated response function:  1.5690e+01,  9.2263e-01
+	Phase(deg.) of the estimated response function: -133.7, -102.8
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.484834
+	Sum of weights: 10717.1
+	Squared coherence: 0
+	Estimated response function: ( -1.0498e+01, -1.0910e+01), ( -3.4406e-01, -6.3837e-01)
+	Amplitude of the estimated response function:  1.5141e+01,  7.2519e-01
+	Phase(deg.) of the estimated response function: -133.9, -118.3
+	Weighted residual power: 0.387443
+Iteration number = 1
+	Scale factor: 0.471373
+	Sum of weights: 10717.4
+	Squared coherence: 0
+	Estimated response function: ( -1.0483e+01, -1.0904e+01), ( -3.3605e-01, -6.3184e-01)
+	Amplitude of the estimated response function:  1.5126e+01,  7.1565e-01
+	Phase(deg.) of the estimated response function: -133.9, -118.0
+	Weighted residual power: 0.386962
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.471373
+	Parameter c: 2.66169
+	Sum of weights: 7642.4
+	Squared coherence: 0
+	Estimated response function: ( -9.4765e+00, -1.0115e+01), ( -3.1435e-01, -1.1100e+00)
+	Amplitude of the estimated response function:  1.3860e+01,  1.1537e+00
+	Phase(deg.) of the estimated response function: -133.1, -105.8
+	Weighted residual power: 0.0970382
+Iteration number = 1
+	Scale factor: 0.471373
+	Parameter c: 2.66169
+	Sum of weights: 7839.08
+	Squared coherence: 0
+	Estimated response function: ( -9.2980e+00, -9.9442e+00), ( -1.9144e-01, -9.5101e-01)
+	Amplitude of the estimated response function:  1.3614e+01,  9.7009e-01
+	Phase(deg.) of the estimated response function: -133.1, -101.4
+	Weighted residual power: 0.104688
+Iteration number = 2
+	Scale factor: 0.471373
+	Parameter c: 2.66169
+	Sum of weights: 7881.53
+	Squared coherence: 0
+	Estimated response function: ( -9.2799e+00, -9.9136e+00), ( -1.4045e-01, -8.6275e-01)
+	Amplitude of the estimated response function:  1.3579e+01,  8.7411e-01
+	Phase(deg.) of the estimated response function: -133.1,  -99.2
+	Weighted residual power: 0.106532
+Iteration number = 3
+	Scale factor: 0.471373
+	Parameter c: 2.66169
+	Sum of weights: 7888.31
+	Squared coherence: 0
+	Estimated response function: ( -9.2835e+00, -9.9095e+00), ( -1.2591e-01, -8.3435e-01)
+	Amplitude of the estimated response function:  1.3579e+01,  8.4379e-01
+	Phase(deg.) of the estimated response function: -133.1,  -98.6
+	Weighted residual power: 0.106863
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Estimate errors by fixed-weights bootstrap
+--------------------------------------------------------------------------------
+================================================================================
+Now Frequency(Hz): 0.25, Period(s): 4
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 10799
+	Squared coherence: 0
+	Estimated response function: (  5.6421e+00,  3.9298e+00), (  1.1186e+01,  8.8810e+00)
+	Amplitude of the estimated response function:  6.8758e+00,  1.4283e+01
+	Phase(deg.) of the estimated response function:   34.9,   38.4
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.544124
+	Sum of weights: 10760.7
+	Squared coherence: 0
+	Estimated response function: (  5.9989e+00,  3.8393e+00), (  1.1433e+01,  8.6886e+00)
+	Amplitude of the estimated response function:  7.1222e+00,  1.4360e+01
+	Phase(deg.) of the estimated response function:   32.6,   37.2
+	Weighted residual power: 0.44044
+Iteration number = 1
+	Scale factor: 0.547861
+	Sum of weights: 10760.6
+	Squared coherence: 0
+	Estimated response function: (  6.0069e+00,  3.8307e+00), (  1.1424e+01,  8.6701e+00)
+	Amplitude of the estimated response function:  7.1244e+00,  1.4342e+01
+	Phase(deg.) of the estimated response function:   32.5,   37.2
+	Weighted residual power: 0.439762
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.547861
+	Parameter c: 2.66169
+	Sum of weights: 7882.41
+	Squared coherence: 0
+	Estimated response function: (  3.3476e+00,  5.6590e+00), (  8.9421e+00,  1.2599e+01)
+	Amplitude of the estimated response function:  6.5750e+00,  1.5450e+01
+	Phase(deg.) of the estimated response function:   59.4,   54.6
+	Weighted residual power: 0.164848
+Iteration number = 1
+	Scale factor: 0.547861
+	Parameter c: 2.66169
+	Sum of weights: 7773.13
+	Squared coherence: 0
+	Estimated response function: (  2.8189e+00,  6.1091e+00), (  8.1770e+00,  1.3534e+01)
+	Amplitude of the estimated response function:  6.7281e+00,  1.5812e+01
+	Phase(deg.) of the estimated response function:   65.2,   58.9
+	Weighted residual power: 0.158142
+Iteration number = 2
+	Scale factor: 0.547861
+	Parameter c: 2.66169
+	Sum of weights: 7709.64
+	Squared coherence: 0
+	Estimated response function: (  2.7052e+00,  6.2247e+00), (  7.9178e+00,  1.3885e+01)
+	Amplitude of the estimated response function:  6.7871e+00,  1.5984e+01
+	Phase(deg.) of the estimated response function:   66.5,   60.3
+	Weighted residual power: 0.155704
+Iteration number = 3
+	Scale factor: 0.547861
+	Parameter c: 2.66169
+	Sum of weights: 7681.21
+	Squared coherence: 0
+	Estimated response function: (  2.6889e+00,  6.2423e+00), (  7.8156e+00,  1.4005e+01)
+	Amplitude of the estimated response function:  6.7968e+00,  1.6038e+01
+	Phase(deg.) of the estimated response function:   66.7,   60.8
+	Weighted residual power: 0.154201
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 10799
+	Squared coherence: 0
+	Estimated response function: ( -1.5833e+01, -8.5184e+00), ( -2.1892e+00,  6.2170e-01)
+	Amplitude of the estimated response function:  1.7979e+01,  2.2758e+00
+	Phase(deg.) of the estimated response function: -151.7,  164.1
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.538919
+	Sum of weights: 10716.3
+	Squared coherence: 0
+	Estimated response function: ( -1.5012e+01, -9.1167e+00), ( -1.6439e+00, -2.7864e-01)
+	Amplitude of the estimated response function:  1.7564e+01,  1.6674e+00
+	Phase(deg.) of the estimated response function: -148.7, -170.4
+	Weighted residual power: 0.488097
+Iteration number = 1
+	Scale factor: 0.525793
+	Sum of weights: 10715.1
+	Squared coherence: 0
+	Estimated response function: ( -1.4970e+01, -9.0870e+00), ( -1.5236e+00, -2.7289e-01)
+	Amplitude of the estimated response function:  1.7512e+01,  1.5478e+00
+	Phase(deg.) of the estimated response function: -148.7, -169.8
+	Weighted residual power: 0.484949
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.525793
+	Parameter c: 2.66169
+	Sum of weights: 7619.71
+	Squared coherence: 0
+	Estimated response function: ( -1.3732e+01, -1.0870e+01), ( -1.3776e+00, -4.2613e-01)
+	Amplitude of the estimated response function:  1.7514e+01,  1.4420e+00
+	Phase(deg.) of the estimated response function: -141.6, -162.8
+	Weighted residual power: 0.135026
+Iteration number = 1
+	Scale factor: 0.525793
+	Parameter c: 2.66169
+	Sum of weights: 7630.32
+	Squared coherence: 0
+	Estimated response function: ( -1.3356e+01, -1.1294e+01), ( -1.2844e+00, -2.4707e-01)
+	Amplitude of the estimated response function:  1.7491e+01,  1.3079e+00
+	Phase(deg.) of the estimated response function: -139.8, -169.1
+	Weighted residual power: 0.13432
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Estimate errors by fixed-weights bootstrap
+--------------------------------------------------------------------------------
+================================================================================
+Now Frequency(Hz): 0.375, Period(s): 2.66667
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 21599
+	Squared coherence: 0
+	Estimated response function: ( -3.3434e+00, -4.6503e+00), (  2.2732e+01,  7.7873e+00)
+	Amplitude of the estimated response function:  5.7275e+00,  2.4029e+01
+	Phase(deg.) of the estimated response function: -125.7,   18.9
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.872523
+	Sum of weights: 21303.4
+	Squared coherence: 0
+	Estimated response function: ( -3.4329e-01, -5.2859e+00), (  2.3580e+01,  1.1295e+01)
+	Amplitude of the estimated response function:  5.2970e+00,  2.6145e+01
+	Phase(deg.) of the estimated response function:  -93.7,   25.6
+	Weighted residual power: 1.87361
+Iteration number = 1
+	Scale factor: 0.921455
+	Sum of weights: 21290.2
+	Squared coherence: 0
+	Estimated response function: ( -7.4279e-02, -5.1925e+00), (  2.3448e+01,  1.1501e+01)
+	Amplitude of the estimated response function:  5.1931e+00,  2.6117e+01
+	Phase(deg.) of the estimated response function:  -90.8,   26.1
+	Weighted residual power: 1.85611
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.921455
+	Parameter c: 2.66146
+	Sum of weights: 14579.1
+	Squared coherence: 0
+	Estimated response function: (  6.6202e+00,  1.8412e-01), (  1.2507e+01,  1.7850e+01)
+	Amplitude of the estimated response function:  6.6228e+00,  2.1795e+01
+	Phase(deg.) of the estimated response function:    1.6,   55.0
+	Weighted residual power: 0.360998
+Iteration number = 1
+	Scale factor: 0.921455
+	Parameter c: 2.66146
+	Sum of weights: 15404.5
+	Squared coherence: 0
+	Estimated response function: (  6.0591e+00,  1.4238e+00), (  1.3460e+01,  1.5526e+01)
+	Amplitude of the estimated response function:  6.2241e+00,  2.0548e+01
+	Phase(deg.) of the estimated response function:   13.2,   49.1
+	Weighted residual power: 0.367003
+Iteration number = 2
+	Scale factor: 0.921455
+	Parameter c: 2.66146
+	Sum of weights: 15730
+	Squared coherence: 0
+	Estimated response function: (  6.6309e+00,  1.8666e+00), (  1.3666e+01,  1.5565e+01)
+	Amplitude of the estimated response function:  6.8886e+00,  2.0713e+01
+	Phase(deg.) of the estimated response function:   15.7,   48.7
+	Weighted residual power: 0.413508
+Iteration number = 3
+	Scale factor: 0.921455
+	Parameter c: 2.66146
+	Sum of weights: 15625.5
+	Squared coherence: 0
+	Estimated response function: (  6.8342e+00,  2.1864e+00), (  1.3674e+01,  1.5658e+01)
+	Amplitude of the estimated response function:  7.1754e+00,  2.0789e+01
+	Phase(deg.) of the estimated response function:   17.7,   48.9
+	Weighted residual power: 0.407319
+Iteration number = 4
+	Scale factor: 0.921455
+	Parameter c: 2.66146
+	Sum of weights: 15578.4
+	Squared coherence: 0
+	Estimated response function: (  6.9126e+00,  2.3624e+00), (  1.3636e+01,  1.5729e+01)
+	Amplitude of the estimated response function:  7.3051e+00,  2.0817e+01
+	Phase(deg.) of the estimated response function:   18.9,   49.1
+	Weighted residual power: 0.404371
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 21599
+	Squared coherence: 0
+	Estimated response function: ( -1.3170e+01, -4.3985e+00), (  4.7925e-02, -9.9128e+00)
+	Amplitude of the estimated response function:  1.3885e+01,  9.9129e+00
+	Phase(deg.) of the estimated response function: -161.5,  -89.7
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.677005
+	Sum of weights: 21371.2
+	Squared coherence: 0
+	Estimated response function: ( -1.3049e+01, -5.0546e+00), ( -8.4438e-01, -1.1143e+01)
+	Amplitude of the estimated response function:  1.3994e+01,  1.1175e+01
+	Phase(deg.) of the estimated response function: -158.8,  -94.3
+	Weighted residual power: 0.984746
+Iteration number = 1
+	Scale factor: 0.701007
+	Sum of weights: 21363.8
+	Squared coherence: 0
+	Estimated response function: ( -1.3050e+01, -5.0532e+00), ( -7.8749e-01, -1.1249e+01)
+	Amplitude of the estimated response function:  1.3995e+01,  1.1277e+01
+	Phase(deg.) of the estimated response function: -158.8,  -94.0
+	Weighted residual power: 0.988611
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.701007
+	Parameter c: 2.66146
+	Sum of weights: 14780.4
+	Squared coherence: 0
+	Estimated response function: ( -1.4004e+01, -1.2058e+01), (  1.5595e+00, -4.2965e+00)
+	Amplitude of the estimated response function:  1.8479e+01,  4.5708e+00
+	Phase(deg.) of the estimated response function: -139.3,  -70.1
+	Weighted residual power: 0.311424
+Iteration number = 1
+	Scale factor: 0.701007
+	Parameter c: 2.66146
+	Sum of weights: 14707.1
+	Squared coherence: 0
+	Estimated response function: ( -1.0687e+01, -1.3463e+01), ( -1.0680e+00, -1.9419e+00)
+	Amplitude of the estimated response function:  1.7189e+01,  2.2162e+00
+	Phase(deg.) of the estimated response function: -128.4, -118.8
+	Weighted residual power: 0.212809
+Iteration number = 2
+	Scale factor: 0.701007
+	Parameter c: 2.66146
+	Sum of weights: 15254.8
+	Squared coherence: 0
+	Estimated response function: ( -1.0046e+01, -1.3329e+01), ( -2.3727e+00, -2.4646e+00)
+	Amplitude of the estimated response function:  1.6691e+01,  3.4211e+00
+	Phase(deg.) of the estimated response function: -127.0, -133.9
+	Weighted residual power: 0.232604
+Iteration number = 3
+	Scale factor: 0.701007
+	Parameter c: 2.66146
+	Sum of weights: 15302.5
+	Squared coherence: 0
+	Estimated response function: ( -1.0382e+01, -1.3263e+01), ( -2.4551e+00, -3.0335e+00)
+	Amplitude of the estimated response function:  1.6843e+01,  3.9025e+00
+	Phase(deg.) of the estimated response function: -128.1, -129.0
+	Weighted residual power: 0.24202
+Iteration number = 4
+	Scale factor: 0.701007
+	Parameter c: 2.66146
+	Sum of weights: 15214.4
+	Squared coherence: 0
+	Estimated response function: ( -1.0470e+01, -1.3384e+01), ( -2.2471e+00, -3.0023e+00)
+	Amplitude of the estimated response function:  1.6993e+01,  3.7501e+00
+	Phase(deg.) of the estimated response function: -128.0, -126.8
+	Weighted residual power: 0.237665
+Iteration number = 5
+	Scale factor: 0.701007
+	Parameter c: 2.66146
+	Sum of weights: 15188.3
+	Squared coherence: 0
+	Estimated response function: ( -1.0399e+01, -1.3443e+01), ( -2.2231e+00, -2.9023e+00)
+	Amplitude of the estimated response function:  1.6996e+01,  3.6559e+00
+	Phase(deg.) of the estimated response function: -127.7, -127.5
+	Weighted residual power: 0.234965
+Iteration number = 6
+	Scale factor: 0.701007
+	Parameter c: 2.66146
+	Sum of weights: 15196.4
+	Squared coherence: 0
+	Estimated response function: ( -1.0363e+01, -1.3446e+01), ( -2.2599e+00, -2.8905e+00)
+	Amplitude of the estimated response function:  1.6976e+01,  3.6690e+00
+	Phase(deg.) of the estimated response function: -127.6, -128.0
+	Weighted residual power: 0.235136
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Estimate errors by fixed-weights bootstrap
+--------------------------------------------------------------------------------
+================================================================================
+Now Frequency(Hz): 0.5, Period(s): 2
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 21599
+	Squared coherence: 0
+	Estimated response function: (  8.2652e-01, -1.2854e+00), (  2.1368e+01,  6.4606e+00)
+	Amplitude of the estimated response function:  1.5282e+00,  2.2324e+01
+	Phase(deg.) of the estimated response function:  -57.3,   16.8
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.770354
+	Sum of weights: 21270.3
+	Squared coherence: 0
+	Estimated response function: (  5.6337e+00, -2.2616e+00), (  2.5365e+01,  9.5686e+00)
+	Amplitude of the estimated response function:  6.0707e+00,  2.7110e+01
+	Phase(deg.) of the estimated response function:  -21.9,   20.7
+	Weighted residual power: 1.94634
+Iteration number = 1
+	Scale factor: 0.925001
+	Sum of weights: 21265.8
+	Squared coherence: 0
+	Estimated response function: (  5.9844e+00, -2.5061e+00), (  2.6289e+01,  1.0242e+01)
+	Amplitude of the estimated response function:  6.4880e+00,  2.8214e+01
+	Phase(deg.) of the estimated response function:  -22.7,   21.3
+	Weighted residual power: 2.08784
+Iteration number = 2
+	Scale factor: 0.952743
+	Sum of weights: 21256.6
+	Squared coherence: 0
+	Estimated response function: (  6.0987e+00, -2.5214e+00), (  2.6379e+01,  1.0504e+01)
+	Amplitude of the estimated response function:  6.5994e+00,  2.8393e+01
+	Phase(deg.) of the estimated response function:  -22.5,   21.7
+	Weighted residual power: 2.1081
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.952743
+	Parameter c: 2.66146
+	Sum of weights: 14395.4
+	Squared coherence: 0
+	Estimated response function: (  7.7944e+00,  1.2745e+00), (  1.7499e+01,  1.8448e+01)
+	Amplitude of the estimated response function:  7.8979e+00,  2.5427e+01
+	Phase(deg.) of the estimated response function:    9.3,   46.5
+	Weighted residual power: 0.379439
+Iteration number = 1
+	Scale factor: 0.952743
+	Parameter c: 2.66146
+	Sum of weights: 14873.4
+	Squared coherence: 0
+	Estimated response function: (  7.6807e+00,  2.2092e+00), (  1.6787e+01,  1.7390e+01)
+	Amplitude of the estimated response function:  7.9921e+00,  2.4171e+01
+	Phase(deg.) of the estimated response function:   16.0,   46.0
+	Weighted residual power: 0.394296
+Iteration number = 2
+	Scale factor: 0.952743
+	Parameter c: 2.66146
+	Sum of weights: 15112.7
+	Squared coherence: 0
+	Estimated response function: (  8.0196e+00,  2.6297e+00), (  1.7174e+01,  1.6824e+01)
+	Amplitude of the estimated response function:  8.4397e+00,  2.4041e+01
+	Phase(deg.) of the estimated response function:   18.2,   44.4
+	Weighted residual power: 0.426243
+Iteration number = 3
+	Scale factor: 0.952743
+	Parameter c: 2.66146
+	Sum of weights: 15099.4
+	Squared coherence: 0
+	Estimated response function: (  8.2065e+00,  2.7027e+00), (  1.7618e+01,  1.6358e+01)
+	Amplitude of the estimated response function:  8.6401e+00,  2.4041e+01
+	Phase(deg.) of the estimated response function:   18.2,   42.9
+	Weighted residual power: 0.426407
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 21599
+	Squared coherence: 0
+	Estimated response function: ( -5.2230e+00, -5.6967e+00), ( -5.7046e+00,  1.5733e+00)
+	Amplitude of the estimated response function:  7.7286e+00,  5.9176e+00
+	Phase(deg.) of the estimated response function: -132.5,  164.6
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.496569
+	Sum of weights: 21428.4
+	Squared coherence: 0
+	Estimated response function: ( -5.0137e+00, -5.3410e+00), ( -7.4037e+00,  2.0346e+00)
+	Amplitude of the estimated response function:  7.3256e+00,  7.6782e+00
+	Phase(deg.) of the estimated response function: -133.2,  164.6
+	Weighted residual power: 0.474761
+Iteration number = 1
+	Scale factor: 0.523336
+	Sum of weights: 21429.2
+	Squared coherence: 0
+	Estimated response function: ( -5.2134e+00, -5.0025e+00), ( -7.6003e+00,  1.8515e+00)
+	Amplitude of the estimated response function:  7.2253e+00,  7.8226e+00
+	Phase(deg.) of the estimated response function: -136.2,  166.3
+	Weighted residual power: 0.476851
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.523336
+	Parameter c: 2.66146
+	Sum of weights: 15303.7
+	Squared coherence: 0
+	Estimated response function: ( -8.6246e+00, -6.6252e+00), ( -1.1744e+01, -1.2487e+00)
+	Amplitude of the estimated response function:  1.0876e+01,  1.1810e+01
+	Phase(deg.) of the estimated response function: -142.5, -173.9
+	Weighted residual power: 0.254018
+Iteration number = 1
+	Scale factor: 0.523336
+	Parameter c: 2.66146
+	Sum of weights: 13610.1
+	Squared coherence: 0
+	Estimated response function: ( -9.6546e+00, -1.1417e+01), ( -8.7367e+00, -2.8980e+00)
+	Amplitude of the estimated response function:  1.4952e+01,  9.2048e+00
+	Phase(deg.) of the estimated response function: -130.2, -161.6
+	Weighted residual power: 0.172935
+Iteration number = 2
+	Scale factor: 0.523336
+	Parameter c: 2.66146
+	Sum of weights: 13265.7
+	Squared coherence: 0
+	Estimated response function: ( -1.0605e+01, -1.3421e+01), ( -7.5938e+00, -5.7845e+00)
+	Amplitude of the estimated response function:  1.7105e+01,  9.5460e+00
+	Phase(deg.) of the estimated response function: -128.3, -142.7
+	Weighted residual power: 0.160248
+Iteration number = 3
+	Scale factor: 0.523336
+	Parameter c: 2.66146
+	Sum of weights: 12790.8
+	Squared coherence: 0
+	Estimated response function: ( -1.0222e+01, -1.4809e+01), ( -5.0196e+00, -6.0786e+00)
+	Amplitude of the estimated response function:  1.7994e+01,  7.8833e+00
+	Phase(deg.) of the estimated response function: -124.6, -129.5
+	Weighted residual power: 0.129978
+Iteration number = 4
+	Scale factor: 0.523336
+	Parameter c: 2.66146
+	Sum of weights: 12788.3
+	Squared coherence: 0
+	Estimated response function: ( -1.1138e+01, -1.4890e+01), ( -3.5361e+00, -6.3961e+00)
+	Amplitude of the estimated response function:  1.8595e+01,  7.3085e+00
+	Phase(deg.) of the estimated response function: -126.8, -118.9
+	Weighted residual power: 0.130478
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Estimate errors by fixed-weights bootstrap
+--------------------------------------------------------------------------------
+================================================================================
+Now Frequency(Hz): 0.75, Period(s): 1.33333
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 43199
+	Squared coherence: 0
+	Estimated response function: ( -2.0554e+01,  2.3432e+00), (  1.5678e+01,  1.0750e+01)
+	Amplitude of the estimated response function:  2.0687e+01,  1.9010e+01
+	Phase(deg.) of the estimated response function:  173.5,   34.4
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 1.24178
+	Sum of weights: 42389.4
+	Squared coherence: 0
+	Estimated response function: ( -2.1230e+01,  5.3523e+00), (  2.0453e+01,  1.2333e+01)
+	Amplitude of the estimated response function:  2.1895e+01,  2.3884e+01
+	Phase(deg.) of the estimated response function:  165.9,   31.1
+	Weighted residual power: 4.96485
+Iteration number = 1
+	Scale factor: 1.37689
+	Sum of weights: 42311.9
+	Squared coherence: 0
+	Estimated response function: ( -2.0619e+01,  5.4862e+00), (  2.0209e+01,  1.1759e+01)
+	Amplitude of the estimated response function:  2.1337e+01,  2.3381e+01
+	Phase(deg.) of the estimated response function:  165.1,   30.2
+	Weighted residual power: 4.69765
+Iteration number = 2
+	Scale factor: 1.35169
+	Sum of weights: 42320.2
+	Squared coherence: 0
+	Estimated response function: ( -2.0624e+01,  5.4953e+00), (  2.0206e+01,  1.1736e+01)
+	Amplitude of the estimated response function:  2.1343e+01,  2.3367e+01
+	Phase(deg.) of the estimated response function:  165.1,   30.1
+	Weighted residual power: 4.70153
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 1.35169
+	Parameter c: 2.66135
+	Sum of weights: 28126
+	Squared coherence: 0
+	Estimated response function: ( -1.8443e+01, -5.9838e+00), (  2.1024e+01,  2.1665e+01)
+	Amplitude of the estimated response function:  1.9390e+01,  3.0189e+01
+	Phase(deg.) of the estimated response function: -162.0,   45.9
+	Weighted residual power: 1.13657
+Iteration number = 1
+	Scale factor: 1.35169
+	Parameter c: 2.66135
+	Sum of weights: 26865.2
+	Squared coherence: 0
+	Estimated response function: ( -1.2674e+01, -1.1069e+01), (  1.4756e+01,  2.2996e+01)
+	Amplitude of the estimated response function:  1.6827e+01,  2.7323e+01
+	Phase(deg.) of the estimated response function: -138.9,   57.3
+	Weighted residual power: 0.662907
+Iteration number = 2
+	Scale factor: 1.35169
+	Parameter c: 2.66135
+	Sum of weights: 28016.9
+	Squared coherence: 0
+	Estimated response function: ( -1.2367e+01, -9.9984e+00), (  1.2315e+01,  2.1899e+01)
+	Amplitude of the estimated response function:  1.5903e+01,  2.5124e+01
+	Phase(deg.) of the estimated response function: -141.0,   60.6
+	Weighted residual power: 0.712524
+Iteration number = 3
+	Scale factor: 1.35169
+	Parameter c: 2.66135
+	Sum of weights: 28828.1
+	Squared coherence: 0
+	Estimated response function: ( -1.2957e+01, -8.9971e+00), (  1.1895e+01,  2.2072e+01)
+	Amplitude of the estimated response function:  1.5774e+01,  2.5073e+01
+	Phase(deg.) of the estimated response function: -145.2,   61.7
+	Weighted residual power: 0.822494
+Iteration number = 4
+	Scale factor: 1.35169
+	Parameter c: 2.66135
+	Sum of weights: 28866.1
+	Squared coherence: 0
+	Estimated response function: ( -1.3059e+01, -8.7143e+00), (  1.2301e+01,  2.2312e+01)
+	Amplitude of the estimated response function:  1.5700e+01,  2.5478e+01
+	Phase(deg.) of the estimated response function: -146.3,   61.1
+	Weighted residual power: 0.840503
+Iteration number = 5
+	Scale factor: 1.35169
+	Parameter c: 2.66135
+	Sum of weights: 28756.3
+	Squared coherence: 0
+	Estimated response function: ( -1.2889e+01, -8.7179e+00), (  1.2374e+01,  2.2298e+01)
+	Amplitude of the estimated response function:  1.5560e+01,  2.5501e+01
+	Phase(deg.) of the estimated response function: -145.9,   61.0
+	Weighted residual power: 0.82065
+Iteration number = 6
+	Scale factor: 1.35169
+	Parameter c: 2.66135
+	Sum of weights: 28776.3
+	Squared coherence: 0
+	Estimated response function: ( -1.2816e+01, -8.6762e+00), (  1.2296e+01,  2.2246e+01)
+	Amplitude of the estimated response function:  1.5477e+01,  2.5418e+01
+	Phase(deg.) of the estimated response function: -145.9,   61.1
+	Weighted residual power: 0.817923
+Iteration using Tukey's biweights weight converged
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 43199
+	Squared coherence: 0
+	Estimated response function: (  3.5864e+00, -3.4221e+00), ( -1.0946e+01, -9.3591e+00)
+	Amplitude of the estimated response function:  4.9571e+00,  1.4401e+01
+	Phase(deg.) of the estimated response function:  -43.7, -139.5
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 0.835151
+	Sum of weights: 42681.4
+	Squared coherence: 0
+	Estimated response function: (  5.3367e+00, -3.9575e+00), ( -1.3911e+01, -1.1383e+01)
+	Amplitude of the estimated response function:  6.6440e+00,  1.7975e+01
+	Phase(deg.) of the estimated response function:  -36.6, -140.7
+	Weighted residual power: 2.0406
+Iteration number = 1
+	Scale factor: 0.956718
+	Sum of weights: 42598.3
+	Squared coherence: 0
+	Estimated response function: (  4.3121e+00, -4.3005e+00), ( -1.3661e+01, -1.0129e+01)
+	Amplitude of the estimated response function:  6.0900e+00,  1.7006e+01
+	Phase(deg.) of the estimated response function:  -44.9, -143.4
+	Weighted residual power: 1.82843
+Iteration number = 2
+	Scale factor: 0.922157
+	Sum of weights: 42621.9
+	Squared coherence: 0
+	Estimated response function: (  4.4972e+00, -4.3187e+00), ( -1.3706e+01, -1.0211e+01)
+	Amplitude of the estimated response function:  6.2351e+00,  1.7092e+01
+	Phase(deg.) of the estimated response function:  -43.8, -143.3
+	Weighted residual power: 1.85578
+Iteration number = 3
+	Scale factor: 0.926788
+	Sum of weights: 42619.4
+	Squared coherence: 0
+	Estimated response function: (  4.4802e+00, -4.3193e+00), ( -1.3700e+01, -1.0203e+01)
+	Amplitude of the estimated response function:  6.2233e+00,  1.7082e+01
+	Phase(deg.) of the estimated response function:  -44.0, -143.3
+	Weighted residual power: 1.85318
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 0.926788
+	Parameter c: 2.66135
+	Sum of weights: 29223.3
+	Squared coherence: 0
+	Estimated response function: ( -6.6946e+00, -2.7392e-01), ( -7.0710e+00, -1.3917e+01)
+	Amplitude of the estimated response function:  6.7002e+00,  1.5610e+01
+	Phase(deg.) of the estimated response function: -177.7, -116.9
+	Weighted residual power: 0.607005
+Iteration number = 1
+	Scale factor: 0.926788
+	Parameter c: 2.66135
+	Sum of weights: 29933.8
+	Squared coherence: 0
+	Estimated response function: ( -7.0567e+00, -6.8566e+00), ( -2.4995e+00, -1.2933e+01)
+	Amplitude of the estimated response function:  9.8392e+00,  1.3172e+01
+	Phase(deg.) of the estimated response function: -135.8, -100.9
+	Weighted residual power: 0.445146
+Iteration number = 2
+	Scale factor: 0.926788
+	Parameter c: 2.66135
+	Sum of weights: 30286.6
+	Squared coherence: 0
+	Estimated response function: ( -5.1541e+00, -9.8139e+00), ( -1.1603e+00, -9.7059e+00)
+	Amplitude of the estimated response function:  1.1085e+01,  9.7750e+00
+	Phase(deg.) of the estimated response function: -117.7,  -96.8
+	Weighted residual power: 0.373163
+Iteration number = 3
+	Scale factor: 0.926788
+	Parameter c: 2.66135
+	Sum of weights: 31309.8
+	Squared coherence: 0
+	Estimated response function: ( -5.6227e+00, -1.1408e+01), ( -2.8798e+00, -7.8144e+00)
+	Amplitude of the estimated response function:  1.2718e+01,  8.3282e+00
+	Phase(deg.) of the estimated response function: -116.2, -110.2
+	Weighted residual power: 0.434228
+Iteration number = 4
+	Scale factor: 0.926788
+	Parameter c: 2.66135
+	Sum of weights: 31074.1
+	Squared coherence: 0
+	Estimated response function: ( -6.5237e+00, -1.3312e+01), ( -4.8711e+00, -5.9737e+00)
+	Amplitude of the estimated response function:  1.4825e+01,  7.7079e+00
+	Phase(deg.) of the estimated response function: -116.1, -129.2
+	Weighted residual power: 0.479261
+Iteration number = 5
+	Scale factor: 0.926788
+	Parameter c: 2.66135
+	Sum of weights: 30203
+	Squared coherence: 0
+	Estimated response function: ( -7.2560e+00, -1.6308e+01), ( -9.3334e+00, -4.9990e+00)
+	Amplitude of the estimated response function:  1.7849e+01,  1.0588e+01
+	Phase(deg.) of the estimated response function: -114.0, -151.8
+	Weighted residual power: 0.598029
+Iteration number = 6
+	Scale factor: 0.926788
+	Parameter c: 2.66135
+	Sum of weights: 28098.8
+	Squared coherence: 0
+	Estimated response function: ( -1.0681e+01, -1.3939e+01), ( -9.1863e+00, -3.1499e+00)
+	Amplitude of the estimated response function:  1.7561e+01,  9.7114e+00
+	Phase(deg.) of the estimated response function: -127.5, -161.1
+	Weighted residual power: 0.37819
+Iteration number = 7
+	Scale factor: 0.926788
+	Parameter c: 2.66135
+	Sum of weights: 28436.6
+	Squared coherence: 0
+	Estimated response function: ( -1.0393e+01, -1.4499e+01), ( -1.0856e+01, -3.0866e+00)
+	Amplitude of the estimated response function:  1.7839e+01,  1.1287e+01
+	Phase(deg.) of the estimated response function: -125.6, -164.1
+	Weighted residual power: 0.43302
+Iteration number = 8
+	Scale factor: 0.926788
+	Parameter c: 2.66135
+	Sum of weights: 27939.9
+	Squared coherence: 0
+	Estimated response function: ( -1.1204e+01, -1.2691e+01), ( -9.3082e+00, -2.5545e+00)
+	Amplitude of the estimated response function:  1.6929e+01,  9.6524e+00
+	Phase(deg.) of the estimated response function: -131.4, -164.7
+	Weighted residual power: 0.348521
+Iteration number = 9
+	Scale factor: 0.926788
+	Parameter c: 2.66135
+	Sum of weights: 28718.7
+	Squared coherence: 0
+	Estimated response function: ( -1.0056e+01, -1.4018e+01), ( -1.0972e+01, -2.8791e+00)
+	Amplitude of the estimated response function:  1.7252e+01,  1.1343e+01
+	Phase(deg.) of the estimated response function: -125.7, -165.3
+	Weighted residual power: 0.441697
+	Iteration using Tukey's biweights weight does not converge
+--------------------------------------------------------------------------------
+Estimate errors by fixed-weights bootstrap
+--------------------------------------------------------------------------------
+================================================================================
+Now Frequency(Hz): 1, Period(s): 1
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 43199
+	Squared coherence: 0
+	Estimated response function: (  1.1326e+01,  8.9234e+00), (  1.8701e+01, -2.6268e+01)
+	Amplitude of the estimated response function:  1.4419e+01,  3.2245e+01
+	Phase(deg.) of the estimated response function:   38.2,  -54.6
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 1.45133
+	Sum of weights: 42300.1
+	Squared coherence: 0
+	Estimated response function: (  1.4484e+01,  6.4817e+00), (  1.0366e+01, -2.6158e+01)
+	Amplitude of the estimated response function:  1.5869e+01,  2.8137e+01
+	Phase(deg.) of the estimated response function:   24.1,  -68.4
+	Weighted residual power: 4.77814
+Iteration number = 1
+	Scale factor: 1.37215
+	Sum of weights: 42357.4
+	Squared coherence: 0
+	Estimated response function: (  1.4236e+01,  5.5934e+00), (  8.9523e+00, -2.5763e+01)
+	Amplitude of the estimated response function:  1.5295e+01,  2.7274e+01
+	Phase(deg.) of the estimated response function:   21.5,  -70.8
+	Weighted residual power: 4.53257
+Iteration number = 2
+	Scale factor: 1.34033
+	Sum of weights: 42375.1
+	Squared coherence: 0
+	Estimated response function: (  1.4244e+01,  5.6671e+00), (  9.1103e+00, -2.5660e+01)
+	Amplitude of the estimated response function:  1.5330e+01,  2.7230e+01
+	Phase(deg.) of the estimated response function:   21.7,  -70.5
+	Weighted residual power: 4.53788
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 1.34033
+	Parameter c: 2.66135
+	Sum of weights: 28189.8
+	Squared coherence: 0
+	Estimated response function: (  5.1115e+01, -1.4304e+01), ( -2.6404e+01, -9.1061e+01)
+	Amplitude of the estimated response function:  5.3079e+01,  9.4812e+01
+	Phase(deg.) of the estimated response function:  -15.6, -106.2
+	Weighted residual power: 9.62102
+Iteration number = 1
+	Scale factor: 1.34033
+	Parameter c: 2.66135
+	Sum of weights: 18298.6
+	Squared coherence: 0
+	Estimated response function: ( -1.9642e+01, -1.2313e+01), (  2.3517e+01,  7.9127e+01)
+	Amplitude of the estimated response function:  2.3182e+01,  8.2548e+01
+	Phase(deg.) of the estimated response function: -147.9,   73.4
+	Weighted residual power: 1.1116
+Iteration number = 2
+	Scale factor: 1.34033
+	Parameter c: 2.66135
+	Sum of weights: 20310.1
+	Squared coherence: 0
+	Estimated response function: (  5.0261e+00, -6.2091e+00), ( -5.5438e+00,  4.3854e+01)
+	Amplitude of the estimated response function:  7.9884e+00,  4.4203e+01
+	Phase(deg.) of the estimated response function:  -51.0,   97.2
+	Weighted residual power: 0.339485
+Iteration number = 3
+	Scale factor: 1.34033
+	Parameter c: 2.66135
+	Sum of weights: 24918.1
+	Squared coherence: 0
+	Estimated response function: (  1.5535e+01, -1.6848e+01), ( -2.1970e+01,  7.6338e+01)
+	Amplitude of the estimated response function:  2.2917e+01,  7.9437e+01
+	Phase(deg.) of the estimated response function:  -47.3,  106.1
+	Weighted residual power: 2.44022
+Iteration number = 4
+	Scale factor: 1.34033
+	Parameter c: 2.66135
+	Sum of weights: 20564.3
+	Squared coherence: 0
+	Estimated response function: (  1.2056e+01, -1.5449e+01), (  4.3444e+00,  9.0098e+01)
+	Amplitude of the estimated response function:  1.9597e+01,  9.0202e+01
+	Phase(deg.) of the estimated response function:  -52.0,   87.2
+	Weighted residual power: 0.979165
+Iteration number = 5
+	Scale factor: 1.34033
+	Parameter c: 2.66135
+	Sum of weights: 19885.3
+	Squared coherence: 0
+	Estimated response function: (  1.1767e+01, -9.4964e+00), (  7.7110e+00,  6.3718e+01)
+	Amplitude of the estimated response function:  1.5121e+01,  6.4183e+01
+	Phase(deg.) of the estimated response function:  -38.9,   83.1
+	Weighted residual power: 0.454041
+Iteration number = 6
+	Scale factor: 1.34033
+	Parameter c: 2.66135
+	Sum of weights: 22071.7
+	Squared coherence: 0
+	Estimated response function: (  1.8426e+01, -9.5736e+00), ( -4.8198e+00,  7.2640e+01)
+	Amplitude of the estimated response function:  2.0765e+01,  7.2800e+01
+	Phase(deg.) of the estimated response function:  -27.5,   93.8
+	Weighted residual power: 0.891622
+Iteration number = 7
+	Scale factor: 1.34033
+	Parameter c: 2.66135
+	Sum of weights: 21153.7
+	Squared coherence: 0
+	Estimated response function: (  1.9367e+01, -6.9103e+00), ( -6.9243e+00,  8.6277e+01)
+	Amplitude of the estimated response function:  2.0563e+01,  8.6554e+01
+	Phase(deg.) of the estimated response function:  -19.6,   94.6
+	Weighted residual power: 0.991377
+Iteration number = 8
+	Scale factor: 1.34033
+	Parameter c: 2.66135
+	Sum of weights: 20104.5
+	Squared coherence: 0
+	Estimated response function: (  1.1633e+01, -6.4619e+00), (  5.0109e+00,  6.3203e+01)
+	Amplitude of the estimated response function:  1.3307e+01,  6.3401e+01
+	Phase(deg.) of the estimated response function:  -29.1,   85.5
+	Weighted residual power: 0.446449
+Iteration number = 9
+	Scale factor: 1.34033
+	Parameter c: 2.66135
+	Sum of weights: 22183.8
+	Squared coherence: 0
+	Estimated response function: (  1.5143e+01, -9.0027e+00), ( -5.3849e+00,  6.3314e+01)
+	Amplitude of the estimated response function:  1.7617e+01,  6.3543e+01
+	Phase(deg.) of the estimated response function:  -30.7,   94.9
+	Weighted residual power: 0.719181
+	Iteration using Tukey's biweights weight does not converge
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 43199
+	Squared coherence: 0
+	Estimated response function: ( -1.2921e+01, -5.3239e+00), ( -2.1024e+01, -1.8731e+01)
+	Amplitude of the estimated response function:  1.3975e+01,  2.8158e+01
+	Phase(deg.) of the estimated response function: -157.6, -138.3
+Calculate response functions by iteratively reweighted remote reference using Huber weight
+Iteration number = 0
+	Scale factor: 1.31321
+	Sum of weights: 42327.3
+	Squared coherence: 0
+	Estimated response function: ( -1.4838e+01, -4.7689e+00), ( -1.1642e+01, -5.6578e+00)
+	Amplitude of the estimated response function:  1.5586e+01,  1.2944e+01
+	Phase(deg.) of the estimated response function: -162.2, -154.1
+	Weighted residual power: 2.15079
+Iteration number = 1
+	Scale factor: 0.981083
+	Sum of weights: 42543.5
+	Squared coherence: 0
+	Estimated response function: ( -1.6498e+01, -7.7300e+00), ( -1.3367e+01, -6.5608e+00)
+	Amplitude of the estimated response function:  1.8219e+01,  1.4891e+01
+	Phase(deg.) of the estimated response function: -154.9, -153.9
+	Weighted residual power: 2.77137
+Iteration number = 2
+	Scale factor: 1.07286
+	Sum of weights: 42456.8
+	Squared coherence: 0
+	Estimated response function: ( -1.6612e+01, -7.1900e+00), ( -1.2424e+01, -6.5326e+00)
+	Amplitude of the estimated response function:  1.8102e+01,  1.4037e+01
+	Phase(deg.) of the estimated response function: -156.6, -152.3
+	Weighted residual power: 2.60771
+Iteration number = 3
+	Scale factor: 1.05812
+	Sum of weights: 42483.7
+	Squared coherence: 0
+	Estimated response function: ( -1.6686e+01, -7.3941e+00), ( -1.2694e+01, -6.5211e+00)
+	Amplitude of the estimated response function:  1.8251e+01,  1.4271e+01
+	Phase(deg.) of the estimated response function: -156.1, -152.8
+	Weighted residual power: 2.66937
+Iteration number = 4
+	Scale factor: 1.06606
+	Sum of weights: 42477.5
+	Squared coherence: 0
+	Estimated response function: ( -1.6694e+01, -7.3416e+00), ( -1.2624e+01, -6.5149e+00)
+	Amplitude of the estimated response function:  1.8237e+01,  1.4206e+01
+	Phase(deg.) of the estimated response function: -156.3, -152.7
+	Weighted residual power: 2.65667
+Iteration using Huber weight converged
+Calculate response functions by iteratively reweighted remote reference using Tukey's biweights weight
+Iteration number = 0
+	Scale factor: 1.06606
+	Parameter c: 2.66135
+	Sum of weights: 28757.8
+	Squared coherence: 0
+	Estimated response function: ( -1.2219e+01, -6.9519e+00), ( -3.2528e+00, -6.8991e-01)
+	Amplitude of the estimated response function:  1.4058e+01,  3.3252e+00
+	Phase(deg.) of the estimated response function: -150.4, -168.0
+	Weighted residual power: 0.336098
+Iteration number = 1
+	Scale factor: 1.06606
+	Parameter c: 2.66135
+	Sum of weights: 33675.4
+	Squared coherence: 0
+	Estimated response function: ( -1.4345e+01, -5.9141e+00), ( -7.6691e-01,  1.5444e+00)
+	Amplitude of the estimated response function:  1.5516e+01,  1.7244e+00
+	Phase(deg.) of the estimated response function: -157.6,  116.4
+	Weighted residual power: 0.582435
+Iteration number = 2
+	Scale factor: 1.06606
+	Parameter c: 2.66135
+	Sum of weights: 33047.4
+	Squared coherence: 0
+	Estimated response function: ( -1.5902e+01, -5.8166e+00), (  2.8767e-01,  4.9486e+00)
+	Amplitude of the estimated response function:  1.6932e+01,  4.9570e+00
+	Phase(deg.) of the estimated response function: -159.9,   86.7
+	Weighted residual power: 0.659738
+Iteration number = 3
+	Scale factor: 1.06606
+	Parameter c: 2.66135
+	Sum of weights: 31730.7
+	Squared coherence: 0
+	Estimated response function: ( -1.6752e+01, -5.2975e+00), (  4.8349e+00,  1.0011e+01)
+	Amplitude of the estimated response function:  1.7570e+01,  1.1118e+01
+	Phase(deg.) of the estimated response function: -162.5,   64.2
+	Weighted residual power: 0.779479
+Iteration number = 4
+	Scale factor: 1.06606
+	Parameter c: 2.66135
+	Sum of weights: 29946.9
+	Squared coherence: 0
+	Estimated response function: ( -1.9933e+01, -3.2964e+00), (  1.5483e+01,  7.4263e+00)
+	Amplitude of the estimated response function:  2.0204e+01,  1.7172e+01
+	Phase(deg.) of the estimated response function: -170.6,   25.6
+	Weighted residual power: 0.901929
+Iteration number = 5
+	Scale factor: 1.06606
+	Parameter c: 2.66135
+	Sum of weights: 27470.5
+	Squared coherence: 0
+	Estimated response function: ( -1.8293e+01, -2.8675e+00), (  1.7470e+01, -7.7977e-01)
+	Amplitude of the estimated response function:  1.8517e+01,  1.7487e+01
+	Phase(deg.) of the estimated response function: -171.1,   -2.6
+	Weighted residual power: 0.534692
+Iteration number = 6
+	Scale factor: 1.06606
+	Parameter c: 2.66135
+	Sum of weights: 27883.1
+	Squared coherence: 0
+	Estimated response function: ( -1.8753e+01, -1.3924e+00), (  2.3363e+01, -6.1567e+00)
+	Amplitude of the estimated response function:  1.8805e+01,  2.4160e+01
+	Phase(deg.) of the estimated response function: -175.8,  -14.8
+	Weighted residual power: 0.75552
+Iteration number = 7
+	Scale factor: 1.06606
+	Parameter c: 2.66135
+	Sum of weights: 26073.7
+	Squared coherence: 0
+	Estimated response function: ( -9.6138e-01, -4.9819e+00), ( -2.1464e+01, -4.1054e+01)
+	Amplitude of the estimated response function:  5.0738e+00,  4.6327e+01
+	Phase(deg.) of the estimated response function: -100.9, -117.6
+	Weighted residual power: 2.74254
+Iteration number = 8
+	Scale factor: 1.06606
+	Parameter c: 2.66135
+	Sum of weights: 22642.2
+	Squared coherence: 0
+	Estimated response function: ( -1.0008e+01, -1.7014e+01), ( -7.6604e+01, -1.9348e+01)
+	Amplitude of the estimated response function:  1.9739e+01,  7.9010e+01
+	Phase(deg.) of the estimated response function: -120.5, -165.8
+	Weighted residual power: 1.61752
+Iteration number = 9
+	Scale factor: 1.06606
+	Parameter c: 2.66135
+	Sum of weights: 18962.2
+	Squared coherence: 0
+	Estimated response function: ( -2.9898e+01,  5.5847e+00), ( -3.4057e+01,  6.2573e+00)
+	Amplitude of the estimated response function:  3.0415e+01,  3.4627e+01
+	Phase(deg.) of the estimated response function:  169.4,  169.6
+	Weighted residual power: 0.513157
+	Iteration using Tukey's biweights weight does not converge
+--------------------------------------------------------------------------------
+Estimate errors by fixed-weights bootstrap
+--------------------------------------------------------------------------------

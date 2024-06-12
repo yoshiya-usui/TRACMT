@@ -1,0 +1,420 @@
+================================================================================
+Now Frequency(Hz): 0.00146484, Period(s): 682.667
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 83
+	Squared coherence: 0.88469
+	Estimated response function: (  3.7554e-01,  4.2087e-01), (  3.3244e-01,  4.4139e-01)
+	Amplitude of the estimated response function:  5.6406e-01,  5.5257e-01
+	Phase(deg.) of the estimated response function:   48.3,   53.0
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 83
+	Squared coherence: 0.943059
+	Estimated response function: ( -6.7784e-01, -8.3556e-01), ( -1.5476e-01, -1.5345e-01)
+	Amplitude of the estimated response function:  1.0759e+00,  2.1794e-01
+	Phase(deg.) of the estimated response function: -129.1, -135.2
+================================================================================
+Now Frequency(Hz): 0.00195312, Period(s): 512
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 83
+	Squared coherence: 0.881175
+	Estimated response function: (  4.5545e-01,  4.7352e-01), (  3.8421e-01,  5.4449e-01)
+	Amplitude of the estimated response function:  6.5701e-01,  6.6640e-01
+	Phase(deg.) of the estimated response function:   46.1,   54.8
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 83
+	Squared coherence: 0.952068
+	Estimated response function: ( -8.0225e-01, -1.0040e+00), ( -1.8291e-01, -2.1313e-01)
+	Amplitude of the estimated response function:  1.2852e+00,  2.8086e-01
+	Phase(deg.) of the estimated response function: -128.6, -130.6
+================================================================================
+Now Frequency(Hz): 0.00292969, Period(s): 341.333
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 167
+	Squared coherence: 0.810574
+	Estimated response function: (  4.7326e-01,  5.9456e-01), (  4.3491e-01,  7.6086e-01)
+	Amplitude of the estimated response function:  7.5992e-01,  8.7639e-01
+	Phase(deg.) of the estimated response function:   51.5,   60.2
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 167
+	Squared coherence: 0.917953
+	Estimated response function: ( -9.3048e-01, -1.3085e+00), ( -1.8189e-01, -2.2954e-01)
+	Amplitude of the estimated response function:  1.6056e+00,  2.9286e-01
+	Phase(deg.) of the estimated response function: -125.4, -128.4
+================================================================================
+Now Frequency(Hz): 0.00390625, Period(s): 256
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 167
+	Squared coherence: 0.795293
+	Estimated response function: (  6.0472e-01,  7.0462e-01), (  4.3766e-01,  9.1245e-01)
+	Amplitude of the estimated response function:  9.2854e-01,  1.0120e+00
+	Phase(deg.) of the estimated response function:   49.4,   64.4
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 167
+	Squared coherence: 0.898233
+	Estimated response function: ( -1.2107e+00, -1.5316e+00), ( -2.0797e-01, -2.9546e-01)
+	Amplitude of the estimated response function:  1.9524e+00,  3.6131e-01
+	Phase(deg.) of the estimated response function: -128.3, -125.1
+================================================================================
+Now Frequency(Hz): 0.00585938, Period(s): 170.667
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 336
+	Squared coherence: 0.69714
+	Estimated response function: (  8.2872e-01,  9.2629e-01), (  6.3990e-01,  1.1135e+00)
+	Amplitude of the estimated response function:  1.2429e+00,  1.2843e+00
+	Phase(deg.) of the estimated response function:   48.2,   60.1
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 336
+	Squared coherence: 0.858605
+	Estimated response function: ( -1.5595e+00, -1.8754e+00), ( -3.0034e-01, -3.2833e-01)
+	Amplitude of the estimated response function:  2.4391e+00,  4.4498e-01
+	Phase(deg.) of the estimated response function: -129.7, -132.5
+================================================================================
+Now Frequency(Hz): 0.0078125, Period(s): 128
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 336
+	Squared coherence: 0.662431
+	Estimated response function: (  1.0339e+00,  1.0460e+00), (  8.5128e-01,  1.3658e+00)
+	Amplitude of the estimated response function:  1.4707e+00,  1.6093e+00
+	Phase(deg.) of the estimated response function:   45.3,   58.1
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 336
+	Squared coherence: 0.81653
+	Estimated response function: ( -1.7951e+00, -2.2401e+00), ( -4.1262e-01, -3.9622e-01)
+	Amplitude of the estimated response function:  2.8706e+00,  5.7205e-01
+	Phase(deg.) of the estimated response function: -128.7, -136.2
+================================================================================
+Now Frequency(Hz): 0.0117188, Period(s): 85.3333
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 674
+	Squared coherence: 0.562555
+	Estimated response function: (  1.3891e+00,  1.2224e+00), (  1.0533e+00,  1.8187e+00)
+	Amplitude of the estimated response function:  1.8504e+00,  2.1017e+00
+	Phase(deg.) of the estimated response function:   41.3,   59.9
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 674
+	Squared coherence: 0.758964
+	Estimated response function: ( -2.4524e+00, -2.9277e+00), ( -4.3863e-01, -5.8231e-01)
+	Amplitude of the estimated response function:  3.8192e+00,  7.2903e-01
+	Phase(deg.) of the estimated response function: -130.0, -127.0
+================================================================================
+Now Frequency(Hz): 0.015625, Period(s): 64
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 674
+	Squared coherence: 0.488236
+	Estimated response function: (  1.5185e+00,  1.3183e+00), (  1.3435e+00,  2.1202e+00)
+	Amplitude of the estimated response function:  2.0109e+00,  2.5100e+00
+	Phase(deg.) of the estimated response function:   41.0,   57.6
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 674
+	Squared coherence: 0.671128
+	Estimated response function: ( -2.9422e+00, -3.2299e+00), ( -5.5561e-01, -5.7310e-01)
+	Amplitude of the estimated response function:  4.3691e+00,  7.9821e-01
+	Phase(deg.) of the estimated response function: -132.3, -134.1
+================================================================================
+Now Frequency(Hz): 0.0234375, Period(s): 42.6667
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 1349
+	Squared coherence: 0.285299
+	Estimated response function: (  1.8094e+00,  1.5365e+00), (  1.7851e+00,  2.7188e+00)
+	Amplitude of the estimated response function:  2.3738e+00,  3.2525e+00
+	Phase(deg.) of the estimated response function:   40.3,   56.7
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 1349
+	Squared coherence: 0.541271
+	Estimated response function: ( -3.7694e+00, -3.9053e+00), ( -8.2834e-01, -9.5551e-01)
+	Amplitude of the estimated response function:  5.4277e+00,  1.2646e+00
+	Phase(deg.) of the estimated response function: -134.0, -130.9
+================================================================================
+Now Frequency(Hz): 0.03125, Period(s): 32
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 1349
+	Squared coherence: 0.182882
+	Estimated response function: (  2.4038e+00,  1.7105e+00), (  2.2720e+00,  3.4053e+00)
+	Amplitude of the estimated response function:  2.9502e+00,  4.0937e+00
+	Phase(deg.) of the estimated response function:   35.4,   56.3
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 1349
+	Squared coherence: 0.416897
+	Estimated response function: ( -4.5305e+00, -4.3722e+00), ( -1.0212e+00, -1.1243e+00)
+	Amplitude of the estimated response function:  6.2961e+00,  1.5189e+00
+	Phase(deg.) of the estimated response function: -136.0, -132.2
+================================================================================
+Now Frequency(Hz): 0.046875, Period(s): 21.3333
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 2699
+	Squared coherence: 0
+	Estimated response function: (  3.4951e+00,  2.1127e+00), (  2.7520e+00,  4.2758e+00)
+	Amplitude of the estimated response function:  4.0841e+00,  5.0849e+00
+	Phase(deg.) of the estimated response function:   31.2,   57.2
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 2699
+	Squared coherence: 0.137491
+	Estimated response function: ( -5.7019e+00, -4.8532e+00), ( -1.0653e+00, -1.0137e+00)
+	Amplitude of the estimated response function:  7.4877e+00,  1.4705e+00
+	Phase(deg.) of the estimated response function: -139.6, -136.4
+================================================================================
+Now Frequency(Hz): 0.0625, Period(s): 16
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 2699
+	Squared coherence: 0
+	Estimated response function: (  3.8661e+00,  2.4595e+00), (  3.7929e+00,  5.6612e+00)
+	Amplitude of the estimated response function:  4.5821e+00,  6.8144e+00
+	Phase(deg.) of the estimated response function:   32.5,   56.2
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 2699
+	Squared coherence: 0
+	Estimated response function: ( -5.7741e+00, -5.9493e+00), ( -1.3897e+00, -1.3007e+00)
+	Amplitude of the estimated response function:  8.2906e+00,  1.9034e+00
+	Phase(deg.) of the estimated response function: -134.1, -136.9
+================================================================================
+Now Frequency(Hz): 0.09375, Period(s): 10.6667
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 5399
+	Squared coherence: 0
+	Estimated response function: (  3.9019e+00,  2.2656e+00), (  4.4292e+00,  7.3770e+00)
+	Amplitude of the estimated response function:  4.5120e+00,  8.6045e+00
+	Phase(deg.) of the estimated response function:   30.1,   59.0
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 5399
+	Squared coherence: 0
+	Estimated response function: ( -6.8066e+00, -7.2849e+00), ( -4.3713e-01, -2.5180e+00)
+	Amplitude of the estimated response function:  9.9699e+00,  2.5557e+00
+	Phase(deg.) of the estimated response function: -133.1,  -99.8
+================================================================================
+Now Frequency(Hz): 0.125, Period(s): 8
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 5399
+	Squared coherence: 0
+	Estimated response function: (  5.2436e+00,  1.8981e+00), (  5.8367e+00,  7.6169e+00)
+	Amplitude of the estimated response function:  5.5766e+00,  9.5961e+00
+	Phase(deg.) of the estimated response function:   19.9,   52.5
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 5399
+	Squared coherence: 0
+	Estimated response function: ( -9.2962e+00, -8.5980e+00), (  2.5354e-02, -1.6449e+00)
+	Amplitude of the estimated response function:  1.2663e+01,  1.6451e+00
+	Phase(deg.) of the estimated response function: -137.2,  -89.1
+================================================================================
+Now Frequency(Hz): 0.1875, Period(s): 5.33333
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 10799
+	Squared coherence: 0
+	Estimated response function: (  4.7388e+00,  3.6659e+00), (  8.5635e+00,  9.6804e+00)
+	Amplitude of the estimated response function:  5.9912e+00,  1.2925e+01
+	Phase(deg.) of the estimated response function:   37.7,   48.5
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 10799
+	Squared coherence: 0
+	Estimated response function: ( -1.1045e+01, -1.1288e+01), ( -2.2411e-01, -5.9487e-01)
+	Amplitude of the estimated response function:  1.5793e+01,  6.3568e-01
+	Phase(deg.) of the estimated response function: -134.4, -110.6
+================================================================================
+Now Frequency(Hz): 0.25, Period(s): 4
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 10799
+	Squared coherence: 0
+	Estimated response function: (  5.8663e+00,  4.0237e+00), (  1.1449e+01,  8.7057e+00)
+	Amplitude of the estimated response function:  7.1136e+00,  1.4383e+01
+	Phase(deg.) of the estimated response function:   34.4,   37.2
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 10799
+	Squared coherence: 0
+	Estimated response function: ( -1.5791e+01, -8.7705e+00), ( -2.1661e+00,  6.6073e-01)
+	Amplitude of the estimated response function:  1.8063e+01,  2.2646e+00
+	Phase(deg.) of the estimated response function: -151.0,  163.0
+================================================================================
+Now Frequency(Hz): 0.375, Period(s): 2.66667
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 21599
+	Squared coherence: 0
+	Estimated response function: ( -3.4466e+00, -5.2926e+00), (  2.3350e+01,  8.4248e+00)
+	Amplitude of the estimated response function:  6.3159e+00,  2.4823e+01
+	Phase(deg.) of the estimated response function: -123.1,   19.8
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 21599
+	Squared coherence: 0
+	Estimated response function: ( -1.3650e+01, -3.9352e+00), ( -4.6476e-02, -1.1209e+01)
+	Amplitude of the estimated response function:  1.4206e+01,  1.1209e+01
+	Phase(deg.) of the estimated response function: -163.9,  -90.2
+================================================================================
+Now Frequency(Hz): 0.5, Period(s): 2
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 21599
+	Squared coherence: 0
+	Estimated response function: (  1.2138e+00, -1.2061e+00), (  2.1695e+01,  6.6378e+00)
+	Amplitude of the estimated response function:  1.7112e+00,  2.2687e+01
+	Phase(deg.) of the estimated response function:  -44.8,   17.0
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 21599
+	Squared coherence: 0
+	Estimated response function: ( -5.3388e+00, -5.2437e+00), ( -6.0756e+00,  1.4369e+00)
+	Amplitude of the estimated response function:  7.4833e+00,  6.2432e+00
+	Phase(deg.) of the estimated response function: -135.5,  166.7
+================================================================================
+Now Frequency(Hz): 0.75, Period(s): 1.33333
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 43199
+	Squared coherence: 0
+	Estimated response function: ( -2.1007e+01,  2.5791e+00), (  1.6554e+01,  1.0975e+01)
+	Amplitude of the estimated response function:  2.1164e+01,  1.9862e+01
+	Phase(deg.) of the estimated response function:  173.0,   33.5
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 43199
+	Squared coherence: 0
+	Estimated response function: (  4.6419e+00, -4.1036e+00), ( -1.1865e+01, -1.0362e+01)
+	Amplitude of the estimated response function:  6.1958e+00,  1.5753e+01
+	Phase(deg.) of the estimated response function:  -41.5, -138.9
+================================================================================
+Now Frequency(Hz): 1, Period(s): 1
+================================================================================
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 0
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 43199
+	Squared coherence: 0
+	Estimated response function: (  1.1221e+01,  1.0270e+01), (  2.1550e+01, -2.5333e+01)
+	Amplitude of the estimated response function:  1.5211e+01,  3.3259e+01
+	Phase(deg.) of the estimated response function:   42.5,  -49.6
+--------------------------------------------------------------------------------
+Calculate response functions for output variable 1
+--------------------------------------------------------------------------------
+Calculate response functions by the ordinary least square method
+	Sum of weights: 43199
+	Squared coherence: 0
+	Estimated response function: ( -1.1946e+01, -5.6520e+00), ( -2.0656e+01, -1.9537e+01)
+	Amplitude of the estimated response function:  1.3216e+01,  2.8432e+01
+	Phase(deg.) of the estimated response function: -154.7, -136.6

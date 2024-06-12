@@ -65,8 +65,8 @@ Control::Control() :
 	m_cutoffFrequencyForIIRLowPassFilter(-1.0),
 	m_doesApplyIIRHighPassFilter(false),
 	m_doesApplyIIRLowPassFilter(false),
-	m_elogMTReadingOption(READ_EX_EY_HX_HY_HZ_HRX_HRY_FROM_ELOGMT_DATA),
-	m_errorEstimationMethod(SUBSET_DELETION_JACKKNIFE),
+	m_elogMTReadingOption(Control::READ_EX_EY_HX_HY_HZ_HRX_HRY_FROM_ELOGMT_DATA),
+	m_errorEstimationMethod(Control::FIXED_WEIGHTS_BOOTSTRAP),
 	m_numOutputVariables(-1),
 	m_numInputVariables(2),
 	m_numRemoteReferenceVariables(2),
@@ -86,7 +86,7 @@ Control::Control() :
 	m_outputTimeSeriesToCsv(false),
 	m_parameterQForNotchFilter(10.0),
 	m_percentageOfOmmitedDataSubsetDeletionJackknife(5.0),
-	m_procedureType(Control::MULTIVARIATE_REGRESSION),
+	m_procedureType(Control::ORDINARY_REMOTE_REFERENCE),
 	m_readAtsBinary(false),
 	m_readElogDualBinary(false),
 	m_readElogMTBinary(false),
@@ -1133,7 +1133,7 @@ void Control::readParameterFile(){
 				m_paramsForRobustFilter.thresholds.push_back(thresholds);
 			}
 		}
-		else if( line.find("ROBUST_MULTIVARIATE_REGRESSION") != std::string::npos ){
+		else if( line.find("ROBUST_MULTIVARIATE_REGRESSION") != std::string::npos || line.find("RRMS") != std::string::npos){
 			// Parameters for robust multivariate regression
 			int ibuf(0);
 			ifs >> ibuf;
