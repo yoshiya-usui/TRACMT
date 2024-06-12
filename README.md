@@ -15,4 +15,12 @@ field.
 4) If your compiler supports C++11, you can compile TRACMT by "make -f Makefile_C++11" command.
    If your compiler does NOT support C++11, download mt19937-64.tgz from http://math.sci.hiroshima-u.ac.jp/m-mat/MT/mt64.html and rename mt19937-64.c to mt19937-64.cpp. After copying mt19937-64.cpp and mt64.h to the source-file directory of TRACMT, you can compile TRACMT by make command (Make -f Makefile).
 
+# Functional overview
+**Input file format**: Text (Ascii) file / .ats files of Metronix instruments / .dat files of ELOG-MT
+**Prewhitening**: Non-robust prewhitening / Robust prewhitening / Robust prewhitening with robust filter
+**Transfer function estimation method**: OLS / Non-robust remote reference / Robust remote reference / RRMS estimator
+**Error estimation method**: Parametric approach / Bootstrap method / Jackknife method
+
+# Release note
+_**v1.2.0**_ Jun. 13, 2024: Initial release
 
