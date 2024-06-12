@@ -20,7 +20,7 @@ field.
 
 **Prewhitening**: Non-robust prewhitening / Robust prewhitening / Robust prewhitening with robust filter
 
-**Transfer function estimation method**: Ordinary leaset square / Non-robust remote reference / Robust remote reference / RRMS estimator
+**Transfer function estimation method**: Ordinary least square / Non-robust remote reference / Robust remote reference / RRMS estimator
 
 **Error estimation method**: Parametric approach / Bootstrap method / Jackknife method
 
