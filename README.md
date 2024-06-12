@@ -12,8 +12,6 @@ field.
 1) Download all source files of TRACMT to a directory.
 2) Download source files of CLAPACK (https://www.netlib.org/clapack/) to another directory and make librariy files.
 3) Copy library files of CLAPACK (blas_LINUX.a, lapack_LINUX.a, and libf2c.a) to "lib" directory and copy header files (blaswrap.h, clapack.h, and f2c.h) to "include" directory"
-4) 
-a) If your compiler supports C++11, you can compile TRACMT by "make -f Makefile_C++11" command.
-b) If your compiler does not supports C++11, download mt19937-64.tgz from http://math.sci.hiroshima-u.ac.jp/m-mat/MT/mt64.html and rename mt19937-64.c to mt19937-64.cpp. After copying mt19937-64.cpp and mt64.h to the source-file directory of TRACMT, you can compile TRACMT by make command (Make -f Makefile).
+4) If your compiler supports C++11, you can compile TRACMT by "make -f Makefile_C++11" command. If your compiler does NOT support C++11, download mt19937-64.tgz from http://math.sci.hiroshima-u.ac.jp/m-mat/MT/mt64.html and rename mt19937-64.c to mt19937-64.cpp. After copying mt19937-64.cpp and mt64.h to the source-file directory of TRACMT, you can compile TRACMT by make command (Make -f Makefile).
 
 
