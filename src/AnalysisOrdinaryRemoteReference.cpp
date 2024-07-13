@@ -1570,47 +1570,48 @@ void AnalysisOrdinaryRemoteReference::parametricErrorEstimation(const int numSeg
 		return;
 	}
 
-	double numerator(0.0);
-	if (noRobust) {
-		for (int iSeg = 0; iSeg < numSegmentsTotal; ++iSeg) {
-			numerator += std::norm(residuals[iSeg]);
+	int index(1);
+	const RobustWeight* const robustWeight2nd = getPointerToRobustWeight(1);
+	if (robustWeight2nd == NULL || robustWeight2nd->getNumIterationMax() < 1) {
+		// The second M-estimater was not active
+		index = 0;
+		const RobustWeight* const robustWeight1st = getPointerToRobustWeight(0);
+		if (robustWeight1st == NULL || robustWeight1st->getNumIterationMax() < 1) {
+			// The 1st M-estimater was not active
+			index = -1;
 		}
 	}
-	else {
-		for (int iSeg = 0; iSeg < numSegmentsTotal; ++iSeg) {
-			numerator += pow(weights[iSeg], 2) * std::norm(residuals[iSeg]);
-		}
-	}
-	numerator /= static_cast<double>(numSegmentsTotal - 2);
 
-	double sumOf2ndOrderDerivativeOfLossFunction(0.0);
-	if (noRobust) {
-		sumOf2ndOrderDerivativeOfLossFunction = static_cast<double>(numSegmentsTotal);
+	double variance(0.0);
+	for (int iSeg = 0; iSeg < numSegmentsTotal; ++iSeg) {
+		variance += std::norm(residuals[iSeg]);
+	}
+	variance /= static_cast<double>(2 * numSegmentsTotal - 4);
+
+	double numerator(0.0);
+	if (noRobust || index < 0) {
+		numerator = 1.0;
 	}
 	else {
-		int index(1);
-		const RobustWeight* const robustWeight2nd = getPointerToRobustWeight(1);
-		if (robustWeight2nd == NULL || robustWeight2nd->getNumIterationMax() < 1) {
-			// The second M-estimater was not active
-			index = 0;
-			const RobustWeight* const robustWeight1st = getPointerToRobustWeight(0);
-			if (robustWeight1st == NULL || robustWeight1st->getNumIterationMax() < 1) {
-				// The 1st M-estimater was not active
-				index = -1;
-			}
+		for (int iSeg = 0; iSeg < numSegmentsTotal; ++iSeg) {
+			const double influenceFunction = weights[iSeg] * std::abs(residuals[iSeg]) / scale;
+			numerator += pow(influenceFunction, 2);
 		}
-		if (index < 0) {
-			sumOf2ndOrderDerivativeOfLossFunction = static_cast<double>(numSegmentsTotal);
-		}
-		else {
-			const RobustWeight* const robustWeight = getPointerToRobustWeight(index);
-			sumOf2ndOrderDerivativeOfLossFunction = robustWeight->calculateSumOf2ndOrderDerivativeOfLossFunction(numSegmentsTotal, residuals, scale);
-		}
+		numerator /= static_cast<double>(numSegmentsTotal);
 	}
-	sumOf2ndOrderDerivativeOfLossFunction /= static_cast<double>(numSegmentsTotal);
-	double denominator = pow(sumOf2ndOrderDerivativeOfLossFunction, 2);
-	if (denominator < 1.0e-10) {
-		denominator = 1.0e-10;
+
+	double denominator = 0.0;
+	if (noRobust || index < 0) {
+		denominator = 1.0;
+	}
+	else {
+		const RobustWeight* const robustWeight = getPointerToRobustWeight(index);
+		double sumOf2ndOrderDerivativeOfLossFunction = robustWeight->calculateSumOf2ndOrderDerivativeOfLossFunction(numSegmentsTotal, residuals, scale);
+		sumOf2ndOrderDerivativeOfLossFunction /= static_cast<double>(numSegmentsTotal);
+		denominator = pow(sumOf2ndOrderDerivativeOfLossFunction, 2);
+		if (denominator < 1.0e-10) {
+			denominator = 1.0e-10;
+		}
 	}
 
 	const Control* const ptrControl = Control::getInstance();
@@ -1651,8 +1652,8 @@ void AnalysisOrdinaryRemoteReference::parametricErrorEstimation(const int numSeg
 	};
 	const std::complex<double> invBrBBrBrinvBBrDiagonalXX = ( invBrBBrBr[0][0] * std::conj(BryBy) - invBrBBrBr[0][1] * std::conj(BrxBy)) / determinantOfBrB / determinantOfBBr;
 	const std::complex<double> invBrBBrBrinvBBrDiagonalYY = (-invBrBBrBr[1][0] * std::conj(BryBx) + invBrBBrBr[1][1] * std::conj(BrxBx)) / determinantOfBrB / determinantOfBBr;
-	error0 = numerator / denominator * std::abs(invBrBBrBrinvBBrDiagonalXX);
-	error1 = numerator / denominator * std::abs(invBrBBrBrinvBBrDiagonalYY);
+	error0 = variance * numerator / denominator * std::abs(invBrBBrBrinvBBrDiagonalXX);
+	error1 = variance * numerator / denominator * std::abs(invBrBBrBrinvBBrDiagonalYY);
 
 }
 
@@ -1884,6 +1885,25 @@ void AnalysisOrdinaryRemoteReference::strictBootstrap(const int iSegLen, const i
 	ptrOutputFiles->restartToWriteCvgMessage();
 	ptrOutputFiles->restartToWriteLogMessage();
 	ptrOutputFiles->restartToWriteWarningMessage();
+
+	if (ptrControl->getOutputLevel() >= 4) {// Output estimates of final response functions
+		for (int iSample = 0; iSample < numOfSamples; ++iSample) {
+			ptrOutputFiles->writeCvgMessage("Dataset " + Util::toString(iSample));
+			ptrOutputFiles->writeCvgMessage("Estimates of final response functions:");
+			std::ostringstream msg;
+			for (int iOut = 0; iOut < numOutputVariables; ++iOut) {
+				msg << "(" << std::setw(12) << std::setprecision(4) << std::scientific << resp0Sample[iSample][iOut].real() << ","
+					<< std::setw(12) << std::setprecision(4) << std::scientific << resp0Sample[iSample][iOut].imag() << "), ";
+				msg << "(" << std::setw(12) << std::setprecision(4) << std::scientific << resp1Sample[iSample][iOut].real() << ","
+					<< std::setw(12) << std::setprecision(4) << std::scientific << resp1Sample[iSample][iOut].imag() << ")";
+				if (iOut + 1 < numOutputVariables) {
+					msg << std::endl;
+				}
+			}
+			ptrOutputFiles->writeCvgMessage(msg.str());
+			ptrOutputFiles->writeCvgMessage("--------------------------------------------------------------------------------");
+		}
+	}
 
 	// Calculate error of response functions
 	assert(numOfSamples > 2);

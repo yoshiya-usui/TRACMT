@@ -51,7 +51,8 @@ public:
 		NUM_TYPE_OF_ELOGMT_TYPE,
 	};
 
-	enum ElogMTReadingOption{
+	enum ElogMTReadingOption {
+		NOT_SPECIFIED = -1,
 		READ_EX_EY_HX_HY_HZ_HRX_HRY_FROM_ELOGMT_DATA = 0,
 		READ_EX_EY_HX_HY_HRX_HRY_FROM_ELOGMT_DATA,
 		READ_HZ_HX_HY_HRX_HRY_FROM_ELOGMT_DATA,
@@ -279,6 +280,9 @@ public:
 	bool doesOutputTimeSeriesToCsv() const;
 
 	// Get flag specifing whether input file is ATS binary file
+	bool doesOutputCalibratedTimeSeriesToCsv() const;
+
+	// Get flag specifing whether input file is ATS binary file
 	bool doesReadAtsBinary() const;
 
 	// Get flag specifing whether input file is ELOG-Dual binary file
@@ -313,6 +317,9 @@ public:
 
 	// Get sampling frequency
 	double getSamplingFrequency() const;
+
+	// Get number of threads
+	double getSamplingFrequencyOrg() const;
 
 	// Get number of threads
 	int getNumThreads() const;
@@ -467,6 +474,9 @@ public:
 	// Set sampling frequency
 	void setSamplingFrequency( const double samplingFrequency );
 
+	// Set original sampling frequency
+	void setSamplingFrequencyOrg(const double samplingFrequency);
+
 private:
 
 	// Constructer
@@ -519,6 +529,9 @@ private:
 
 	// Number of remote reference variables
 	int m_numRemoteReferenceVariables;
+
+	// Sampling frequency
+	double m_samplingFrequencyOrg;
 
 	// Sampling frequency
 	double m_samplingFrequency;
@@ -582,6 +595,9 @@ private:
 
 	// Flag specifing wheter output time series data as csv file
 	bool m_outputTimeSeriesToCsv;
+
+	// Flag specifing wheter output calibrated time series data as csv file
+	bool m_outputCalibratedTimeSeriesToCsv;
 
 	// Parameter Q for notch filter
 	double m_parameterQForNotchFilter;

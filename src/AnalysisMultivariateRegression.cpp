@@ -3377,6 +3377,10 @@ void AnalysisMultivariateRegression::calculateResponseFunctions( const int iSegL
 	}
 	const int typeOfErrorEstimationMethod = ptrControl->getErrorEstimationMethod();
 	switch(typeOfErrorEstimationMethod){
+	case Control::PARAMETRIC:
+		estimateErrorParametric(numSegmentsTotal, paramB, paramC, ftval, resp[candidateWithSmallestScale], variancesWithoutScale[candidateWithSmallestScale],
+			scales[candidateWithSmallestScale], respErr);
+		break;
 	case Control::FIXED_WEIGHTS_JACKKNIFE:
 		estimateErrorByFixedWeightsJackknife( numSegmentsTotal, paramB, paramC, ftval, resp0, resp1, resp[candidateWithSmallestScale],
 			variancesWithoutScale[candidateWithSmallestScale], scales[candidateWithSmallestScale], respErr );
@@ -4434,6 +4438,10 @@ void AnalysisMultivariateRegression::estimateErrorByFixedWeightsBootstrap( const
 			assert(iVar == numOfOutputAndInputVariables);
 			ptrOutputFiles->writeCvgMessage(msg.str());
 		}
+		respFinal[iDataSet] = new std::complex<double>*[numOfOutputVariables];
+		for (int iOut = 0; iOut < numOfOutputVariables; ++iOut) {
+			respFinal[iDataSet][iOut] = new std::complex<double>[numOfReferenceVariables];
+		}
 		if( ptrControl->getOutputLevel() >= 4 ){
 			ptrOutputFiles->writeCvgMessage("One-step estimate of scale: " + Util::toString(scale));
 			std::ostringstream msg;
@@ -4445,11 +4453,44 @@ void AnalysisMultivariateRegression::estimateErrorByFixedWeightsBootstrap( const
 				}
 			}
 			ptrOutputFiles->writeCvgMessage(msg.str());
+			// Calculate estimates of final response functions
+			const int in0 = ptrControl->getChannelIndex(CommonParameters::INPUT, 0);
+			const int in1 = ptrControl->getChannelIndex(CommonParameters::INPUT, 1);
+			const std::complex<double> Txx = resp[in0][0];
+			const std::complex<double> Txy = resp[in0][1];
+			const std::complex<double> Tyx = resp[in1][0];
+			const std::complex<double> Tyy = resp[in1][1];
+			const std::complex<double> det = Txx * Tyy - Txy * Tyx;
+			if (std::abs(det) < CommonParameters::EPS) {
+				ptrOutputFiles->writeErrorMessage("Determinant is too small: " + Util::toString(std::abs(det)));
+			}
+			for (int iOut = 0; iOut < numOfOutputVariables; ++iOut) {
+				const int index = ptrControl->getChannelIndex(CommonParameters::OUTPUT, iOut);
+				const std::complex<double> U_x = resp[index][0];
+				const std::complex<double> U_y = resp[index][1];
+				const std::complex<double> resp0 = (U_x * Tyy - U_y * Tyx) / det;
+				const std::complex<double> resp1 = (U_y * Txx - U_x * Txy) / det;
+				respFinal[iDataSet][iOut][0] = resp0;
+				respFinal[iDataSet][iOut][1] = resp1;
+			}
+			ptrOutputFiles->writeCvgMessage("One-step estimates of final response functions:");
+			std::ostringstream msg2;
+			for (int iOut = 0; iOut < numOfOutputVariables; ++iOut) {
+				msg2 << "(" << std::setw(12) << std::setprecision(4) << std::scientific << respFinal[iDataSet][iOut][0].real() << ","
+					<< std::setw(12) << std::setprecision(4) << std::scientific << respFinal[iDataSet][iOut][0].imag() << "), ";
+				msg2 << "(" << std::setw(12) << std::setprecision(4) << std::scientific << respFinal[iDataSet][iOut][1].real() << ","
+					<< std::setw(12) << std::setprecision(4) << std::scientific << respFinal[iDataSet][iOut][1].imag() << ")";
+				if (iOut + 1 < numOfOutputVariables) {
+					msg2 << std::endl;
+				}
+			}
+			ptrOutputFiles->writeCvgMessage(msg2.str());
+			ptrOutputFiles->writeCvgMessage("--------------------------------------------------------------------------------");
 		}
 
 		// Calculate estimates of final response functions
-		const int in0 = ptrControl->getChannelIndex( CommonParameters::INPUT, 0 );
-		const int in1 = ptrControl->getChannelIndex( CommonParameters::INPUT, 1 );
+		const int in0 = ptrControl->getChannelIndex(CommonParameters::INPUT, 0);
+		const int in1 = ptrControl->getChannelIndex(CommonParameters::INPUT, 1);
 		const std::complex<double> Txx = resp[in0][0];
 		const std::complex<double> Txy = resp[in0][1];
 		const std::complex<double> Tyx = resp[in1][0];
@@ -4458,9 +4499,7 @@ void AnalysisMultivariateRegression::estimateErrorByFixedWeightsBootstrap( const
 		if( std::abs(det) < CommonParameters::EPS ){
 			ptrOutputFiles->writeErrorMessage("Determinant is too small: " + Util::toString(std::abs(det)));
 		}
-		respFinal[iDataSet] = new std::complex<double>*[numOfOutputVariables];
 		for( int iOut = 0; iOut < numOfOutputVariables; ++iOut ){
-			respFinal[iDataSet][iOut] = new std::complex<double>[numOfReferenceVariables];
 			const int index = ptrControl->getChannelIndex( CommonParameters::OUTPUT, iOut );
 			const std::complex<double> U_x = resp[index][0];
 			const std::complex<double> U_y = resp[index][1];
@@ -5117,15 +5156,13 @@ void AnalysisMultivariateRegression::estimateErrorBySubsetDeletionJackknife( con
 
 // Estimate error by a parametric approach
 void AnalysisMultivariateRegression::estimateErrorParametric(const int numSegmentsTotal, const double paramB, const double paramC,
-	std::complex<double>** ftval, const std::complex<double>* const respOrg0, const std::complex<double>* const respOrg1,
-	std::complex<double>** respOrg, const double* const variancesWithoutScaleOrg, const double scaleOrg, double** respErr) const {
+	std::complex<double>** ftval, std::complex<double>** respOrg, const double* const variancesWithoutScaleOrg, const double scaleOrg, 
+	double** respErr) const {
 
 	OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
 	ptrOutputFiles->writeCvgMessage("--------------------------------------------------------------------------------");
 	ptrOutputFiles->writeCvgAndLogMessage("Estimate errors by a parametric approach");
 	ptrOutputFiles->writeCvgMessage("--------------------------------------------------------------------------------");
-
-	ptrOutputFiles->writeErrorMessage(static_cast<std::string>(__FUNCTION__) + "is under constrution.");	
 
 	const Control* const ptrControl = Control::getInstance();
 	const int numOfOutputVariables = ptrControl->getNumOutputVariables();
@@ -5155,24 +5192,25 @@ void AnalysisMultivariateRegression::estimateErrorParametric(const int numSegmen
 	// Calculate Mahalanobis distance
 	calculateMD(numSegmentsTotal, numOfOutputAndInputVariables, complexResidualsOrg,
 		variancesWithoutScaleOrg, MDOrg);
-	// Calculate original weights
 	double sumOfSquaredDerivativeOfLossFunction(0.0);
 	double sumOfSecondDerivativeOfLossFunction(0.0);
 	double sumfOfBrxNorm(0.0);
 	double sumfOfBryNorm(0.0);
-	double* sumfOfResidualNorm = new double[numOfOutputAndInputVariables];
-	for (int iVar = 0; iVar < numOfOutputAndInputVariables; ++iVar) {
-		sumfOfResidualNorm[iVar] = 0.0;
-	}
 	for (int iSeg = 0; iSeg < numSegmentsTotal; ++iSeg) {
 		const double val = MDOrg[iSeg] / scaleOrg;
-		sumOfSquaredDerivativeOfLossFunction += pow(RobustWeightTukeysBiweights::calculateDerivativeOfLossFunction(val, paramC), 2);
+		const double influenceFunction = RobustWeightTukeysBiweights::calculateWeights(val, paramC) * val;
+		sumOfSquaredDerivativeOfLossFunction += pow(influenceFunction, 2);
 		sumOfSecondDerivativeOfLossFunction += RobustWeightTukeysBiweights::calculateSecondDerivativeOfLossFunction(val, paramC);
 		sumfOfBrxNorm += std::norm(ftval[rr0][iSeg]);
 		sumfOfBryNorm += std::norm(ftval[rr1][iSeg]);
-		for (int iVar = 0; iVar < numOfOutputAndInputVariables; ++iVar) {
-			sumfOfResidualNorm[iVar] += std::norm(complexResidualsOrg[iVar][iSeg]);
+	}
+	double* variance = new double[numOfOutputAndInputVariables];
+	for (int iVar = 0; iVar < numOfOutputAndInputVariables; ++iVar) {
+		variance[iVar] = 0.0;
+		for (int iSeg = 0; iSeg < numSegmentsTotal; ++iSeg) {
+			variance[iVar] += std::norm(complexResidualsOrg[iVar][iSeg]);
 		}
+		variance[iVar] /= static_cast<double>(2 * numSegmentsTotal - 4);
 	}
 	const double numerator = sumOfSquaredDerivativeOfLossFunction / static_cast<double>(numSegmentsTotal);
 	double denominator = pow( sumOfSecondDerivativeOfLossFunction / static_cast<double>(numSegmentsTotal), 2 );
@@ -5188,165 +5226,240 @@ void AnalysisMultivariateRegression::estimateErrorParametric(const int numSegmen
 
 	double** istfErr = new double* [numOfOutputAndInputVariables];
 	for (int iVar = 0; iVar < numOfOutputAndInputVariables; ++iVar) {
-		const double variance = sumfOfResidualNorm[iVar] / static_cast<double>(2 * numSegmentsTotal - 4);
 		istfErr[iVar] = new double[2];
-		istfErr[iVar][0] = variance * numerator / denominator / sumfOfBrxNorm;
-		istfErr[iVar][1] = variance * numerator / denominator / sumfOfBryNorm;
+		istfErr[iVar][0] = variance[iVar] * numerator / denominator / sumfOfBrxNorm;
+		istfErr[iVar][1] = variance[iVar] * numerator / denominator / sumfOfBryNorm;
 	}
 
-//	const std::complex<double> czero = std::complex<double>(0.0, 0.0);
-//	assert(numOfInputVariables == 2);
-//	const int in0 = ptrControl->getChannelIndex(CommonParameters::INPUT, 0);
-//	const int in1 = ptrControl->getChannelIndex(CommonParameters::INPUT, 1);
-//	const std::complex<double> Txx = respOrg[in0][0];
-//	const std::complex<double> Txy = respOrg[in0][1];
-//	const std::complex<double> Tyx = respOrg[in1][0];
-//	const std::complex<double> Tyy = respOrg[in1][1];
-//	std::complex<double> TMatrix[2][2] = { Txx, Txy, Tyx, Tyy };
-//#ifdef _DEBUG_WRITE
-//	std::cout << "[";
-//	for (int row = 0; row < numOfInputVariables; ++row) {
-//		for (int col = 0; col < numOfReferenceVariables; ++col) {
-//			std::cout << TMatrix[row][col].real() << "+" << TMatrix[row][col].imag() << "im ";
-//		}
-//		if (row + 1 < numOfInputVariables) {
-//			std::cout << ";";
-//		}
-//	}
-//	std::cout << "]" << std::endl;
-//#endif	
-//	const std::complex<double> det = TMatrix[0][0] * TMatrix[1][1] - TMatrix[1][0] * TMatrix[0][1];
-//	const std::complex<double> TInvMatrix[2][2] = { TMatrix[1][1] / det, -TMatrix[0][1] / det, -TMatrix[1][0] / det, TMatrix[0][0] / det };
-//	const std::complex<double> TInvTMatrix[2][2] = { TInvMatrix[0][0], TInvMatrix[1][0], TInvMatrix[0][1], TInvMatrix[1][1] };
-//#ifdef _DEBUG_WRITE
-//	std::cout << "[";
-//	for (int row = 0; row < numOfReferenceVariables; ++row) {
-//		for (int col = 0; col < numOfInputVariables; ++col) {
-//			std::cout << TInvTMatrix[row][col].real() << "+" << TInvTMatrix[row][col].imag() << "im ";
-//		}
-//		if (row + 1 < numOfReferenceVariables) {
-//			std::cout << ";";
-//		}
-//	}
-//	std::cout << "]" << std::endl;
-//#endif	
-//	std::complex<double>** TInvTTInvMatrix = new std::complex<double>*[numOfInputVariables * numOfReferenceVariables];
-//	for (int irow = 0; irow < numOfInputVariables * numOfReferenceVariables; ++irow) {
-//		TInvTTInvMatrix[irow] = new std::complex<double>[numOfInputVariables * numOfReferenceVariables];
-//		for (int icol = 0; icol < numOfInputVariables * numOfReferenceVariables; ++icol) {
-//			TInvTTInvMatrix[irow][icol] = czero;// Zero clear
-//		}
-//	}
-//	for (int irow = 0; irow < numOfReferenceVariables; ++irow) {
-//		for (int icol = 0; icol < numOfInputVariables; ++icol) {
-//			const std::complex<double> factor = TInvTMatrix[irow][icol];
-//			for (int irow2 = 0; irow2 < numOfReferenceVariables; ++irow2) {
-//				for (int icol2 = 0; icol2 < numOfInputVariables; ++icol2) {
-//					const int irowOut = irow2 + irow * numOfReferenceVariables;
-//					const int icolOut = icol2 + icol * numOfInputVariables;
-//					TInvTTInvMatrix[irowOut][icolOut] = factor * TInvMatrix[irow2][icol2];
-//				}
-//			}
-//		}
-//	}
-//#ifdef _DEBUG_WRITE
-//	std::cout << "[";
-//	for (int row = 0; row < numOfInputVariables * numOfReferenceVariables; ++row) {
-//		for (int col = 0; col < numOfInputVariables * numOfReferenceVariables; ++col) {
-//			std::cout << TInvTTInvMatrix[row][col].real() << "+" << TInvTTInvMatrix[row][col].imag() << "im ";
-//		}
-//		if (row + 1 < numOfInputVariables * numOfReferenceVariables) {
-//			std::cout << ";";
-//		}
-//	}
-//	std::cout << "]" << std::endl;
-//#endif
-//	std::complex<double> UMatrix[2] = { czero, czero };
-//	for (int iSeg = 0; iSeg < numSegments; ++iSeg) {
-//		QMatrix[0] += ftval[out][iSeg] * std::conj(ftval[rr0][iSeg]) * weights[iSeg];
-//		QMatrix[1] += ftval[out][iSeg] * std::conj(ftval[rr1][iSeg]) * weights[iSeg];
-//	}
-//#ifdef _DEBUG_WRITE
-//	std::cout << "[";
-//	for (int col = 0; col < numOfReferenceVariables; ++col) {
-//		std::cout << QMatrix[col].real() << "+" << QMatrix[col].imag() << "im ";
-//	}
-//	std::cout << "]" << std::endl;
-//	std::cout << "[";
-//	for (int col = 0; col < numOfReferenceVariables; ++col) {
-//		std::cout << resp[col].real() << "+" << resp[col].imag() << "im ";
-//	}
-//	std::cout << "]" << std::endl;
-//#endif
-//	std::complex<double>** IQMatrix = new std::complex<double>*[numOfInputVariables];
-//	for (int irow = 0; irow < numOfInputVariables; ++irow) {
-//		IQMatrix[irow] = new std::complex<double>[numOfInputVariables * numOfReferenceVariables];
-//		for (int icol = 0; icol < numOfInputVariables * numOfReferenceVariables; ++icol) {
-//			IQMatrix[irow][icol] = czero;// Zero clear
-//		}
-//	}
-//	for (int irow = 0; irow < numOfInputVariables; ++irow) {
-//		for (int icol = 0; icol < numOfInputVariables; ++icol) {
-//			const double factor = irow == icol ? 1.0 : 0.0;
-//			for (int icol2 = 0; icol2 < numOfReferenceVariables; ++icol2) {
-//				const int irowOut = irow;
-//				const int icolOut = icol2 + icol * numOfReferenceVariables;
-//				IQMatrix[irowOut][icolOut] = factor * QMatrix[icol2];
-//			}
-//		}
-//	}
-//#ifdef _DEBUG_WRITE
-//	std::cout << "[";
-//	for (int row = 0; row < numOfInputVariables; ++row) {
-//		for (int col = 0; col < numOfInputVariables * numOfReferenceVariables; ++col) {
-//			std::cout << IQMatrix[row][col].real() << "+" << IQMatrix[row][col].imag() << "im ";
-//		}
-//		if (row + 1 < numOfInputVariables) {
-//			std::cout << ";";
-//		}
-//	}
-//	std::cout << "]" << std::endl;
-//#endif
-//	std::complex<double>** IQPInvTPInvMatrix = new std::complex<double>*[numOfInputVariables];
-//	for (int irow = 0; irow < numOfInputVariables; ++irow) {
-//		IQPInvTPInvMatrix[irow] = new std::complex<double>[numOfInputVariables * numOfReferenceVariables];
-//		for (int icol = 0; icol < numOfInputVariables * numOfReferenceVariables; ++icol) {
-//			IQPInvTPInvMatrix[irow][icol] = czero;// Zero clear
-//		}
-//	}
-//	for (int irow = 0; irow < numOfInputVariables; ++irow) {
-//		for (int icol = 0; icol < numOfInputVariables * numOfReferenceVariables; ++icol) {
-//			std::complex<double> value = czero;
-//			for (int i = 0; i < numOfInputVariables * numOfReferenceVariables; ++i) {
-//				value += IQMatrix[irow][i] * PInvTPInvMatrix[i][icol];
-//			}
-//			IQPInvTPInvMatrix[irow][icol] = value;
-//		}
-//	}
-//#ifdef _DEBUG_WRITE
-//#else
-//	for (int irow = 0; irow < numOfInputVariables * numOfReferenceVariables; ++irow) {
-//		delete[] PInvTPInvMatrix[irow];
-//	}
-//	delete[] PInvTPInvMatrix;
-//#endif
-//	for (int irow = 0; irow < numOfInputVariables; ++irow) {
-//		delete[] IQMatrix[irow];
-//	}
-//	delete[] IQMatrix;
-//#ifdef _DEBUG_WRITE
-//	std::cout << "[";
-//	for (int row = 0; row < numOfInputVariables; ++row) {
-//		for (int col = 0; col < numOfInputVariables * numOfReferenceVariables; ++col) {
-//			std::cout << IQPInvTPInvMatrix[row][col].real() << "+" << IQPInvTPInvMatrix[row][col].imag() << "im ";
-//		}
-//		if (row + 1 < numOfInputVariables) {
-//			std::cout << ";";
-//		}
-//	}
-//	std::cout << "]" << std::endl;
-//#endif
+	const std::complex<double> czero = std::complex<double>(0.0, 0.0);
+	assert(numOfInputVariables == 2);
+	const int in0 = ptrControl->getChannelIndex(CommonParameters::INPUT, 0);
+	const int in1 = ptrControl->getChannelIndex(CommonParameters::INPUT, 1);
+	const std::complex<double> Txx = respOrg[in0][0];
+	const std::complex<double> Txy = respOrg[in0][1];
+	const std::complex<double> Tyx = respOrg[in1][0];
+	const std::complex<double> Tyy = respOrg[in1][1];
+	std::complex<double> TMatrix[2][2] = { Txx, Txy, Tyx, Tyy };
+#ifdef _DEBUG_WRITE
+	std::cout << "[";
+	for (int row = 0; row < numOfInputVariables; ++row) {
+		for (int col = 0; col < numOfReferenceVariables; ++col) {
+			std::cout << TMatrix[row][col].real() << "+" << TMatrix[row][col].imag() << "im ";
+		}
+		if (row + 1 < numOfInputVariables) {
+			std::cout << ";";
+		}
+	}
+	std::cout << "]" << std::endl;
+#endif	
+	const std::complex<double> det = TMatrix[0][0] * TMatrix[1][1] - TMatrix[1][0] * TMatrix[0][1];
+	const std::complex<double> TInvMatrix[2][2] = { TMatrix[1][1] / det, -TMatrix[0][1] / det, -TMatrix[1][0] / det, TMatrix[0][0] / det };
+	const std::complex<double> TInvTMatrix[2][2] = { TInvMatrix[0][0], TInvMatrix[1][0], TInvMatrix[0][1], TInvMatrix[1][1] };
+#ifdef _DEBUG_WRITE
+	std::cout << "[";
+	for (int row = 0; row < numOfReferenceVariables; ++row) {
+		for (int col = 0; col < numOfInputVariables; ++col) {
+			std::cout << TInvTMatrix[row][col].real() << "+" << TInvTMatrix[row][col].imag() << "im ";
+		}
+		if (row + 1 < numOfReferenceVariables) {
+			std::cout << ";";
+		}
+	}
+	std::cout << "]" << std::endl;
+#endif	
+	std::complex<double>** TInvTTInvMatrix = new std::complex<double>*[numOfInputVariables * numOfReferenceVariables];
+	for (int irow = 0; irow < numOfInputVariables * numOfReferenceVariables; ++irow) {
+		TInvTTInvMatrix[irow] = new std::complex<double>[numOfInputVariables * numOfReferenceVariables];
+		for (int icol = 0; icol < numOfInputVariables * numOfReferenceVariables; ++icol) {
+			TInvTTInvMatrix[irow][icol] = czero;// Zero clear
+		}
+	}
+	for (int irow = 0; irow < numOfReferenceVariables; ++irow) {
+		for (int icol = 0; icol < numOfInputVariables; ++icol) {
+			const std::complex<double> factor = TInvTMatrix[irow][icol];
+			for (int irow2 = 0; irow2 < numOfReferenceVariables; ++irow2) {
+				for (int icol2 = 0; icol2 < numOfInputVariables; ++icol2) {
+					const int irowOut = irow2 + irow * numOfReferenceVariables;
+					const int icolOut = icol2 + icol * numOfInputVariables;
+					TInvTTInvMatrix[irowOut][icolOut] = factor * TInvMatrix[irow2][icol2];
+				}
+			}
+		}
+	}
+#ifdef _DEBUG_WRITE
+	std::cout << "[";
+	for (int row = 0; row < numOfInputVariables * numOfReferenceVariables; ++row) {
+		for (int col = 0; col < numOfInputVariables * numOfReferenceVariables; ++col) {
+			std::cout << TInvTTInvMatrix[row][col].real() << "+" << TInvTTInvMatrix[row][col].imag() << "im ";
+		}
+		if (row + 1 < numOfInputVariables * numOfReferenceVariables) {
+			std::cout << ";";
+		}
+	}
+	std::cout << "]" << std::endl;
+#endif
 
+	for (int iOut = 0; iOut < numOfOutputVariables; ++iOut) {
+		const int out = ptrControl->getChannelIndex(CommonParameters::OUTPUT, iOut);
+		std::complex<double> UMatrix[2] = { respOrg[out][0], respOrg[out][1] };
+#ifdef _DEBUG_WRITE
+		std::cout << "[";
+		for (int col = 0; col < numOfReferenceVariables; ++col) {
+			std::cout << UMatrix[col].real() << "+" << UMatrix[col].imag() << "im ";
+		}
+		std::cout << "]" << std::endl;
+#endif
+		std::complex<double>** IUMatrix = new std::complex<double>*[numOfInputVariables];
+		for (int irow = 0; irow < numOfInputVariables; ++irow) {
+			IUMatrix[irow] = new std::complex<double>[numOfInputVariables * numOfReferenceVariables];
+			for (int icol = 0; icol < numOfInputVariables * numOfReferenceVariables; ++icol) {
+				IUMatrix[irow][icol] = czero;// Zero clear
+			}
+		}
+		for (int irow = 0; irow < numOfInputVariables; ++irow) {
+			for (int icol = 0; icol < numOfInputVariables; ++icol) {
+				const double factor = irow == icol ? 1.0 : 0.0;
+				for (int icol2 = 0; icol2 < numOfReferenceVariables; ++icol2) {
+					const int irowOut = irow;
+					const int icolOut = icol2 + icol * numOfReferenceVariables;
+					IUMatrix[irowOut][icolOut] = factor * UMatrix[icol2];
+				}
+			}
+		}
+#ifdef _DEBUG_WRITE
+		std::cout << "[";
+		for (int row = 0; row < numOfInputVariables; ++row) {
+			for (int col = 0; col < numOfInputVariables * numOfReferenceVariables; ++col) {
+				std::cout << IUMatrix[row][col].real() << "+" << IUMatrix[row][col].imag() << "im ";
+			}
+			if (row + 1 < numOfInputVariables) {
+				std::cout << ";";
+			}
+		}
+		std::cout << "]" << std::endl;
+#endif
+		std::complex<double>** IUTInvTTInvMatrix = new std::complex<double>*[numOfInputVariables];
+		for (int irow = 0; irow < numOfInputVariables; ++irow) {
+			IUTInvTTInvMatrix[irow] = new std::complex<double>[numOfInputVariables * numOfReferenceVariables];
+			for (int icol = 0; icol < numOfInputVariables * numOfReferenceVariables; ++icol) {
+				IUTInvTTInvMatrix[irow][icol] = czero;// Zero clear
+			}
+		}
+		for (int irow = 0; irow < numOfInputVariables; ++irow) {
+			for (int icol = 0; icol < numOfInputVariables * numOfReferenceVariables; ++icol) {
+				std::complex<double> value = czero;
+				for (int i = 0; i < numOfInputVariables * numOfReferenceVariables; ++i) {
+					value += IUMatrix[irow][i] * TInvTTInvMatrix[i][icol];
+				}
+				IUTInvTTInvMatrix[irow][icol] = value;
+			}
+		}
+		for (int irow = 0; irow < numOfInputVariables; ++irow) {
+			delete[] IUMatrix[irow];
+		}
+		delete[] IUMatrix;
+#ifdef _DEBUG_WRITE
+		std::cout << "[";
+		for (int row = 0; row < numOfInputVariables; ++row) {
+			for (int col = 0; col < numOfInputVariables * numOfReferenceVariables; ++col) {
+				std::cout << IUTInvTTInvMatrix[row][col].real() << "+" << IUTInvTTInvMatrix[row][col].imag() << "im ";
+			}
+			if (row + 1 < numOfInputVariables) {
+				std::cout << ";";
+			}
+		}
+		std::cout << "]" << std::endl;
+#endif
+		std::vector< std::complex<double> > delta[2];
+		const std::complex<double> imaginaryUnit = std::complex<double>(0.0, 1.0);
+		for (int i = 0; i < numOfInputVariables; ++i) {
+			for (int row = 0; row < numOfInputVariables; ++row) {
+				delta[i].push_back(TInvTMatrix[i][row] * istfErr[out][row]);
+				delta[i].push_back(TInvTMatrix[i][row] * istfErr[out][row] * imaginaryUnit);
+			}
+			for (int row = 0; row < numOfInputVariables; ++row) {
+				const int in = ptrControl->getChannelIndex(CommonParameters::INPUT, row);
+				for (int col = 0; col < numOfReferenceVariables; ++col) {
+					const int index = numOfInputVariables * col + row;
+					delta[i].push_back( - IUTInvTTInvMatrix[i][index] * istfErr[in][col]);
+					delta[i].push_back( - IUTInvTTInvMatrix[i][index] * istfErr[in][col] * imaginaryUnit);
+				}
+			}
+		}
+#ifdef _DEBUG_WRITE
+		const std::complex<double> Ux = respOrg[out][0];
+		const std::complex<double> Uy = respOrg[out][1];
+		const std::complex<double> det = Txx * Tyy - Txy * Tyx;
+		const std::complex<double> resp0 = (Ux * Tyy - Uy * Tyx) / det;
+		const std::complex<double> resp1 = (Uy * Txx - Ux * Txy) / det;
+		for (int i = 0; i < 3; ++i) {
+			for (int j = 0; j < numOfReferenceVariables; ++j) {
+				for (int isign = 0; isign < 2; ++isign){
+					std::complex<double>** respMod = new std::complex<double>*[numOfOutputAndInputVariables];
+					for (int i2 = 0; i2 < numOfOutputAndInputVariables; ++i2) {
+						respMod[i2] = new std::complex<double>[numOfReferenceVariables];
+						for (int j2 = 0; j2 < numOfReferenceVariables; ++j2) {
+							respMod[i2][j2] = respOrg[i2][j2];
+						}
+					}
+					const double deltaRatio = 0.001;
+					double deltaValue(0.0);
+					int index = i;
+					if (i == 1) {
+						index = in0;
+					}
+					else if (i == 2) {
+						index = in1;
+					}
+					if (isign == 0) {
+						deltaValue = respOrg[index][j].real() * deltaRatio;
+						respMod[index][j] += deltaValue;
+					}
+					else {
+						deltaValue = respOrg[index][j].imag() * deltaRatio;
+						respMod[index][j] += imaginaryUnit * deltaValue;
+					}
+					// Slighty modify
+					const std::complex<double> UxMod = respMod[out][0];
+					const std::complex<double> UyMod = respMod[out][1];
+					const std::complex<double> TxxMod = respMod[in0][0];
+					const std::complex<double> TxyMod = respMod[in0][1];
+					const std::complex<double> TyxMod = respMod[in1][0];
+					const std::complex<double> TyyMod = respMod[in1][1];
+					const std::complex<double> detMod = TxxMod * TyyMod - TxyMod * TyxMod;
+					const std::complex<double> resp0Mod = (UxMod * TyyMod - UyMod * TyxMod) / detMod;
+					const std::complex<double> resp1Mod = (UyMod * TxxMod - UxMod * TxyMod) / detMod;
+					// Calculate derivative
+					std::complex<double> derivative0(0.0, 0.0);
+					std::complex<double> derivative1(0.0, 0.0);
+					derivative0 = (resp0Mod - resp0) / deltaValue;
+					derivative1 = (resp1Mod - resp1) / deltaValue;
+					std::cout << i << " " << j << " " << isign
+						<< " " << derivative0.real() << " " << derivative0.imag() 
+						<< " " << derivative1.real() << " " << derivative1.imag() << std::endl;
+					for (int i2 = 0; i2 < numOfOutputAndInputVariables; ++i2) {
+						delete[] respMod[i2];
+					}
+					delete[] respMod;
+				}
+			}
+		}
+
+#endif
+		for (int irow = 0; irow < numOfInputVariables; ++irow) {
+			delete[] IUTInvTTInvMatrix[irow];
+		}
+		delete[] IUTInvTTInvMatrix;
+		for (int i = 0; i < numOfInputVariables; ++i) {
+			double squareSumReal(0.0);
+			double squareSumImag(0.0);
+			for (std::vector< std::complex<double> >::const_iterator itr = delta[i].begin(); itr != delta[i].end(); ++itr) {
+				squareSumReal += pow(itr->real(), 2);
+				squareSumImag += pow(itr->imag(), 2);
+			}
+			respErr[out][i] = sqrt(squareSumReal);
+		}
+	}
 
 	// Release memory
 	for (int iVar = 0; iVar < numOfOutputAndInputVariables; ++iVar) {
@@ -5354,11 +5467,16 @@ void AnalysisMultivariateRegression::estimateErrorParametric(const int numSegmen
 	}
 	delete[] complexResidualsOrg;
 	delete[] MDOrg;
-	delete[] sumfOfResidualNorm;
+	delete[] variance;
 	for (int iVar = 0; iVar < numOfOutputAndInputVariables; ++iVar) {
 		delete[] istfErr[iVar];
 	}
 	delete[] istfErr;
+	for (int irow = 0; irow < numOfInputVariables * numOfReferenceVariables; ++irow) {
+		delete[] TInvTTInvMatrix[irow];
+	}
+	delete[] TInvTTInvMatrix;
+
 
 }
 

@@ -186,7 +186,7 @@ private:
 	void calibrationCorrectionAllChannels( const int numChannels, const int numSegmentsTotal, const double freq, std::complex<double>** ftval ) const;
 
 	// Perform calibration correction for main analyss
-	void calibrationCorrection( const int iChan, const int numSegmentsTotal, const double freq, std::complex<double>* ftval, const bool afterPreprocessing = true ) const;
+	void calibrationCorrection(const int iChan, const int numSegmentsTotal, const double freq, std::complex<double>* ftval, const bool afterPreprocessing, const bool afterTapering ) const;
 
 	// Calculate rotated fields
 	void calculateRotatedFields( const int numSegmentsTotal, std::complex<double>** ftval ) const;
@@ -212,6 +212,9 @@ private:
 
 	// Output time-series data
 	void outputTimeSeriesData( const std::vector<CommonParameters::DataFileSet>& dataFileSets, const bool afterPreprocessing ) const;
+
+	// Evaluate characteristics of time-series data prior to the estimation of the response functions
+	void outputCalibratedTimeSeriesData(const std::vector<CommonParameters::DataFileSet>& dataFileSets) const;
 
 	// Evaluate characteristics of time-series data prior to the estimation of the response functions
 	void priorEvaluationOfTimeSeriesData( const int interval, const std::vector<CommonParameters::DataFileSet>& dataFileSets,

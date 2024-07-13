@@ -4,6 +4,7 @@ CXXFLAGS      = -O3 \
                 -qopenmp \
                 -DNDEBUG \
                 -D_USE_OMP \
+                -D_LINUX \
                 -I./include
 DEST          = ./
 LIB_DIR       = ./lib

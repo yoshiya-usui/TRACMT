@@ -52,6 +52,9 @@ public:
 	// Calculate calibration function for a input frequency
 	std::complex<double> calculateCalibrationFunction( const double freq ) const;
 
+	// Get constant factor
+	double getFactor() const;
+
 private:
 	// Constant factor
 	double m_factor;

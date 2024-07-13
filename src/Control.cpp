@@ -65,12 +65,13 @@ Control::Control() :
 	m_cutoffFrequencyForIIRLowPassFilter(-1.0),
 	m_doesApplyIIRHighPassFilter(false),
 	m_doesApplyIIRLowPassFilter(false),
-	m_elogMTReadingOption(Control::READ_EX_EY_HX_HY_HZ_HRX_HRY_FROM_ELOGMT_DATA),
+	m_elogMTReadingOption(Control::NOT_SPECIFIED),
 	m_errorEstimationMethod(Control::FIXED_WEIGHTS_BOOTSTRAP),
 	m_numOutputVariables(-1),
 	m_numInputVariables(2),
 	m_numRemoteReferenceVariables(2),
 	m_samplingFrequency(-1),
+	m_samplingFrequencyOrg(-1),
 	m_numThreads(1),
 	m_numTimeSeriesSections(-1),
 	m_numRepetitionsOfBootstrap(1000),
@@ -84,6 +85,7 @@ Control::Control() :
 	m_outputLevel(0),
 	m_outputFreqDomainDataToCsv(false),
 	m_outputTimeSeriesToCsv(false),
+	m_outputCalibratedTimeSeriesToCsv(false),
 	m_parameterQForNotchFilter(10.0),
 	m_percentageOfOmmitedDataSubsetDeletionJackknife(5.0),
 	m_procedureType(Control::ORDINARY_REMOTE_REFERENCE),
@@ -266,6 +268,11 @@ bool Control::doesOutputTimeSeriesToCsv() const{
 }
 
 // Get flag specifing whether input file is ATS binary file
+bool Control::doesOutputCalibratedTimeSeriesToCsv() const {
+	return m_outputCalibratedTimeSeriesToCsv;
+}
+
+// Get flag specifing whether input file is ATS binary file
 bool Control::doesReadAtsBinary() const{
 	return m_readAtsBinary;
 }
@@ -349,6 +356,11 @@ int Control::getNumRemoteReferenceVariables() const{
 // Get sampling frequency
 double Control::getSamplingFrequency() const{
 	return m_samplingFrequency;
+}
+
+// Get number of threads
+double Control::getSamplingFrequencyOrg() const {
+	return m_samplingFrequencyOrg;
 }
 
 // Get number of threads
@@ -605,7 +617,7 @@ std::string Control::getTimeFromStartTimeOfEachSection( const int sectionIndex, 
 	double temp = sec0 + elapsedTime;
 	if( m_paramsForDecimation.applyDecimation ){
 		const double samplingFreq = getSamplingFrequency();
-		const double samplingFreqBeforeDecimation = samplingFreq * static_cast<double>(m_paramsForDecimation.decimationInterval);
+		const double samplingFreqBeforeDecimation = getSamplingFrequencyOrg();
 		const int halfOfDimension = m_paramsForDecimation.filterLength / 2;
 		temp += static_cast<double>(halfOfDimension) / samplingFreqBeforeDecimation;
 	}
@@ -701,7 +713,10 @@ void Control::readParameterFile(){
 			ifs >> m_numRemoteReferenceVariables;
 		}
 		else if( line.find("SAMPLING_FREQ") != std::string::npos ){
-			ifs >> m_samplingFrequency;
+			double dbuf(0.0);
+			ifs >> dbuf;
+			m_samplingFrequency = dbuf;
+			m_samplingFrequencyOrg = dbuf;
 		}
 		else if( line.find("NUM_SECTION") != std::string::npos ){
 			ifs >> m_numTimeSeriesSections;
@@ -1037,6 +1052,9 @@ void Control::readParameterFile(){
 		else if( line.find("OUTPUT_TIME_SERIES") != std::string::npos ){
 			m_outputTimeSeriesToCsv = true;
 		}
+		else if (line.find("OUTPUT_CALIBRATED_TIME_SERIES") != std::string::npos) {
+			m_outputCalibratedTimeSeriesToCsv = true;
+		}
 		else if( line.find("JACKKNIFE") != std::string::npos ){
 			double dbuf(0);
 			ifs >> dbuf;
@@ -1298,6 +1316,23 @@ void Control::readParameterFile(){
 	if( getNumCalibrationFiles() > 0 ){
 		assert( getNumCalibrationFiles() == getNumberOfChannels() );
 	}
+	if (getElogMTReadingOption() == Control::NOT_SPECIFIED) {
+		switch (getNumOutputVariables())
+		{
+			case 1:
+				m_elogMTReadingOption = Control::READ_HZ_HX_HY_HRX_HRY_FROM_ELOGMT_DATA;
+				break;
+			case 2:
+				m_elogMTReadingOption = Control::READ_EX_EY_HX_HY_HRX_HRY_FROM_ELOGMT_DATA;
+				break;
+			case 3:
+				m_elogMTReadingOption = Control::READ_EX_EY_HX_HY_HZ_HRX_HRY_FROM_ELOGMT_DATA;
+				break;
+			default:
+				m_elogMTReadingOption = Control::READ_EX_EY_HX_HY_HZ_HRX_HRY_FROM_ELOGMT_DATA;
+				break;
+		}
+	}
 
 	const double samplingFrequencyAfterDecimation = m_samplingFrequency / static_cast<double>(m_paramsForDecimation.decimationInterval);
 
@@ -1467,6 +1502,9 @@ void Control::readParameterFile(){
 	ptrOutputFiles->writeLogMessage("Output level : " + Util::toString(getOutputLevel()), false);
 	if( doesOutputTimeSeriesToCsv() ){
 		ptrOutputFiles->writeLogMessage("Output time-series data to csv files", false);
+	}
+	if (doesOutputCalibratedTimeSeriesToCsv()) {
+		ptrOutputFiles->writeLogMessage("Output calibrated time-series data to csv files", false);
 	}
 	if( doesOutputFreqDomainDataToCsv() ){
 		ptrOutputFiles->writeLogMessage("Output frequency-domain data to csv files", false);

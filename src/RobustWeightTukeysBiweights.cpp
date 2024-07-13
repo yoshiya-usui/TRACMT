@@ -119,7 +119,7 @@ double RobustWeightTukeysBiweights::calculateDerivativeOfLossFunction(const doub
 	}
 	else {
 		const double temp = 1.0 - pow(val / c, 2);
-		return val * (temp, 2);
+		return val * pow(temp, 2);
 	}
 
 }

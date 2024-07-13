@@ -168,3 +168,8 @@ std::complex<double> CalibrationFunction::calculateCalibrationFunction( const do
 	return amp * std::complex<double>( cos(phs), sin(phs) );
 
 }
+
+// Get constant factor
+double CalibrationFunction::getFactor() const{
+	return m_factor;
+}

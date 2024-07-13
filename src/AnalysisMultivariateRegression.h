@@ -139,8 +139,8 @@ private:
 
 	// Estimate error by a parametric approach
 	void estimateErrorParametric( const int numSegmentsTotal, const double paramB, const double paramC,
-		std::complex<double>** ftval, const std::complex<double>* const respOrg0, const std::complex<double>* const respOrg1,
-		std::complex<double>** respOrg, const double* const variancesWithoutScaleOrg, const double scaleOrg, double** respErr ) const;
+		std::complex<double>** ftval, std::complex<double>** respOrg, const double* const variancesWithoutScaleOrg, const double scaleOrg,
+		double** respErr ) const;
 
 	// Write residuals
 	void writeResiduals( const std::string& fileName, const int numSegmentsTotal, const int numOfOutputAndInputVariables,

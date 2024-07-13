@@ -111,6 +111,11 @@ void Analysis::run( std::vector<CommonParameters::DataFileSet>& dataFileSets ){
 		outputTimeSeriesData( dataFileSets, false );
 	}
 
+	if (ptrControl->doesOutputCalibratedTimeSeriesToCsv() ) {
+		outputCalibratedTimeSeriesData(dataFileSets);
+	}
+
+	// Prior evaluation before preprocessing
 	if( ptrControl->getParamsForTimeDomainEvaluation().doEvaluation ){
 		const Control::ParamsForTimeDomainEvaluation params = ptrControl->getParamsForTimeDomainEvaluation();
 		priorEvaluationOfTimeSeriesData( params.timeSeriesInterval, dataFileSets, false );
@@ -1238,13 +1243,13 @@ void Analysis::calibrationCorrectionAllChannels( const int numChannels, const in
 
 	// Calibration correction
 	for( int iChan = 0; iChan < numChannels; ++iChan ){
-		calibrationCorrection( iChan, numSegmentsTotal, freq, ftval[iChan] );
+		calibrationCorrection(iChan, numSegmentsTotal, freq, ftval[iChan], true, true);
 	}
 
 }
 
 // Perform calibration correction
-void Analysis::calibrationCorrection( const int iChan, const int numSegmentsTotal, const double freq, std::complex<double>* ftval, const bool afterPreprocessing ) const{
+void Analysis::calibrationCorrection(const int iChan, const int numSegmentsTotal, const double freq, std::complex<double>* ftval, const bool afterPreprocessing, const bool afterTapering) const {
 
 	const Control* const ptrControl = Control::getInstance();
 
@@ -1260,7 +1265,7 @@ void Analysis::calibrationCorrection( const int iChan, const int numSegmentsTota
 		const Control::ParamsForDecimation params = ptrControl->getParamsForDecimation();
 		double* coeff = new double[params.filterLength + 1];
 		const double samplingFreqAfterDecimation = ptrControl->getSamplingFrequency();
-		const double samplingFreqBeforeDecimation = samplingFreqAfterDecimation * static_cast<double>(params.decimationInterval);
+		const double samplingFreqBeforeDecimation = ptrControl->getSamplingFrequencyOrg();
 		const double freqStop = 0.5 * samplingFreqBeforeDecimation;
 		const double freqPass = freqStop / pow(10.0, params.transitionBandWidthInLogarithmicScale);
 		Util::calculateFIRFilterCoeffsByLeastSquare( params.filterLength, true, samplingFreqBeforeDecimation, freqPass, freqStop, 1.0, 1.0, coeff );
@@ -1269,8 +1274,10 @@ void Analysis::calibrationCorrection( const int iChan, const int numSegmentsTota
 		delete [] coeff;
 	}
 
-	// Adjust the scaling factor for the loss due to the Hanning tapering
-	calCorrFunc *= sqrt(8.0/3.0);
+	if (afterTapering) {
+		// Adjust the scaling factor for the loss due to the Hanning tapering
+		calCorrFunc *= sqrt(8.0 / 3.0);
+	}
 
 	if(afterPreprocessing){
 		// Adjust the influences of preprocessing 
@@ -2332,7 +2339,7 @@ void Analysis::mergeSections( std::vector<CommonParameters::DataFileSet>& dataFi
 void Analysis::calculateRotatedFields( const int numSegmentsTotal, std::complex<double>** ftval ) const{
 
 	OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
-	ptrOutputFiles->writeLogMessage("Calculate rotated fields for segment length");
+	ptrOutputFiles->writeLogMessage("Calculate rotated fields");
 
 	const Control* const ptrControl = Control::getInstance();
 	const double rotationAngle = ptrControl->getRotationAngle();
@@ -2772,6 +2779,76 @@ void Analysis::outputTimeSeriesData( const std::vector<CommonParameters::DataFil
 }
 
 // Evaluate characteristics of time-series data prior to the estimation of the response functions
+void Analysis::outputCalibratedTimeSeriesData(const std::vector<CommonParameters::DataFileSet>& dataFileSets) const {
+
+	OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
+	ptrOutputFiles->writeLogMessage("Output calibrated time-series data");
+
+	const Control* const ptrControl = Control::getInstance();
+	const int numChannels = ptrControl->getNumberOfChannels();
+	const double samplingFrequency = ptrControl->getSamplingFrequency();
+
+	int section(0);
+	for (std::vector<CommonParameters::DataFileSet>::const_iterator itr = dataFileSets.begin(); itr != dataFileSets.end(); ++itr, ++section) {
+		const int numData = itr->numDataPoints;
+		int numDataForFFT(-1);
+		for (int i = 1; i < 1000; ++i) {
+			const int vpow2 = static_cast<int>(pow(2, i));
+			if (vpow2 >= numData) {
+				numDataForFFT = vpow2;
+				break;
+			}
+		}
+		std::complex<double>** cdata = new std::complex<double>*[numChannels];
+		for (int iChan = 0; iChan < numChannels; ++iChan) {
+			// FFT
+			cdata[iChan] = new std::complex<double>[numDataForFFT];
+			for (int i = 0; i < numData; ++i) {
+				cdata[iChan][i] = std::complex<double>(itr->dataFile[iChan].data[i], 0.0);
+			}
+			for (int i = numData; i < numDataForFFT; ++i) {
+				cdata[iChan][i] = std::complex<double>(0.0, 0.0);
+			}
+			Util::fourierTransform(numDataForFFT, cdata[iChan]);
+			// Stop to write warning otherwise huge number of warnings can be outputed because the frequency
+			// ranges of calibration files are usually too narrow to cover the whole frequency range.
+			ptrOutputFiles->stopToWriteWarningMessage();
+			// Calibration
+			cdata[iChan][0] *= m_calibrationFunctions[iChan].getFactor();// Frequency = 0 (Hz)
+			for (int i = 1; i < numDataForFFT / 2 + 1; ++i) {
+				// Exclude frequency = 0 (Hz) because log(frequency) is caculated for calibration correcton
+				const double freq = static_cast<double>(i) / static_cast<double>(numDataForFFT) * samplingFrequency;
+				calibrationCorrection(iChan, 1, freq, &cdata[iChan][i], false, false);
+			}
+			ptrOutputFiles->restartToWriteWarningMessage();
+		}
+		// Rotate
+		calculateRotatedFields(numDataForFFT, cdata);
+		for (int iChan = 0; iChan < numChannels; ++iChan) {
+			// Inverse FFT
+			Util::inverseFourierTransform(numDataForFFT, cdata[iChan]);
+			// Output calibrated time series 
+			std::ostringstream oss;
+			oss << "time_series_calibrated_sect_" << section << "_chan_" << iChan << ".csv";
+			std::ofstream ofs;
+			ofs.open(oss.str().c_str(), std::ios::out);
+			if (ofs.fail()) {
+				ptrOutputFiles->writeLogMessage("File open error !! : " + oss.str());
+			}
+			for (int i = 0; i < numData; ++i) {
+				ofs << std::setprecision(12) << std::scientific << cdata[iChan][i].real() << std::endl;
+			}
+			ofs.close();
+			// Release memory 
+			delete[] cdata[iChan];
+		}
+		// Release memory 
+		delete[] cdata;
+	}
+
+}
+
+// Evaluate characteristics of time-series data prior to the estimation of the response functions
 void Analysis::priorEvaluationOfTimeSeriesData( const int interval, const std::vector<CommonParameters::DataFileSet>& dataFileSets,
 	const bool afterPreprocessing ) const{
 
@@ -2905,7 +2982,7 @@ void Analysis::priorEvaluationOfFrequencyDataFromAllData( const std::vector<Comm
 				if( freq < params.startOutputFrequency || freq > params.endOutputFrequency ){
 					continue;
 				}
-				calibrationCorrection( iChan, 1, freq, &cdata[iChan][i], afterPreprocessing );
+				calibrationCorrection(iChan, 1, freq, &cdata[iChan][i], afterPreprocessing, false);
 			}
 			ptrOutputFiles->restartToWriteWarningMessage();
 		}

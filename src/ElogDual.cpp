@@ -208,7 +208,11 @@ void ElogDual::makeCalibrationFile( const std::string& fileName, const double un
 			//------- 1st fir filer from measured calibration table
 			std::string path = "";
 			if (!ptrControl->getDirectoryOfLoggerCalibrationFiles().empty()) {
+#ifdef _LINUX
+				path = ptrControl->getDirectoryOfLoggerCalibrationFiles() + "\/";
+#else
 				path = ptrControl->getDirectoryOfLoggerCalibrationFiles() + "\\";
+#endif
 			}
 			std::string fileName = "firh.txt";
 			if (ptrControl->getTypeOfElogDual() == Control::ELOGDUAL_ADU_MODE) {
@@ -268,12 +272,15 @@ void ElogDual::makeCalibrationFile( const std::string& fileName, const double un
 			std::cout << std::endl;
 #endif
 		}
-		const double samplingFreq = ptrControl->getSamplingFrequency();
-		if( fabs(samplingFreq - 32.0) < CommonParameters::EPS ) {
+		if( fabs(ptrControl->getSamplingFrequencyOrg() - 32.0) < CommonParameters::EPS ) {
 			//------ Group delay correction ---
 			std::string path = "";
 			if (!ptrControl->getDirectoryOfLoggerCalibrationFiles().empty()) {
+#ifdef _LINUX
+				path = ptrControl->getDirectoryOfLoggerCalibrationFiles() + "\/";
+#else
 				path = ptrControl->getDirectoryOfLoggerCalibrationFiles() + "\\";
+#endif
 			}
 			std::string fileName = "firl.txt";
 			if (ptrControl->getTypeOfElogDual() == Control::ELOGDUAL_ADU_MODE) {

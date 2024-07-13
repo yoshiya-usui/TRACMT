@@ -4,6 +4,7 @@ CXXFLAGS      = -O3 \
                 -qopenmp \
                 -DNDEBUG \
                 -D_USE_OMP \
+                -D_LINUX \
                 -D_MERSENNE_TWISTER_ORIGINAL \
                 -I./include
 DEST          = ./
