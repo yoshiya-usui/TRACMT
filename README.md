@@ -27,7 +27,7 @@ field.
 # Release note
 _**v1.2.0**_ June. 13, 2024: Initial release
 
-_**v1.3.4**_ July. 14, 2024: I added a parametric error estimation method for the RRMS estimator and fixed some bugs relating to the ELOG reading option and calibration.
+_**v1.3.4**_ July. 14, 2024:  A parametric error estimation method is addd for the RRMS estimator. Some bugs relating to the ELOG reading option and calibration and fixed.
 
 _**v1.3.6**_ August. 15, 2024: A function to read ELOG-DUAL binary files is modified.
 
