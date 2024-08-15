@@ -196,6 +196,9 @@ private:
 		std::ofstream& ofsResp, std::ofstream& ofsRhoaPhs ) = 0;
 
 	// Output average spectrum
+	void modifyTimeSeriesBasedOnEOFAnalysis(std::vector<CommonParameters::DataFileSet>& dataFileSets);
+
+	// Output average spectrum
 	void outputAverageSpectrum( std::complex<double>** cdata, const int numData, const int section, 
 		const bool afterPreprocessing, const bool afterCalibration ) const;
 

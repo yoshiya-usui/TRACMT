@@ -65,6 +65,7 @@ Control::Control() :
 	m_cutoffFrequencyForIIRLowPassFilter(-1.0),
 	m_doesApplyIIRHighPassFilter(false),
 	m_doesApplyIIRLowPassFilter(false),
+	m_doesPeformEOFBasedDenoising(false),
 	m_elogMTReadingOption(Control::NOT_SPECIFIED),
 	m_errorEstimationMethod(Control::FIXED_WEIGHTS_BOOTSTRAP),
 	m_numOutputVariables(-1),
@@ -92,6 +93,7 @@ Control::Control() :
 	m_readAtsBinary(false),
 	m_readElogDualBinary(false),
 	m_readElogMTBinary(false),
+	m_timingEOFBasedDenoising(Control::BEFORE_DECIMATION),
 	m_typeOfElogDual(Control::ELOG1K),
 	m_typeOfElogMT(Control::ELOGMT_ADU_MODE)
 {
@@ -290,6 +292,11 @@ bool Control::doesReadElogMTBinary() const{
 // Get azimuth
 double Control::getAzimuth( const int iChan ) const{
 	return m_azimuths[iChan];
+}
+
+// Get channel index
+bool Control::doesPeformEOFBasedDenoising() const {
+	return m_doesPeformEOFBasedDenoising;
 }
 
 // Get channel index
@@ -663,6 +670,13 @@ int Control::getNumStartTimesSections() const{
 int Control::getProcedureType () const{
 
 	return m_procedureType;
+
+}
+
+// Get type of ELOG-Dual
+int Control::getTimingEOFBasedDenoising() const {
+
+	return m_timingEOFBasedDenoising;
 
 }
 
@@ -1303,6 +1317,12 @@ void Control::readParameterFile(){
 				m_rangeOfSectionsForMerge.push_back ( std::make_pair(startSectionIndex, endSectionIndex ) );
 			}
 		}
+		else if (line.find("EOF_ANALYSIS") != std::string::npos) {
+			m_doesPeformEOFBasedDenoising = true;
+			int ibuf(0);
+			ifs >> ibuf;
+			m_timingEOFBasedDenoising = ibuf;
+		}
 		else if( line.find("END") != std::string::npos ){
 			break;
 		}
@@ -1819,6 +1839,20 @@ void Control::readParameterFile(){
 			oss << *itr << " ";
 		}
 		ptrOutputFiles->writeLogMessage(oss.str(), false);
+	}
+	if (doesPeformEOFBasedDenoising()) {
+		switch (getTimingEOFBasedDenoising())
+		{
+			case Control::BEFORE_DECIMATION:
+				ptrOutputFiles->writeLogMessage("EOF analysis is performed before decimation", false);
+				break;
+			case Control::AFTER_DEGITAL_FILTERS:
+				ptrOutputFiles->writeLogMessage("EOF analysis is performed after the application of digital filters", false);
+				break;
+			default:
+				ptrOutputFiles->writeErrorMessage("Unsupported timing of EOF analysis: " + Util::toString(getTimingEOFBasedDenoising()));
+				break;
+		}
 	}
 	if( m_paramsForDecimation.applyDecimation ){
 		ptrOutputFiles->writeLogMessage("Parameters for decimation : ", false);

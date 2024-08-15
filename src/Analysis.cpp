@@ -100,6 +100,11 @@ void Analysis::run( std::vector<CommonParameters::DataFileSet>& dataFileSets ){
 	// Merge sections
 	mergeSections(dataFileSets);
 
+	if (ptrControl->doesPeformEOFBasedDenoising() && ptrControl->getTimingEOFBasedDenoising() == Control::BEFORE_DECIMATION) {
+		// Modify time-series data based on the EOF analysis
+		modifyTimeSeriesBasedOnEOFAnalysis(dataFileSets);
+	}
+
 	// Apply decimation
 	decimation(dataFileSets);
 
@@ -1090,7 +1095,12 @@ void Analysis::preprocessing( std::vector<CommonParameters::DataFileSet>& dataFi
 			}
 		}
 	}
-	
+
+	if (ptrControl->doesPeformEOFBasedDenoising() && ptrControl->getTimingEOFBasedDenoising() == Control::AFTER_DEGITAL_FILTERS) {
+		// Modify time-series data based on the EOF analysis
+		modifyTimeSeriesBasedOnEOFAnalysis(dataFileSets);
+	}
+
 	if( (ptrControl->getParamsForPrewhitening()).applyPrewhitening ){
 		m_coefficientsOfARModel = new std::vector<double>[numChannels];
 		const Control::ParamsForPrewhitening params = ptrControl->getParamsForPrewhitening();
@@ -2397,6 +2407,94 @@ void Analysis::calculateRotatedFields( const int numSegmentsTotal, std::complex<
 			ftval[iChan0][iSeg] = Util::calculateRotatedField( azimuth0, azimuth1, rotationAngle, v0, v1 );
 			ftval[iChan1][iSeg] = Util::calculateRotatedField( azimuth0, azimuth1, rotationAngle + 90, v0, v1 );
 		}
+	}
+
+}
+
+// Output average spectrum
+void Analysis::modifyTimeSeriesBasedOnEOFAnalysis(std::vector<CommonParameters::DataFileSet>& dataFileSets) {
+
+	OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
+	ptrOutputFiles->writeLogMessage("Modify time-series data based on the EOF analysis");
+
+	const Control* const ptrControl = Control::getInstance();
+	const double samplingFrequency = ptrControl->getSamplingFrequency();
+
+	int iSection(0);
+	int icount(0);
+	double matrix[3] = { 0.0, 0.0, 0.0 };
+	for (std::vector<CommonParameters::DataFileSet>::iterator itr = dataFileSets.begin(); itr != dataFileSets.end(); ++itr, ++iSection) {
+		const int numData = itr->numDataPoints;
+		for (int iChan = 0; iChan < 2; ++iChan) {
+			ptrOutputFiles->writeLogMessage("Secton " + Util::toString(iSection) + ", Channel " + Util::toString(iChan));
+			// Make new data records by subtracting mean
+			const double mean = Util::calculateMeanValue(numData, itr->dataFile[iChan].data);
+			ptrOutputFiles->writeLogMessage("Subtract mean (" + Util::toString(mean) + ")");
+			for (int i = 0; i < numData; ++i) {
+				itr->dataFile[iChan].data[i] -= mean;
+			}
+		}
+		for (int i = 0; i < numData; ++i) {
+			matrix[0] += pow(itr->dataFile[0].data[i], 2);
+			matrix[2] += pow(itr->dataFile[1].data[i], 2);
+			matrix[1] += itr->dataFile[0].data[i] * itr->dataFile[1].data[i];
+			++icount;
+		}
+#ifdef _DEBUG_WRITE
+		const int numChannels = ptrControl->getNumberOfChannels();
+		for (int iChan = 0; iChan < numChannels; ++iChan) {
+			std::ostringstream oss;
+			oss << "ts_sect_" << iSection << "_chan_" << iChan << "_before_EOF.txt";
+			std::ofstream ofs;
+			ofs.open(oss.str().c_str(), std::ios::out);
+			if (ofs.fail()) {
+				ptrOutputFiles->writeLogMessage("File open error !! : " + oss.str());
+			}
+			for (int i = 0; i < numData; ++i) {
+				const double elapsedTime = static_cast<double>(i) / samplingFrequency;
+				ofs << std::setprecision(8) << std::scientific << itr->dataFile[iChan].data[i] << std::endl;
+			}
+			ofs.close();
+		}
+#endif
+	}
+	matrix[0] /= static_cast<double>(icount);
+	matrix[1] /= static_cast<double>(icount);
+	matrix[2] /= static_cast<double>(icount);
+	// Calcualte all eigenvalues and eigenvectors of a real symmetric
+	double eigenVectors[4] = { 0.0, 0.0, 0.0, 0.0 };
+	double eigenValues[2] = { 0.0, 0.0 };
+	Util::calculateEigenValuesAndVectorsOfRealSymmetricMatrix(2, matrix, eigenValues, eigenVectors);
+	ptrOutputFiles->writeLogMessage("The first mode: eigen value = " + Util::toString(eigenValues[0]) 
+		+ ", eigen vector = (" + Util::toString(eigenVectors[0]) + ", " + Util::toString(eigenVectors[1]) + ")");
+	ptrOutputFiles->writeLogMessage("The second mode: eigen value = " + Util::toString(eigenValues[1])
+		+ ", eigen vector = (" + Util::toString(eigenVectors[2]) + ", " + Util::toString(eigenVectors[3]) + ")");
+	iSection = 0;
+	for (std::vector<CommonParameters::DataFileSet>::iterator itr = dataFileSets.begin(); itr != dataFileSets.end(); ++itr, ++iSection) {
+		const int numData = itr->numDataPoints;
+		for (int i = 0; i < numData; ++i) {
+			const double val0 = itr->dataFile[0].data[i];
+			const double val1 = itr->dataFile[1].data[i];
+			itr->dataFile[0].data[i] = val0 * eigenVectors[0] + val1 * eigenVectors[1];
+			itr->dataFile[1].data[i] = val0 * eigenVectors[2] + val1 * eigenVectors[3];
+		}
+#ifdef _DEBUG_WRITE
+		const int numChannels = ptrControl->getNumberOfChannels();
+		for (int iChan = 0; iChan < numChannels; ++iChan) {
+			std::ostringstream oss;
+			oss << "ts_sect_" << iSection << "_chan_" << iChan << "_after_EOF.txt";
+			std::ofstream ofs;
+			ofs.open(oss.str().c_str(), std::ios::out);
+			if (ofs.fail()) {
+				ptrOutputFiles->writeLogMessage("File open error !! : " + oss.str());
+			}
+			for (int i = 0; i < numData; ++i) {
+				const double elapsedTime = static_cast<double>(i) / samplingFrequency;
+				ofs << std::setprecision(8) << std::scientific << itr->dataFile[iChan].data[i] << std::endl;
+			}
+			ofs.close();
+		}
+#endif
 	}
 
 }

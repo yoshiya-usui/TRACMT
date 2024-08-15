@@ -467,15 +467,28 @@ double Util::calculateDeterminantOfMatrix( const int dimension, const double* co
 }
 
 // Calcualte all eigenvalues and eigenvectors of a real symmetric
-void Util::calculateEigenValuesAndVectorsOfRealSymmetricMatrix( const int dimension, const double* const matrix, 
-	double* eigenValues, double* eigenVectors ){
+void Util::calculateEigenValuesAndVectorsOfRealSymmetricMatrix(const int dimension, const double* const matrix,
+	double* eigenValues, double* eigenVectors) {
 
 	OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
-	if( dimension < 1 ){
-		ptrOutputFiles->writeErrorMessage("Dimension of linear equation is less than 1" );
+	if (dimension < 1) {
+		ptrOutputFiles->writeErrorMessage("Dimension of linear equation is less than 1");
 	}
 
-	memcpy(eigenVectors, matrix, sizeof(double)*dimension*dimension);
+	int icount(0);
+	// Column major
+	for (int col = 0; col < dimension; ++col) {
+		for (int row = 0; row < col; ++row) {
+			const int index = col * dimension + row;
+			eigenVectors[index] = 0.0;
+		}
+		for (int row = col; row < dimension; ++row) {
+			const int index = col * dimension + row;
+			eigenVectors[index] = matrix[icount];
+			++icount;
+		}
+	}
+
 	LapackInterface::calculateEigenValuesAndVectorsOfRealSymmetricMatrix(dimension, eigenVectors, eigenValues);
 
 }

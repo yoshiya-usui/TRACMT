@@ -42,19 +42,22 @@ void LapackInterface::calculateEigenValuesAndVectorsOfRealSymmetricMatrix( const
 
 	integer n = static_cast<integer>(dimension);
 	integer lda = n;
-	integer lwork = n * n;
+	integer dum1 = 1;
+	integer dum2 = -1;
+	integer nb = ilaenv_(&dum1, "DSYTRD", "L", &n, &dum2, &dum2, &dum2);
+	integer lwork = (nb + 2) * n;
 	double* work = new double[lwork];
 	integer info = 0;
-
 	dsyev_("V", "L", &n, matrix, &lda, vectors, work, &lwork, &info);
-	delete [] work;
+	delete[] work;
 
-	if( info < 0 ){
+	if (info < 0) {
 		OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
-		ptrOutputFiles->writeErrorMessage("An argument had an illegal value : info="+Util::toString(info) );
-	}else if( info > 0 ){
+		ptrOutputFiles->writeErrorMessage("An argument had an illegal value : info=" + Util::toString(info));
+	}
+	else if (info > 0) {
 		OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
-		ptrOutputFiles->writeErrorMessage("Eigenvalue calculation is not converged : info="+Util::toString(info) );
+		ptrOutputFiles->writeErrorMessage("Eigenvalue calculation is not converged : info=" + Util::toString(info));
 	}
 
 }

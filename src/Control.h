@@ -107,6 +107,12 @@ public:
 	};
 
 	// Segment length and the index of the frequency where response functions are estimated
+	enum TimingEOFBasedDenoising{
+		BEFORE_DECIMATION = 0 ,
+		AFTER_DEGITAL_FILTERS,
+	};
+
+	// Segment length and the index of the frequency where response functions are estimated
 	struct SegmentInfo{
 		int length;
 		std::vector<int> degrees;
@@ -292,6 +298,9 @@ public:
 	bool doesReadElogMTBinary() const;
 
 	// Get azimuth
+	bool doesPeformEOFBasedDenoising() const;
+
+	// Get azimuth
 	double getAzimuth( const int iChan ) const;
 
 	// Get channel index
@@ -463,7 +472,10 @@ public:
 	int getNumStartTimesSections() const;
 
 	// Get procedure type
-	int getProcedureType () const;
+	int getProcedureType() const;
+
+	// Get timing of denoising based on EOF
+	int getTimingEOFBasedDenoising() const;
 
 	// Get type of ELOG-Dual
 	int getTypeOfElogDual() const;
@@ -511,6 +523,9 @@ private:
 
 	// Flag specifing whether IIR low-pass filter is applied
 	bool m_doesApplyIIRLowPassFilter;
+
+	// Option of ELOG-Dual binary data reading
+	bool m_doesPeformEOFBasedDenoising;
 
 	// Option of ELOG-Dual binary data reading
 	int m_elogDualReadingOption;
@@ -670,6 +685,9 @@ private:
 
 	// Flag specifing whether ELOG-MT binary is read
 	bool m_readElogMTBinary;
+
+	// Type of ELOG-Dual
+	int m_timingEOFBasedDenoising;
 
 	// Type of ELOG-Dual
 	int m_typeOfElogDual;

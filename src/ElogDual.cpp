@@ -130,7 +130,7 @@ void ElogDual::readElogBinaryFilesUnderADirectory(const std::string& directory, 
 		int counter(0);
 		for (auto& p : dirItr) {
 			const std::string fileName = p.path().string();
-			if (fileName.find(stringCompared) != std::string::npos) {
+			if (fileName.find(stringCompared) != std::string::npos && Util::extractExtensionOfFileName(fileName).find("dat") != std::string::npos) {
 				readElogBinaryFile(fileName, numSkipData, numDataPoints, counter, ex, ey);
 				if (counter >= numSkipData + numDataPoints){
 					break;
