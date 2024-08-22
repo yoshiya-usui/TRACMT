@@ -8,14 +8,14 @@ We developed the RRMS estimator by applying the robust multivariate linear regre
 The RRMS estimator can give an unbiased estimate of MT transfer function and suppress the influence of outliers in the electric field and magnetic
 field.
 
-# How to compile TRACMT
+## How to compile TRACMT
 1) Download all source files of TRACMT to a directory.
 2) Download source files of CLAPACK (https://www.netlib.org/clapack/) to another directory and make librariy files.
 3) Copy library files of CLAPACK (blas_LINUX.a, lapack_LINUX.a, and libf2c.a) to "lib" directory and copy header files (blaswrap.h, clapack.h, and f2c.h) to "include" directory.
 4) If your compiler supports C++11, you can compile TRACMT by "make -f Makefile_C++11" command.
    If your compiler does NOT support C++11, download mt19937-64.tgz from http://math.sci.hiroshima-u.ac.jp/m-mat/MT/mt64.html and rename mt19937-64.c to mt19937-64.cpp. After copying mt19937-64.cpp and mt64.h to the source-file directory of TRACMT, you can compile TRACMT by make command (Make -f Makefile).
 
-# Functional overview
+## Functional overview
 **Input file format**: Text (Ascii) file / .ats files of Metronix instruments / .dat files of ELOG-MT
 
 **Prewhitening**: Non-robust prewhitening / Robust prewhitening / Robust prewhitening with robust filter
@@ -24,7 +24,7 @@ field.
 
 **Error estimation method**: Parametric approach / Bootstrap method / Jackknife method
 
-# Release note
+## Release note
 _**v1.2.0**_ June. 13, 2024: Initial release
 
 _**v1.3.4**_ July. 14, 2024:  A parametric error estimation method is addd for the RRMS estimator. Some bugs relating to the ELOG reading option and calibration and fixed.
