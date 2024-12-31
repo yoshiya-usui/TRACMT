@@ -33,6 +33,7 @@
 // Default constructer
 RobustWeight::RobustWeight():
 	m_convergenceCriteria(0.01),
+	m_name("no name"),
 	m_numIterationMax(10)
 {
 }

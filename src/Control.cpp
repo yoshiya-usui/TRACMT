@@ -269,7 +269,7 @@ bool Control::doesOutputTimeSeriesToCsv() const{
 	return m_outputTimeSeriesToCsv;
 }
 
-// Get flag specifing whether input file is ATS binary file
+// Get flag specifing wheter output calibrated time series data as csv file
 bool Control::doesOutputCalibratedTimeSeriesToCsv() const {
 	return m_outputCalibratedTimeSeriesToCsv;
 }
@@ -294,7 +294,7 @@ double Control::getAzimuth( const int iChan ) const{
 	return m_azimuths[iChan];
 }
 
-// Get channel index
+// Get flag specifing whether denoising based on EOF is performed
 bool Control::doesPeformEOFBasedDenoising() const {
 	return m_doesPeformEOFBasedDenoising;
 }
@@ -365,7 +365,7 @@ double Control::getSamplingFrequency() const{
 	return m_samplingFrequency;
 }
 
-// Get number of threads
+// Get original sampling frequency
 double Control::getSamplingFrequencyOrg() const {
 	return m_samplingFrequencyOrg;
 }
@@ -1370,6 +1370,9 @@ void Control::readParameterFile(){
 		case Control::MULTIVARIATE_REGRESSION:
 			ptrOutputFiles->writeLogMessage("Procedure type : multivariate regression (RRMS)", false);
 			break;
+		case Control::MODIFIED_MULTIVARIATE_REGRESSION:
+			ptrOutputFiles->writeLogMessage("Procedure type : modified multivariate regression (MRRMS)", false);
+			break;
 		case Control::ORDINARY_REMOTE_REFERENCE:
 			ptrOutputFiles->writeLogMessage("Procedure type : ordinary remote reference", false);
 			break;
@@ -1390,6 +1393,9 @@ void Control::readParameterFile(){
 			m_analysis = new AnalysisTwoStage();
 			break;
 		case Control::MULTIVARIATE_REGRESSION:
+			m_analysis = new AnalysisMultivariateRegression();
+			break;
+		case Control::MODIFIED_MULTIVARIATE_REGRESSION:
 			m_analysis = new AnalysisMultivariateRegression();
 			break;
 		case Control::ORDINARY_REMOTE_REFERENCE:
@@ -1455,7 +1461,7 @@ void Control::readParameterFile(){
 			ptrOutputFiles->writeLogMessage("     Maximum number of the outer iteration: " + Util::toString(m_paramsForTreatmentOfHatMatrix.maxNumberOfOuterIteration), false);
 		}
 	}
-	else if( getProcedureType() == Control::MULTIVARIATE_REGRESSION ){
+	else if (getProcedureType() == Control::MULTIVARIATE_REGRESSION || getProcedureType() == Control::MODIFIED_MULTIVARIATE_REGRESSION) {
 		if( m_paramsForRobustMultivariateRegression.selectInitialCandidatesByRandomSamplingAtEachFrequency ){
 			ptrOutputFiles->writeLogMessage("At each frequency, initial candidates are selected by random sampling", false);
 		}
@@ -1497,6 +1503,10 @@ void Control::readParameterFile(){
 	case FIXED_WEIGHTS_JACKKNIFE:
 		ptrOutputFiles->writeLogMessage("Error estimation method : fixed-weights jackknife", false);
 		break;
+	case ROBUST_BOOTSTRAP:
+		ptrOutputFiles->writeLogMessage("Error estimation method : robust bootstrap", false);
+		ptrOutputFiles->writeLogMessage("Number or repetitions in bootstrap : " + Util::toString(getNumRepetitionsOfBootstrap()), false);
+		break;
 	case FIXED_WEIGHTS_BOOTSTRAP:
 		ptrOutputFiles->writeLogMessage("Error estimation method : fixed-weights bootstrap", false);
 		ptrOutputFiles->writeLogMessage("Number or repetitions in bootstrap : " + Util::toString(getNumRepetitionsOfBootstrap()), false);
@@ -1511,6 +1521,11 @@ void Control::readParameterFile(){
 	default:
 		ptrOutputFiles->writeErrorMessage("Unsupported error estimation method : " + Util::toString(getErrorEstimationMethod()));
 		break;
+	}
+
+	if (getProcedureType() == Control::MODIFIED_MULTIVARIATE_REGRESSION && getErrorEstimationMethod() == ROBUST_BOOTSTRAP)
+	{
+		ptrOutputFiles->writeErrorMessage("Robust bootstrap cannot be used for MRRMS estimator");
 	}
 
 	ptrOutputFiles->writeLogMessage("Number of output variables : " + Util::toString(getNumOutputVariables()), false);

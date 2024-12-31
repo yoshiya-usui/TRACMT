@@ -81,7 +81,7 @@ private:
 		const std::complex<double>* const residuals, const double scale, const bool noRobust, double& error0, double& error1) const;
 
 	// Estimate error by fixed-weights bootstrap
-	void fixedWeightsBootstrap(const double freq, const int numSegmentsTotal, double** weightsOrg, double* scalesOrg, std::complex<double>** ftval,
+	void robustBootstrap(const double freq, const int numSegmentsTotal, double** weightsOrg, double* scalesOrg, std::complex<double>** ftval,
 		std::ofstream& ofsResp, std::ofstream& ofsRhoaPhs, const std::complex<double>* const resp0Org, const std::complex<double>* const resp1Org) const;
 
 	// Estimate errors by strict bootstrap

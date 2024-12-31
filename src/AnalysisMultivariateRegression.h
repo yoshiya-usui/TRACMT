@@ -111,36 +111,45 @@ private:
 	void improveCandidate( const int numSegmentsTotal, const int numOfMaxIterations, 
 		const double convergenceCriteria, const bool initialCalculation, const double paramB, const double paramC,
 		std::complex<double>** ftval, std::complex<double>** resp, double* variancesWithoutScale, double& scale, double& determinant,
-		double* coherencesMin ) const;
+		double* coherencesMin, double* covariancesLowerTriangleWithoutScale) const;
 
 	// Calculate Mahalanobis distances
-	void calculateMD( const int numSegmentsTotal, 
-		const int numOfOutputAndInputVariables, std::complex<double>** complexResiduals, const double* const variancesWithoutScale, 
-		double* MD ) const;
+	void calculateMD(const int numSegmentsTotal, const int numOfOutputAndInputVariables, std::complex<double>** complexResiduals,
+		const double* const variancesWithoutScale, double* MD) const;
 
 	// Estimate error by fixed-weights bootstrap
-	void estimateErrorByFixedWeightsBootstrap(const int numSegmentsTotal, const double paramB, const double paramC,
-		std::complex<double>** ftval, std::complex<double>** respOrg, const double* const variancesWithoutScaleOrg, const double scaleOrg,
-		const double determinantOrg, double** respErr) const;
+	void calculateMD(const int numSegmentsTotal, const int numOfOutputAndInputVariables, std::complex<double>** complexResiduals, 
+		const double* const variancesWithoutScale, const double* const covariancesLowerTriangleWithoutScale, double* MD) const;
+	// Estimate error by robust bootstrap
+	void estimateErrorByRobustBootstrap(const int numSegmentsTotal, const double paramB, const double paramC,
+		std::complex<double>** ftval, std::complex<double>** respOrg, const double* const variancesWithoutScaleOrg, 
+		const double* const covariancesLowerTriangleWithoutScaleOrg, const double scaleOrg, const double determinantOrg, 
+		double** respErr) const;
 
 	// Estimate error by strict bootstrap
-	void estimateErrorByStrictBootstrap( const int numSegmentsTotal, const double paramB, const double paramC, 
-		std::complex<double>** ftvalOrg, std::complex<double>** respOrg, const double* const variancesWithoutScaleOrg, const double scaleOrg,
-		const double determinantOrg, double** respErr ) const;
+	void estimateErrorByStrictBootstrap(const int numSegmentsTotal, const double paramB, const double paramC,
+		std::complex<double>** ftvalOrg, std::complex<double>** respOrg, const double* const variancesWithoutScaleOrg, 
+		const double* const covariancesLowerTriangleWithoutScaleOrg, const double scaleOrg,	const double determinantOrg, double** respErr) const;
 
 	// Estimate error by fixed-weights jackknife
-	void estimateErrorByFixedWeightsJackknife( const int numSegmentsTotal, const double paramB, const double paramC, 
+	void estimateErrorByFixedWeightsJackknife(const int numSegmentsTotal, const double paramB, const double paramC,
 		std::complex<double>** ftvalOrg, const std::complex<double>* const respOrg0, const std::complex<double>* const respOrg1,
-		std::complex<double>** respOrg, const double* const variancesWithoutScaleOrg, const double scaleOrg, double** respErr ) const;
+		std::complex<double>** respOrg, const double* const variancesWithoutScaleOrg, const double* const covariancesLowerTriangleWithoutScaleOrg, 
+		const double scaleOrg, double** respErr) const;
 
 	// Estimate error by subset deletion jackknife
-	void estimateErrorBySubsetDeletionJackknife( const int numSegmentsTotal, std::complex<double>** ftvalOrg, std::complex<double>** respOrg, 
-		const double* const variancesWithoutScaleOrg, const double scaleOrg,const double determinantOrg,	double** respErr ) const;
+	void estimateErrorBySubsetDeletionJackknife(const int numSegmentsTotal, std::complex<double>** ftvalOrg, std::complex<double>** respOrg,
+		const double* const variancesWithoutScaleOrg, const double* const covariancesLowerTriangleWithoutScaleOrg, const double scaleOrg,
+		const double determinantOrg, double** respErr) const;
 
 	// Estimate error by a parametric approach
-	void estimateErrorParametric( const int numSegmentsTotal, const double paramB, const double paramC,
-		std::complex<double>** ftval, std::complex<double>** respOrg, const double* const variancesWithoutScaleOrg, const double scaleOrg,
-		double** respErr ) const;
+	void estimateErrorParametric(const int numSegmentsTotal, const double paramB, const double paramC,
+		std::complex<double>** ftval, std::complex<double>** respOrg, const double* const variancesWithoutScaleOrg, 
+		const double* const covariancesLowerTriangleWithoutScaleOrg, const double scaleOrg,	double** respErr) const;
+
+	// Get value of covariance matrix
+	double getValueOfCovarianceMatrix(const int dimension, const double* const variancesWithoutScaleOrg, const double* const covariancesLowerTriangleWithoutScaleOrg,
+		const int row, const int col) const;
 
 	// Write residuals
 	void writeResiduals( const std::string& fileName, const int numSegmentsTotal, const int numOfOutputAndInputVariables,

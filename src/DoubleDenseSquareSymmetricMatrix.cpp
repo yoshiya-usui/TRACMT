@@ -69,6 +69,27 @@ void DoubleDenseSquareSymmetricMatrix::factorizeMatrix(){
 }
 
 // Factorize and solve a linear equation with a right-hand-side vector
+double DoubleDenseSquareSymmetricMatrix::determinant() {
+
+	if (m_factorizedMatrix == NULL) {
+		m_factorizedMatrix = new double[m_numRows * m_numColumns];
+	}
+
+	if (m_ipiv == NULL) {
+		m_ipiv = new int[m_numRows];
+	}
+	Util::factorizeRealSymmetricMatrix(m_numRows, m_matrix, m_factorizedMatrix, m_ipiv);
+
+	double determinant(1.0);
+	for( int row = 0; row < m_numRows; ++row ){
+		const int index = row * m_numRows + row;
+		determinant *= m_factorizedMatrix[index];
+	}
+	return determinant;
+
+}
+
+// Factorize and solve a linear equation with a right-hand-side vector
 void DoubleDenseSquareSymmetricMatrix::factorizeAndSolveLinearEquation( const double* const rhsVector, double* result ) const{
 
 	Util::factorizeAndSolveLinearEquationRealSymmetricMatrix(m_numRows, 1, m_matrix, rhsVector, result);

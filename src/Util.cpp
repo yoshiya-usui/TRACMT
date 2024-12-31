@@ -406,6 +406,7 @@ double Util::calculateDeterminantOfMatrix( const int dimension, const double* co
 //	Util::debugWriteRealMatrix(dimension, dimension, matrixWork);
 //#endif
 
+	int numPivoting(0);
 	// Change to triangular matrix
 	for( int col = 0; col < dimension - 1; ++col ){
 		// Search maximum diagonal component
@@ -432,6 +433,7 @@ double Util::calculateDeterminantOfMatrix( const int dimension, const double* co
 				matrixWork[indexCur] = valMax;
 				matrixWork[indexMax] = valCur;
 			}
+			++numPivoting;
 //#ifdef _DEBUG_WRITE
 //			Util::debugWriteRealMatrix(dimension, dimension, matrixWork);
 //#endif
@@ -461,6 +463,7 @@ double Util::calculateDeterminantOfMatrix( const int dimension, const double* co
 		determinant *= matrixWork[index]; 
 	}
 	delete [] matrixWork;
+	determinant *= pow(-1.0, numPivoting);
 
 	return determinant;
 

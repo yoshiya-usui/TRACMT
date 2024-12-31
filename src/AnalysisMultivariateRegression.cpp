@@ -30,6 +30,7 @@
 #include "Control.h"
 #include "OutputFiles.h"
 #include "DoubleDenseSquareMatrix.h"
+#include "DoubleDenseSquareSymmetricMatrix.h"
 #include <algorithm>
 
 #include <string.h>
@@ -2356,6 +2357,7 @@ void AnalysisMultivariateRegression::calculatePartialDerivativesOfVariancesWitho
 		denominator += weights[iSeg] * pow(MD[iSeg] / scale, 2);
 	}
 	double* term1 = new double[2 * numOfReferenceVariables * numOfOutputAndInputVariables];
+	double* term1a = new double[2 * numOfReferenceVariables * numOfOutputAndInputVariables];
 	double* term2 = new double[2 * numOfReferenceVariables * numOfOutputAndInputVariables];
 	double* term3 = new double[numOfOutputAndInputVariables];
 	double* term4 = new double[numOfOutputAndInputVariables];
@@ -2378,6 +2380,7 @@ void AnalysisMultivariateRegression::calculatePartialDerivativesOfVariancesWitho
 		std::complex<double> termFirst = czero;
 		for( int icol = 0; icol < 2 * numOfReferenceVariables * numOfOutputAndInputVariables; ++icol ){
 			term1[icol] = 0.0;// Zero clear
+			term1a[icol] = 0.0;// Zero clear
 			term2[icol] = 0.0;// Zero clear
 		}
 		for( int icol = 0; icol < numOfOutputAndInputVariables; ++icol ){
@@ -2410,12 +2413,21 @@ void AnalysisMultivariateRegression::calculatePartialDerivativesOfVariancesWitho
 			}
 			term5 += std::norm(complexResiduals[irow][iSeg]) * diff / scale; 
 			term6 += ( diff + 2.0 * weights[iSeg] ) / scale * pow(MD[iSeg] / scale, 2);
+			const double sigmaReal = complexResiduals[irow][iSeg].real();
+			const double sigmaImag = complexResiduals[irow][iSeg].imag();
+			const std::complex<double> brx = ftval[ptrControl->getChannelIndex(CommonParameters::REMOTE_REFERENCE, 0)][iSeg];
+			const std::complex<double> bry = ftval[ptrControl->getChannelIndex(CommonParameters::REMOTE_REFERENCE, 1)][iSeg];
+			const int offset = 2 * numOfReferenceVariables * irow;
+			term1a[offset    ] += weights[iSeg] * ( sigmaReal * brx.real() + sigmaImag * brx.imag());
+			term1a[offset + 1] += weights[iSeg] * ( sigmaReal * bry.real() + sigmaImag * bry.imag());
+			term1a[offset + 2] += weights[iSeg] * (-sigmaReal * brx.imag() + sigmaImag * brx.real());
+			term1a[offset + 3] += weights[iSeg] * (-sigmaReal * bry.imag() + sigmaImag * bry.real());
 		}
 		for( int icol = 0; icol < 2 * numOfReferenceVariables * numOfOutputAndInputVariables; ++icol ){
-			dSigma1[irow][icol] = - valq / denominator * term1[icol]	+ valq * numerator / pow(denominator,2) * term2[icol];
+			dSigma1[irow][icol] = - valq / denominator * term1[icol] - 2.0 * valq / denominator * term1a[icol] + valq * numerator / pow(denominator,2) * term2[icol];
 		}
 		for( int icol = 0; icol < numOfOutputAndInputVariables; ++icol ){
-			dSigma2[irow][icol] = - valq / denominator * term3[icol]	+ valq * numerator / pow(denominator,2) * term4[icol];
+			dSigma2[irow][icol] = - valq / denominator * term3[icol] + valq * numerator / pow(denominator,2) * term4[icol];
 		}
 		dSigma3[irow] = - valq / denominator * term5 + valq * numerator / pow(denominator,2) * term6;
 	}
@@ -2425,6 +2437,7 @@ void AnalysisMultivariateRegression::calculatePartialDerivativesOfVariancesWitho
 	delete [] hSigmaMatrix;
 	delete [] vecSigma;
 	delete [] term1;
+	delete [] term1a;
 	delete [] term2;
 	delete [] term3;
 	delete [] term4;
@@ -2980,8 +2993,10 @@ void AnalysisMultivariateRegression::calculateResponseFunctions( const int iSegL
 	}
 
 	double** variancesWithoutScale = new double*[numOfCancidates];
+	double** covariancesLowerTriangleWithoutScale = new double* [numOfCancidates];
 	for( int iCan = 0; iCan < numOfCancidates; ++iCan ){
 		variancesWithoutScale[iCan] = new double[numOfOutputAndInputVariables];
+		covariancesLowerTriangleWithoutScale[iCan] = new double[numOfOutputAndInputVariables * (numOfOutputAndInputVariables - 1) / 2];
 	}
 	double* scales = new double[numOfCancidates];
 	double* determinants = new double[numOfCancidates];
@@ -3004,8 +3019,9 @@ void AnalysisMultivariateRegression::calculateResponseFunctions( const int iSegL
 			ptrOutputFiles->writeCvgMessage("Candidate: " + Util::toString(iCan));
 			ptrOutputFiles->writeCvgMessage("--------------------------------------------------------------------------------");
 		}
-		improveCandidate( numSegmentsTotal, numOfMaxIterations, convergenceCriteria, true, paramB, paramC,
-			ftval, resp[iCan], variancesWithoutScale[iCan], scales[iCan], determinants[iCan], coherences );
+		improveCandidate(numSegmentsTotal, numOfMaxIterations, convergenceCriteria, true, paramB, paramC,
+			ftval, resp[iCan], variancesWithoutScale[iCan], scales[iCan], determinants[iCan], coherences,
+			covariancesLowerTriangleWithoutScale[iCan]);
 	}
 
 	if( ptrControl->getOutputLevel() >= 3 ){
@@ -3046,7 +3062,7 @@ void AnalysisMultivariateRegression::calculateResponseFunctions( const int iSegL
 
 		// Output scales and variances without scale
 		ptrOutputFiles->writeCvgMessage("--------------------------------------------------------------------------------");
-		ptrOutputFiles->writeCvgMessage("Scales and variances without scale of all candidates:");
+		ptrOutputFiles->writeCvgMessage("Scales and covariance matrices without scale of all candidates:");
 		ptrOutputFiles->writeCvgMessage("--------------------------------------------------------------------------------");
 		for( int iCan = 0; iCan < numOfCancidates; ++iCan ){
 			std::ostringstream msg;
@@ -3056,11 +3072,26 @@ void AnalysisMultivariateRegression::calculateResponseFunctions( const int iSegL
 				const int iSeg2 = candidatesOfPairs[iCan].second;
 				msg << "Segment pair: ("  << std::setw(10) << iSeg1 << "," << std::setw(10) << iSeg2 << "), ";
 			}
-			msg << "Scale:" << std::setw(12) << std::setprecision(4) << std::scientific << scales[iCan] << ", Variances without scale:";
-			for( int iVar = 0; iVar < numOfOutputAndInputVariables; ++iVar ){
-				msg << std::setw(12) << std::setprecision(4) << std::scientific << variancesWithoutScale[iCan][iVar];
-				if( iVar + 1 < numOfOutputAndInputVariables ){
-					msg << ", ";
+			msg << "Scale:" << std::setw(12) << std::setprecision(4) << std::scientific << scales[iCan] << ", Covariance matrix without scale:";
+			msg << "(";
+			for (int irow = 0; irow < numOfOutputAndInputVariables; ++irow) {
+				for (int icol = 0; icol < numOfOutputAndInputVariables; ++icol) {
+					msg << std::setw(12) << std::setprecision(4) << std::scientific << getValueOfCovarianceMatrix(numOfOutputAndInputVariables, variancesWithoutScale[iCan], covariancesLowerTriangleWithoutScale[iCan], irow, icol);
+					if (icol == numOfOutputAndInputVariables - 1)
+					{
+						if (irow == numOfOutputAndInputVariables - 1)
+						{
+							msg << ")";
+						}
+						else
+						{
+							msg << ";";
+						}
+					}
+					else
+					{
+						msg << ",";
+					}
 				}
 			}
 			ptrOutputFiles->writeCvgMessage(msg.str());
@@ -3088,7 +3119,8 @@ void AnalysisMultivariateRegression::calculateResponseFunctions( const int iSegL
 			// Calculate complex residuals
 			calculateComplexResiduals( numSegmentsTotal, ftval, resp[iCan], complexResiduals );
 			// Calculate Mahalanobis distance
-			calculateMD( numSegmentsTotal, numOfOutputAndInputVariables, complexResiduals, variancesWithoutScale[iCan], MD );
+			calculateMD(numSegmentsTotal, numOfOutputAndInputVariables, complexResiduals, variancesWithoutScale[iCan], 
+				covariancesLowerTriangleWithoutScale[iCan], MD);
 			double averageOfLossFunction(0.0);
 			for( int iSeg = 0; iSeg < numSegmentsTotal; ++iSeg ){
 				const double val = MD[iSeg] / maxScaleOfBestCandidates;
@@ -3160,7 +3192,7 @@ void AnalysisMultivariateRegression::calculateResponseFunctions( const int iSegL
 			ptrOutputFiles->writeCvgMessage(msg.str());
 		}
 		ptrOutputFiles->writeCvgMessage("--------------------------------------------------------------------------------");
-		ptrOutputFiles->writeCvgMessage("Scales and variances without scale of the best " + Util::toString(bestCandidates.size()) + " candidates:");
+		ptrOutputFiles->writeCvgMessage("Scales and variance matrices without scale of the best " + Util::toString(bestCandidates.size()) + " candidates:");
 		ptrOutputFiles->writeCvgMessage("--------------------------------------------------------------------------------");
 		for( std::vector<int>::const_iterator itrCanBest = bestCandidates.begin(); itrCanBest != bestCandidates.end(); ++itrCanBest ){
 			const int iCan = *itrCanBest;	
@@ -3171,11 +3203,26 @@ void AnalysisMultivariateRegression::calculateResponseFunctions( const int iSegL
 				const int iSeg2 = candidatesOfPairs[iCan].second;
 				msg << "Segment pair: ("  << std::setw(10) << iSeg1 << "," << std::setw(10) << iSeg2 << "), ";
 			}
-			msg << "Scale:" << std::setw(12) << std::setprecision(4) << std::scientific << scales[iCan] << ", Variances without scale:";
-			for( int iVar = 0; iVar < numOfOutputAndInputVariables; ++iVar ){
-				msg << std::setw(12) << std::setprecision(4) << std::scientific << variancesWithoutScale[iCan][iVar];
-				if( iVar + 1 < numOfOutputAndInputVariables ){
-					msg << ", ";
+			msg << "Scale:" << std::setw(12) << std::setprecision(4) << std::scientific << scales[iCan] << ", Covariances without scale:";
+			msg << "(";
+			for (int irow = 0; irow < numOfOutputAndInputVariables; ++irow) {
+				for (int icol = 0; icol < numOfOutputAndInputVariables; ++icol) {
+					msg << std::setw(12) << std::setprecision(4) << std::scientific << getValueOfCovarianceMatrix(numOfOutputAndInputVariables, variancesWithoutScale[iCan], covariancesLowerTriangleWithoutScale[iCan], irow, icol);
+					if (icol == numOfOutputAndInputVariables - 1)
+					{
+						if (irow == numOfOutputAndInputVariables - 1)
+						{
+							msg << ")";
+						}
+						else
+						{
+							msg << ";";
+						}
+					}
+					else
+					{
+						msg << ",";
+					}
 				}
 			}
 			ptrOutputFiles->writeCvgMessage(msg.str());
@@ -3196,8 +3243,9 @@ void AnalysisMultivariateRegression::calculateResponseFunctions( const int iSegL
 			ptrOutputFiles->writeCvgMessage("Candidate: " + Util::toString(*itrCanBest));
 			ptrOutputFiles->writeCvgMessage("--------------------------------------------------------------------------------");
 		}
-		improveCandidate( numSegmentsTotal, numOfMaxIterations, convergenceCriteria, false, paramB, paramC,
-			ftval, resp[*itrCanBest], variancesWithoutScale[*itrCanBest], scales[*itrCanBest], determinants[*itrCanBest], coherences );
+		improveCandidate(numSegmentsTotal, numOfMaxIterations, convergenceCriteria, false, paramB, paramC,
+			ftval, resp[*itrCanBest], variancesWithoutScale[*itrCanBest], scales[*itrCanBest], determinants[*itrCanBest], coherences,
+			covariancesLowerTriangleWithoutScale[*itrCanBest]);
 		if( scales[*itrCanBest] < smallestScale) {
 			smallestScale = scales[*itrCanBest];
 			candidateWithSmallestScale= *itrCanBest;
@@ -3216,8 +3264,8 @@ void AnalysisMultivariateRegression::calculateResponseFunctions( const int iSegL
 		calculateComplexResiduals( numSegmentsTotal, ftval, resp[iCan], complexResiduals );
 		// Calculate Mahalanobis distance
 		double* MD = new double[numSegmentsTotal];
-		calculateMD( numSegmentsTotal, numOfOutputAndInputVariables, complexResiduals,
-			variancesWithoutScale[iCan], MD );
+		calculateMD(numSegmentsTotal, numOfOutputAndInputVariables, complexResiduals, variancesWithoutScale[iCan], 
+			covariancesLowerTriangleWithoutScale[iCan], MD);
 		double* weights = new double[numSegmentsTotal];
 		for( int iSeg = 0; iSeg < numSegmentsTotal; ++iSeg ){
 			const double val = MD[iSeg] / scales[iCan];
@@ -3281,11 +3329,14 @@ void AnalysisMultivariateRegression::calculateResponseFunctions( const int iSegL
 		const int iCan = candidateWithSmallestScale;
 		ptrOutputFiles->writeCvgMessage("Scale: " + Util::toString(scales[iCan]));
 		std::ostringstream msg;
-		msg << "Variances without scale:";
-		for( int iVar = 0; iVar < numOfOutputAndInputVariables; ++iVar ){
-			msg << std::setw(12) << std::setprecision(4) << std::scientific << variancesWithoutScale[iCan][iVar];
-			if( iVar + 1 < numOfOutputAndInputVariables ){
-				msg << ", ";
+		msg << "Covariance matrix without scale: " << std::endl;
+		for (int irow = 0; irow < numOfOutputAndInputVariables; ++irow) {
+			for (int icol = 0; icol < numOfOutputAndInputVariables; ++icol) {
+				msg << std::setw(12) << std::setprecision(4) << std::scientific << getValueOfCovarianceMatrix(numOfOutputAndInputVariables, variancesWithoutScale[iCan], covariancesLowerTriangleWithoutScale[iCan], irow, icol);
+			}
+			if (irow < numOfOutputAndInputVariables - 1)
+			{
+				msg << std::endl;
 			}
 		}
 		ptrOutputFiles->writeCvgMessage(msg.str());
@@ -3303,8 +3354,8 @@ void AnalysisMultivariateRegression::calculateResponseFunctions( const int iSegL
 		// Calculate complex residuals
 		calculateComplexResiduals( numSegmentsTotal, ftval, resp[iCan], complexResiduals );
 		// Calculate Mahalanobis distance
-		calculateMD( numSegmentsTotal, numOfOutputAndInputVariables, complexResiduals,
-			variancesWithoutScale[iCan], MD );
+		calculateMD(numSegmentsTotal, numOfOutputAndInputVariables, complexResiduals, variancesWithoutScale[iCan],
+			covariancesLowerTriangleWithoutScale[iCan], MD);
 		// Calculate weights
 		for( int iSeg = 0; iSeg < numSegmentsTotal; ++iSeg ){
 			const double val = MD[iSeg] / scales[iCan];
@@ -3376,26 +3427,29 @@ void AnalysisMultivariateRegression::calculateResponseFunctions( const int iSegL
 		respErr[iOut] = new double[numOfReferenceVariables];
 	}
 	const int typeOfErrorEstimationMethod = ptrControl->getErrorEstimationMethod();
-	switch(typeOfErrorEstimationMethod){
+	switch (typeOfErrorEstimationMethod) {
 	case Control::PARAMETRIC:
 		estimateErrorParametric(numSegmentsTotal, paramB, paramC, ftval, resp[candidateWithSmallestScale], variancesWithoutScale[candidateWithSmallestScale],
-			scales[candidateWithSmallestScale], respErr);
+			covariancesLowerTriangleWithoutScale[candidateWithSmallestScale], scales[candidateWithSmallestScale], respErr);
 		break;
 	case Control::FIXED_WEIGHTS_JACKKNIFE:
-		estimateErrorByFixedWeightsJackknife( numSegmentsTotal, paramB, paramC, ftval, resp0, resp1, resp[candidateWithSmallestScale],
-			variancesWithoutScale[candidateWithSmallestScale], scales[candidateWithSmallestScale], respErr );
+		estimateErrorByFixedWeightsJackknife(numSegmentsTotal, paramB, paramC, ftval, resp0, resp1, resp[candidateWithSmallestScale],
+			variancesWithoutScale[candidateWithSmallestScale], covariancesLowerTriangleWithoutScale[candidateWithSmallestScale], scales[candidateWithSmallestScale],
+			respErr);
 		break;
 	case Control::FIXED_WEIGHTS_BOOTSTRAP:
-		estimateErrorByFixedWeightsBootstrap(numSegmentsTotal, paramB, paramC, ftval, resp[candidateWithSmallestScale], variancesWithoutScale[candidateWithSmallestScale],
-			scales[candidateWithSmallestScale], determinants[candidateWithSmallestScale], respErr);
+		// Go through
+	case Control::ROBUST_BOOTSTRAP:
+		estimateErrorByRobustBootstrap(numSegmentsTotal, paramB, paramC, ftval, resp[candidateWithSmallestScale], variancesWithoutScale[candidateWithSmallestScale],
+			covariancesLowerTriangleWithoutScale[candidateWithSmallestScale], scales[candidateWithSmallestScale], determinants[candidateWithSmallestScale], respErr);
 		break;
 	case Control::SUBSET_DELETION_JACKKNIFE:
-		estimateErrorBySubsetDeletionJackknife( numSegmentsTotal, ftval, resp[candidateWithSmallestScale], variancesWithoutScale[candidateWithSmallestScale],
-			scales[candidateWithSmallestScale], determinants[candidateWithSmallestScale], respErr );
+		estimateErrorBySubsetDeletionJackknife(numSegmentsTotal, ftval, resp[candidateWithSmallestScale], variancesWithoutScale[candidateWithSmallestScale],
+			covariancesLowerTriangleWithoutScale[candidateWithSmallestScale], scales[candidateWithSmallestScale], determinants[candidateWithSmallestScale], respErr);
 		break;
 	case Control::STRICT_BOOTSTRAP:
-		estimateErrorByStrictBootstrap( numSegmentsTotal, paramB, paramC, ftval, resp[candidateWithSmallestScale], variancesWithoutScale[candidateWithSmallestScale],
-			scales[candidateWithSmallestScale], determinants[candidateWithSmallestScale], respErr );
+		estimateErrorByStrictBootstrap(numSegmentsTotal, paramB, paramC, ftval, resp[candidateWithSmallestScale], variancesWithoutScale[candidateWithSmallestScale],
+			covariancesLowerTriangleWithoutScale[candidateWithSmallestScale], scales[candidateWithSmallestScale], determinants[candidateWithSmallestScale], respErr);
 		break;
 	default:
 		ptrOutputFiles->writeErrorMessage("Unsupported error estimation method : " + Util::toString(typeOfErrorEstimationMethod));
@@ -3404,8 +3458,10 @@ void AnalysisMultivariateRegression::calculateResponseFunctions( const int iSegL
 
 	for( int iCan = 0; iCan < numOfCancidates; ++iCan ){
 		delete [] variancesWithoutScale[iCan];
+		delete [] covariancesLowerTriangleWithoutScale[iCan];
 	}
 	delete [] variancesWithoutScale;
+	delete [] covariancesLowerTriangleWithoutScale;
 	delete [] scales;
 	delete [] determinants;
 
@@ -3899,7 +3955,7 @@ void AnalysisMultivariateRegression::determineCandidatesByRandomSampling( const 
 void AnalysisMultivariateRegression::improveCandidate( const int numSegmentsTotal, const int numOfMaxIterations, 
 	const double convergenceCriteria, const bool initialCalculation, const double paramB, const double paramC,
 	std::complex<double>** ftval, std::complex<double>** resp, double* variancesWithoutScale, double& scale, double& determinant,
-	double* coherencesMin ) const{
+	double* coherencesMin, double* covariancesLowerTriangleWithoutScale ) const{
 
 	OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
 	const Control* const ptrControl = Control::getInstance();
@@ -3912,6 +3968,7 @@ void AnalysisMultivariateRegression::improveCandidate( const int numSegmentsTota
 	const int numOfInputVariables = ptrControl->getNumInputVariables();
 	const int numOfOutputAndInputVariables = numOfOutputVariables + numOfInputVariables;
 	const int degreeOfFreedom = 2 * numOfOutputAndInputVariables;
+	const int numOfLowerTriangles = numOfOutputAndInputVariables * (numOfOutputAndInputVariables - 1) / 2;
 
 	const int numOfReferenceVariables = ptrControl->getNumRemoteReferenceVariables();
 	assert(numOfReferenceVariables == 2); 
@@ -3965,6 +4022,9 @@ void AnalysisMultivariateRegression::improveCandidate( const int numSegmentsTota
 #endif
 			variancesWithoutScale[iVar] = pow(sigma, 2);
 		}
+		for (int iVar = 0; iVar < numOfLowerTriangles; ++iVar) {
+			covariancesLowerTriangleWithoutScale[iVar] = 0.0;
+		}
 		delete [] work;
 		determinant = 1.0;
 		for( int iVar = 0; iVar < numOfOutputAndInputVariables; ++iVar ){
@@ -3985,7 +4045,8 @@ void AnalysisMultivariateRegression::improveCandidate( const int numSegmentsTota
 
 	// Calculate Mahalanobis distance
 	double* MD = new double[numSegmentsTotal];
-	calculateMD( numSegmentsTotal, numOfOutputAndInputVariables, complexResiduals, variancesWithoutScale, MD );
+	calculateMD(numSegmentsTotal, numOfOutputAndInputVariables, complexResiduals, variancesWithoutScale, 
+		covariancesLowerTriangleWithoutScale, MD);
 
 	if(initialCalculation){
 		scale = Util::calculateMedian(numSegmentsTotal, MD);
@@ -4012,11 +4073,14 @@ void AnalysisMultivariateRegression::improveCandidate( const int numSegmentsTota
 		ptrOutputFiles->writeCvgMessage("Iteration number = " + Util::toString(iter) + ", Scale = " + Util::toString(scale) 
 			+ ", Sum of weights = " + Util::toString(sumOfWeights));
 		std::ostringstream msgVariance;
-		msgVariance << "Variances without scale: ";
-		for( int iVar = 0; iVar < numOfOutputAndInputVariables; ++iVar ){
-			msgVariance << std::setw(12) << std::setprecision(4) << std::scientific << variancesWithoutScale[iVar];
-			if( iVar + 1 < numOfOutputAndInputVariables ){
-				msgVariance << ",";
+		msgVariance << "Covariance matrix without scale: " << std::endl;
+		for (int irow = 0; irow < numOfOutputAndInputVariables; ++irow) {
+			for (int icol = 0; icol < numOfOutputAndInputVariables; ++icol) {
+				msgVariance << std::setw(12) << std::setprecision(4) << std::scientific << getValueOfCovarianceMatrix(numOfOutputAndInputVariables, variancesWithoutScale, covariancesLowerTriangleWithoutScale, irow, icol);
+			}
+			if (irow < numOfOutputAndInputVariables - 1)
+			{
+				msgVariance << std::endl;
 			}
 		}
 		ptrOutputFiles->writeCvgMessage(msgVariance.str());
@@ -4081,33 +4145,71 @@ void AnalysisMultivariateRegression::improveCandidate( const int numSegmentsTota
 			break;
 		}
 		// Calculate variances without scale
-		determinant = 1.0;
-		for( int iVar = 0; iVar < numOfOutputAndInputVariables; ++iVar ){
+		double* covarianceMatrix = new double[numOfOutputAndInputVariables * numOfOutputAndInputVariables];
+		for (int iVar = 0; iVar < numOfOutputAndInputVariables; ++iVar) {
 			// Make real residual vector from complex residual vector
-			double numerator (0.0);
+			double numerator(0.0);
 			double denominator(0.0);
-			for( int iSeg = 0; iSeg < numSegmentsTotal; ++iSeg ){
+			for (int iSeg = 0; iSeg < numSegmentsTotal; ++iSeg) {
 				numerator += std::norm(complexResiduals[iVar][iSeg]) * weights[iSeg];
 				const double val = MD[iSeg] / scale;
 				denominator += RobustWeightTukeysBiweights::calculateTermInDenominatorOfRobustCovariance(val, paramC);
 			}
-			if( denominator < CommonParameters::EPS ){
-				ptrOutputFiles->writeErrorMessage("Denominator of robust covariance is too small (" +  Util::toString(denominator) + ")");
+			if (denominator < 0.0) {
+				ptrOutputFiles->writeErrorMessage("Denominator of robust covariance is too negative (" + Util::toString(denominator) + ")");
 			}
 			variancesWithoutScale[iVar] = static_cast<double>(numOfOutputAndInputVariables) * numerator / denominator;
-			determinant *= variancesWithoutScale[iVar];// Real part
-			determinant *= variancesWithoutScale[iVar];// Imaginary part
+			covarianceMatrix[iVar + iVar * numOfOutputAndInputVariables] = variancesWithoutScale[iVar];
 		}
-		const double factor = pow(determinant, -1.0/static_cast<double>(degreeOfFreedom));
-		// Make determinant of covariance matrix one
-		for( int iVar = 0; iVar < numOfOutputAndInputVariables; ++iVar ){
+		if (ptrControl->getProcedureType() == Control::MODIFIED_MULTIVARIATE_REGRESSION)
+		{
+			for (int icol = 0; icol < numOfOutputAndInputVariables; ++icol) {
+				for (int irow = icol + 1; irow < numOfOutputAndInputVariables; ++irow) {
+					// Lower triangle part
+					double numerator(0.0);
+					double denominator(0.0);
+					for (int iSeg = 0; iSeg < numSegmentsTotal; ++iSeg) {
+						numerator += (complexResiduals[irow][iSeg] * std::conj(complexResiduals[icol][iSeg])).real() * weights[iSeg];
+						const double val = MD[iSeg] / scale;
+						denominator += RobustWeightTukeysBiweights::calculateTermInDenominatorOfRobustCovariance(val, paramC);
+					}
+					if (denominator < CommonParameters::EPS) {
+						ptrOutputFiles->writeErrorMessage("Denominator of robust covariance is too small (" + Util::toString(denominator) + ")");
+					}
+					const int index = irow - icol - 1 + numOfOutputAndInputVariables * (numOfOutputAndInputVariables - 1) / 2 - (numOfOutputAndInputVariables - icol) * (numOfOutputAndInputVariables - icol - 1) / 2;
+					covariancesLowerTriangleWithoutScale[index] = static_cast<double>(numOfOutputAndInputVariables) * numerator / denominator;
+					covarianceMatrix[irow + icol * numOfOutputAndInputVariables] = covariancesLowerTriangleWithoutScale[index];
+					covarianceMatrix[icol + irow * numOfOutputAndInputVariables] = covariancesLowerTriangleWithoutScale[index];
+				}
+			}
+		}
+		else
+		{
+			for (int icol = 0; icol < numOfOutputAndInputVariables; ++icol) {
+				for (int irow = icol + 1; irow < numOfOutputAndInputVariables; ++irow) {
+					covarianceMatrix[irow + icol * numOfOutputAndInputVariables] = 0.0;
+					covarianceMatrix[icol + irow * numOfOutputAndInputVariables] = 0.0;
+				}
+			}
+		}
+#ifdef _DEBUG_WRITE
+		Util::debugWriteRealMatrix(numOfOutputAndInputVariables, numOfOutputAndInputVariables, covarianceMatrix);
+#endif
+		const double determinant = Util::calculateDeterminantOfMatrix(numOfOutputAndInputVariables, covarianceMatrix);
+		delete[] covarianceMatrix;
+		if (determinant < 0.0) {
+			ptrOutputFiles->writeErrorMessage("Determinant of the covariance matrix is negative (" + Util::toString(determinant) + ")");
+		}
+		const double factor = pow(determinant, -1.0 / static_cast<double>(numOfOutputAndInputVariables));
+		for (int iVar = 0; iVar < numOfOutputAndInputVariables; ++iVar) {
 			variancesWithoutScale[iVar] *= factor;
 		}
+		for (int index = 0; index < numOfLowerTriangles; ++index) {
+			covariancesLowerTriangleWithoutScale[index] *= factor;
+		}
 		// Calculate Mahalanobis distance
-		calculateMD( numSegmentsTotal, numOfOutputAndInputVariables, complexResiduals,
-			variancesWithoutScale, MD );
-		scale = RobustWeightTukeysBiweights::calculateRobustScale(numSegmentsTotal, MD,
-			scale, paramB, paramC );
+		calculateMD(numSegmentsTotal, numOfOutputAndInputVariables, complexResiduals, variancesWithoutScale, covariancesLowerTriangleWithoutScale, MD);
+		scale = RobustWeightTukeysBiweights::calculateRobustScale(numSegmentsTotal, MD,	scale, paramB, paramC );
 		// Convergence judgment
 		converge = true;
 		if( fabs(scale - scalePre) / fabs(scalePre) > convergenceCriteria ){
@@ -4152,7 +4254,7 @@ void AnalysisMultivariateRegression::improveCandidate( const int numSegmentsTota
 
 // Calculate Mahalanobis distances
 void AnalysisMultivariateRegression::calculateMD( const int numSegmentsTotal, const int numOfOutputAndInputVariables,
-		std::complex<double>** complexResiduals, const double* const variancesWithoutScale, double* MD ) const{
+	std::complex<double>** complexResiduals, const double* const variancesWithoutScale, double* MD ) const{
 
 	for( int iSeg = 0; iSeg < numSegmentsTotal; ++iSeg ){
 		// Zero clear
@@ -4176,17 +4278,111 @@ void AnalysisMultivariateRegression::calculateMD( const int numSegmentsTotal, co
 }
 
 // Estimate error by fixed-weights bootstrap
-void AnalysisMultivariateRegression::estimateErrorByFixedWeightsBootstrap( const int numSegmentsTotal, const double paramB, const double paramC,
-	std::complex<double>** ftval, std::complex<double>** respOrg, const double* const variancesWithoutScaleOrg, const double scaleOrg,
-	const double determinantOrg, double** respErr ) const{
+void AnalysisMultivariateRegression::calculateMD(const int numSegmentsTotal, const int numOfOutputAndInputVariables, std::complex<double>** complexResiduals,
+	const double* const variancesWithoutScale, const double* const covariancesLowerTriangleWithoutScale, double* MD) const {
+
+	DoubleDenseSquareSymmetricMatrix covarianceMatrix;
+	covarianceMatrix.setDegreeOfEquation(numOfOutputAndInputVariables);
+	int icount = 0;
+	for (int icol = 0; icol < numOfOutputAndInputVariables; ++icol)
+	{
+		// Diagonals
+		covarianceMatrix.setValue(icol, icol, variancesWithoutScale[icol]);
+		for (int irow = icol + 1; irow < numOfOutputAndInputVariables; ++irow)
+		{
+			// Lower triangle part
+			covarianceMatrix.setValue(irow, icol, covariancesLowerTriangleWithoutScale[icount]);
+			++icount;
+		}
+	}
+#ifdef _DEBUG_WRITE
+	covarianceMatrix.debugWriteMatrix();
+#endif // _DEBUG_WRITE
+
+	covarianceMatrix.factorizeMatrix();
+
+	for (int iSeg = 0; iSeg < numSegmentsTotal; ++iSeg) {
+		// Zero clear
+		MD[iSeg] = 0.0;
+	}
+	double* tempRhsReal = new double[numOfOutputAndInputVariables];
+	double* tempResReal = new double[numOfOutputAndInputVariables];
+	double* tempRhsImag = new double[numOfOutputAndInputVariables];
+	double* tempResImag = new double[numOfOutputAndInputVariables];
+	for (int iSeg = 0; iSeg < numSegmentsTotal; ++iSeg) {
+//#ifdef _DEBUG_WRITE
+//		std::cout << "[";
+//		for (int irow = 0; irow < numOfOutputAndInputVariables; ++irow) {
+//			std::cout << Util::toString(complexResiduals[irow][iSeg].real()) + "+" + Util::toString(complexResiduals[irow][iSeg].imag()) + "im";
+//			if (irow < numOfOutputAndInputVariables - 1)
+//			{
+//				std::cout << ", ";
+//			}
+//		}
+//		std::cout << "]" << std::endl;
+//#endif // _DEBUG_WRITE
+		for (int irow = 0; irow < numOfOutputAndInputVariables; ++irow) {
+			tempRhsReal[irow] = complexResiduals[irow][iSeg].real();
+			tempRhsImag[irow] = complexResiduals[irow][iSeg].imag();
+		}
+		covarianceMatrix.solveLinearEquation(tempRhsReal, tempResReal);
+		covarianceMatrix.solveLinearEquation(tempRhsImag, tempResImag);
+//#ifdef _DEBUG_WRITE
+//		std::cout << "[";
+//		for (int irow = 0; irow < numOfOutputAndInputVariables; ++irow) {
+//			std::cout << Util::toString(tempResReal[irow]) + "+" + Util::toString(tempResImag[irow]) + "im";
+//			if (irow < numOfOutputAndInputVariables - 1)
+//			{
+//				std::cout << ", ";
+//			}
+//		}
+//		std::cout << "]" << std::endl;
+//#endif // _DEBUG_WRITE
+		for (int irow = 0; irow < numOfOutputAndInputVariables; ++irow) {
+			const std::complex<double> val = std::complex<double>(tempResReal[irow], tempResImag[irow]);
+			const std::complex<double> product = std::conj(complexResiduals[irow][iSeg]) * val;
+			MD[iSeg] += product.real();
+		}
+	}
+	delete[] tempRhsReal;
+	delete[] tempResReal;
+	delete[] tempRhsImag;
+	delete[] tempResImag;
+
+	// Calculate Mahalanobis distance
+	for (int iSeg = 0; iSeg < numSegmentsTotal; ++iSeg) {
+		const double work = sqrt(MD[iSeg]);
+		MD[iSeg] = work;
+	}
+
+}
+// Estimate error by robust bootstrap
+void AnalysisMultivariateRegression::estimateErrorByRobustBootstrap(const int numSegmentsTotal, const double paramB, const double paramC,
+	std::complex<double>** ftval, std::complex<double>** respOrg, const double* const variancesWithoutScaleOrg, 
+	const double* const covariancesLowerTriangleWithoutScaleOrg, const double scaleOrg,	const double determinantOrg, double** respErr) const {
 
 	OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
 	const Control* const ptrControl = Control::getInstance();
 
 	bool fixedWeights(true);
-	ptrOutputFiles->writeCvgMessage("--------------------------------------------------------------------------------");
-	ptrOutputFiles->writeCvgAndLogMessage("Estimate errors by fixed-weights bootstrap");
-	ptrOutputFiles->writeCvgMessage("--------------------------------------------------------------------------------");
+	const int typeOfErrorEstimationMethod = ptrControl->getErrorEstimationMethod();
+	switch(typeOfErrorEstimationMethod){
+	case Control::FIXED_WEIGHTS_BOOTSTRAP:
+		fixedWeights = true;
+		ptrOutputFiles->writeCvgMessage("--------------------------------------------------------------------------------");
+		ptrOutputFiles->writeCvgAndLogMessage("Estimate errors by fixed-weights bootstrap");
+		ptrOutputFiles->writeCvgMessage("--------------------------------------------------------------------------------");
+		break;
+	case Control::ROBUST_BOOTSTRAP:
+		fixedWeights = false;
+		ptrOutputFiles->writeCvgMessage("--------------------------------------------------------------------------------");
+		ptrOutputFiles->writeCvgAndLogMessage("Estimate errors by robust bootstrap");
+		ptrOutputFiles->writeCvgMessage("--------------------------------------------------------------------------------");
+		break;
+	default:
+		ptrOutputFiles->writeErrorMessage("Unsupported error estimation method : " + Util::toString(typeOfErrorEstimationMethod));
+		break;
+	}
 
 	const int numOfOutputVariables = ptrControl->getNumOutputVariables();
 	const int numOfInputVariables = ptrControl->getNumInputVariables();
@@ -4210,8 +4406,8 @@ void AnalysisMultivariateRegression::estimateErrorByFixedWeightsBootstrap( const
 	// Calculate complex residuals
 	calculateComplexResiduals( numSegmentsTotal, ftval, respOrg, complexResidualsOrg );
 	// Calculate Mahalanobis distance
-	calculateMD( numSegmentsTotal, numOfOutputAndInputVariables, complexResidualsOrg,
-		variancesWithoutScaleOrg, MDOrg );
+	calculateMD(numSegmentsTotal, numOfOutputAndInputVariables, complexResidualsOrg,
+		variancesWithoutScaleOrg, covariancesLowerTriangleWithoutScaleOrg, MDOrg);
 	// Calculate original weights
 	double sumOfWeights(0.0);
 	for( int iSeg = 0; iSeg < numSegmentsTotal; ++iSeg ){
@@ -4304,6 +4500,133 @@ void AnalysisMultivariateRegression::estimateErrorByFixedWeightsBootstrap( const
 //#endif
 
 	// Bootstrap
+	const int dofOfMatrixForCorrection = degreeOfFreedom * numOfReferenceVariables + numOfOutputAndInputVariables;
+	DoubleDenseSquareMatrix matrixForCorrection;
+	if(!fixedWeights){
+		matrixForCorrection.setDegreeOfEquation(dofOfMatrixForCorrection);
+		matrixForCorrection.zeroClearMatrix();
+		for( int irow = 0; irow < dofOfMatrixForCorrection; ++irow ){
+			matrixForCorrection.setValue(irow, irow, 1.0);// Unit matrix
+		}
+#ifdef _DEBUG_WRITE
+		matrixForCorrection.debugWriteMatrix();
+#endif
+
+		double** derivativesRespsResps = new double*[degreeOfFreedom * numOfReferenceVariables];
+		for( int irow = 0; irow < degreeOfFreedom * numOfReferenceVariables; ++irow ){
+			derivativesRespsResps[irow] = new double[degreeOfFreedom * numOfReferenceVariables];
+		}
+		double** derivativesRespsVariances = new double*[degreeOfFreedom * numOfReferenceVariables];
+		for( int irow = 0; irow < degreeOfFreedom * numOfReferenceVariables; ++irow ){
+			derivativesRespsVariances[irow] = new double[numOfOutputAndInputVariables];
+		}
+		double* derivativesRespsScale = new double[degreeOfFreedom * numOfReferenceVariables];
+		calculatePartialDerivativesOfResponses( numSegmentsTotal, paramC, ftval, respOrg, variancesWithoutScaleOrg, scaleOrg,
+			complexResidualsOrg, MDOrg, weightsOrg,
+			derivativesRespsResps, derivativesRespsVariances, derivativesRespsScale );
+		for( int irow = 0; irow < degreeOfFreedom * numOfReferenceVariables; ++irow ){
+			int icol(0);
+			for( int icount = 0; icount < degreeOfFreedom * numOfReferenceVariables; ++icount ){
+				matrixForCorrection.addValue(irow, icol, -derivativesRespsResps[irow][icount]);
+				++icol;
+			}
+			for( int icount = 0; icount < numOfOutputAndInputVariables; ++icount ){
+				if( icount != indexOfMinimumVariance ){
+					matrixForCorrection.addValue(irow, icol, -derivativesRespsVariances[irow][icount]);
+					++icol;
+				}
+			}
+			matrixForCorrection.addValue(irow, icol, -derivativesRespsScale[irow]);
+		}
+#ifdef _DEBUG_WRITE
+		matrixForCorrection.debugWriteMatrix();
+#endif
+		for( int irow = 0; irow < degreeOfFreedom * numOfReferenceVariables; ++irow ){
+			delete [] derivativesRespsResps[irow];
+		}
+		delete [] derivativesRespsResps;
+		for( int irow = 0; irow < degreeOfFreedom * numOfReferenceVariables; ++irow ){
+			delete [] derivativesRespsVariances[irow];
+		}
+		delete [] derivativesRespsVariances;
+		delete [] derivativesRespsScale;
+
+		double** derivativesVariancesResps = new double*[numOfOutputAndInputVariables];
+		for( int irow = 0; irow < numOfOutputAndInputVariables; ++irow ){
+			derivativesVariancesResps[irow] = new double[degreeOfFreedom * numOfReferenceVariables];
+		}
+		double** derivativesVariancesVariances = new double*[numOfOutputAndInputVariables];
+		for( int irow = 0; irow < numOfOutputAndInputVariables; ++irow ){
+			derivativesVariancesVariances[irow] = new double[numOfOutputAndInputVariables];
+		}
+		double* derivativesVariancesScale = new double[numOfOutputAndInputVariables];
+		calculatePartialDerivativesOfVariancesWithoutScale( numSegmentsTotal, paramC, ftval, respOrg, variancesWithoutScaleOrg, 
+			scaleOrg, determinantOrg, complexResidualsOrg, MDOrg, weightsOrg,
+			derivativesVariancesResps, derivativesVariancesVariances, derivativesVariancesScale );
+		int varCount(0);
+		for( int iVar = 0; iVar < numOfOutputAndInputVariables; ++iVar ){
+			if( iVar == indexOfMinimumVariance ){
+				continue;
+			}
+			const int irow = varCount + degreeOfFreedom * numOfReferenceVariables;
+			++varCount;
+			int icol(0);
+			for( int icount = 0; icount < degreeOfFreedom * numOfReferenceVariables; ++icount ){
+				matrixForCorrection.addValue(irow, icol, -derivativesVariancesResps[iVar][icount]);
+				++icol;
+			}
+			for( int icount = 0; icount < numOfOutputAndInputVariables; ++icount ){
+				if( icount != indexOfMinimumVariance ){
+					matrixForCorrection.addValue(irow, icol, -derivativesVariancesVariances[iVar][icount]);
+					++icol;
+				}
+			}
+			matrixForCorrection.addValue(irow, icol, -derivativesVariancesScale[iVar]);
+		}
+#ifdef _DEBUG_WRITE
+		matrixForCorrection.debugWriteMatrix();
+#endif
+		for( int irow = 0; irow < numOfOutputAndInputVariables; ++irow ){
+			delete [] derivativesVariancesResps[irow];
+		}
+		delete [] derivativesVariancesResps;
+		for( int irow = 0; irow < numOfOutputAndInputVariables; ++irow ){
+			delete [] derivativesVariancesVariances[irow];
+		}
+		delete [] derivativesVariancesVariances;
+		delete [] derivativesVariancesScale;
+
+		double* derivativesScaleResps = new double[degreeOfFreedom * numOfReferenceVariables];
+		double* derivativesScaleVariances = new double[numOfOutputAndInputVariables];
+		double derivativesScaleScale(0.0);
+		calculatePartialDerivativesOfScale( numSegmentsTotal, paramB, paramC, ftval, respOrg, variancesWithoutScaleOrg, scaleOrg,
+			complexResidualsOrg, MDOrg, weightsOrg, 
+			derivativesScaleResps, derivativesScaleVariances, derivativesScaleScale );
+		{
+			const int irow = dofOfMatrixForCorrection - 1;
+			int icol(0);
+			for( int icount = 0; icount < degreeOfFreedom * numOfReferenceVariables; ++icount ){
+				matrixForCorrection.addValue(irow, icol, -derivativesScaleResps[icount]);
+				++icol;
+			}
+			for( int icount = 0; icount < numOfOutputAndInputVariables; ++icount ){
+				if( icount != indexOfMinimumVariance ){
+					matrixForCorrection.addValue(irow, icol, -derivativesScaleVariances[icount]);
+					++icol;
+				}
+			}
+			matrixForCorrection.addValue(irow, icol, -derivativesScaleScale);
+		}
+#ifdef _DEBUG_WRITE
+		matrixForCorrection.debugWriteMatrix();
+#endif
+		delete [] derivativesScaleResps;
+		delete [] derivativesScaleVariances;
+		// Factorize matrix
+		matrixForCorrection.factorizeMatrix();
+	}
+
+	// Bootstrap
 	int* segmentIndexes = new int [numSegmentsTotal];
 	std::complex<double>** resp = new std::complex<double>*[numOfOutputAndInputVariables];
 	for( int iVar = 0; iVar < numOfOutputAndInputVariables; ++iVar ){
@@ -4312,6 +4635,7 @@ void AnalysisMultivariateRegression::estimateErrorByFixedWeightsBootstrap( const
 	const int numOfDataSet = ptrControl->getNumRepetitionsOfBootstrap();
 	std::complex<double>*** respFinal = new std::complex<double>**[numOfDataSet];
 	double* variancesWithoutScale = new double[numOfOutputAndInputVariables];
+	double* vectorForCorrection = new double[dofOfMatrixForCorrection];
 #ifdef _RAND
 	srand(1234);
 #else
@@ -4488,6 +4812,97 @@ void AnalysisMultivariateRegression::estimateErrorByFixedWeightsBootstrap( const
 			ptrOutputFiles->writeCvgMessage("--------------------------------------------------------------------------------");
 		}
 
+		if(!fixedWeights){
+			// Calculate differences between one-step estimates and original estimates
+			int index(0);
+			for( int iVar = 0; iVar < numOfOutputAndInputVariables; ++iVar ){
+				for( int irr = 0; irr < numOfReferenceVariables; ++irr ){
+					// Order: Re(Z11),Im(Z11),Re(Z12),Im(Z12),Re(Z21),Im(Z21),Re(Z22),Im(Z22),...,Re(Zq1),Im(Zq1),Re(Zq2),Im(Zq2)
+					vectorForCorrection[index] = resp[iVar][irr].real() - respOrg[iVar][irr].real();
+					++index;
+					vectorForCorrection[index] = resp[iVar][irr].imag() - respOrg[iVar][irr].imag();
+					++index;
+				}
+			}
+			for( int iVar = 0; iVar < numOfOutputAndInputVariables; ++iVar ){
+				if( iVar == indexOfMinimumVariance ){
+					continue;
+				}
+				vectorForCorrection[index] = variancesWithoutScale[iVar] - variancesWithoutScaleOrg[iVar];
+				++index;
+			}
+			vectorForCorrection[index] = scale - scaleOrg;
+			assert(index + 1 == dofOfMatrixForCorrection);
+#if _DEBUG_WRITE
+			std::cout << "[";
+			for( int row = 0; row < dofOfMatrixForCorrection; ++row ){
+				std::cout << vectorForCorrection[row] <<" ";
+				if( row+1 < dofOfMatrixForCorrection ){
+					std::cout << ",";
+				}
+			}
+			std::cout << "]" << std::endl;
+#endif
+			// Solve linear equation
+			matrixForCorrection.solveLinearEquation(vectorForCorrection, vectorForCorrection);
+#if _DEBUG_WRITE
+			std::cout << "[";
+			for( int row = 0; row < dofOfMatrixForCorrection; ++row ){
+				std::cout << vectorForCorrection[row] <<" ";
+				if( row+1 < dofOfMatrixForCorrection ){
+					std::cout << ",";
+				}
+			}
+			std::cout << "]" << std::endl;
+			std::cout << "[";
+#endif
+			// Calculate corrected version of the output one-step estimates
+			index = 0;// Zero clear
+			for( int iVar = 0; iVar < numOfOutputAndInputVariables; ++iVar ){
+				for( int irr = 0; irr < numOfReferenceVariables; ++irr ){
+					// Order: Re(Z11),Im(Z11),Re(Z12),Im(Z12),Re(Z21),Im(Z21),Re(Z22),Im(Z22),...,Re(Zq1),Im(Zq1),Re(Zq2),Im(Zq2)
+					const std::complex<double> correction = std::complex<double>(vectorForCorrection[index], vectorForCorrection[index+1]);
+#if _DEBUG_WRITE
+					std::cout << correction.real() << "+" << correction.imag() <<"im ";
+#endif
+					resp[iVar][irr] = respOrg[iVar][irr] + correction;
+					index += 2;
+				}
+#if _DEBUG_WRITE
+				if( iVar+1 < numOfOutputAndInputVariables ){
+					std::cout << ";";
+				}
+#endif
+			}
+#if _DEBUG_WRITE
+			std::cout << "]" << std::endl;
+#endif
+			if( ptrControl->getOutputLevel() >= 4 ){//Output corrected version of the output one-step estimates
+				ptrOutputFiles->writeCvgMessage("Corrected one-step estimates of response functions:");
+				std::ostringstream msg;
+				int iVar = 0;
+				for( int iOut = 0; iOut < numOfOutputVariables; ++iOut ){
+					msg << "("  << std::setw(12) << std::setprecision(4) << std::scientific << resp[iVar][0].real() << "," 
+							   << std::setw(12) << std::setprecision(4) << std::scientific << resp[iVar][0].imag() << "), ";
+					msg << "("  << std::setw(12) << std::setprecision(4) << std::scientific << resp[iVar][1].real() << "," 
+							   << std::setw(12) << std::setprecision(4) << std::scientific << resp[iVar][1].imag() << ")" << std::endl;
+					++iVar;
+				}
+				for( int iInp = 0; iInp < numOfInputVariables; ++iInp ){
+					msg << "("  << std::setw(12) << std::setprecision(4) << std::scientific << resp[iVar][0].real() << "," 
+							   << std::setw(12) << std::setprecision(4) << std::scientific << resp[iVar][0].imag() << "), ";
+					msg << "("  << std::setw(12) << std::setprecision(4) << std::scientific << resp[iVar][1].real() << "," 
+							   << std::setw(12) << std::setprecision(4) << std::scientific << resp[iVar][1].imag() << ")";
+					++iVar;
+					if( iInp + 1 < numOfInputVariables ){
+						msg << std::endl;
+					}
+				}
+				assert(iVar == numOfOutputAndInputVariables);
+				ptrOutputFiles->writeCvgMessage(msg.str());
+			}
+		}
+
 		// Calculate estimates of final response functions
 		const int in0 = ptrControl->getChannelIndex(CommonParameters::INPUT, 0);
 		const int in1 = ptrControl->getChannelIndex(CommonParameters::INPUT, 1);
@@ -4538,6 +4953,7 @@ void AnalysisMultivariateRegression::estimateErrorByFixedWeightsBootstrap( const
 	}
 	delete [] resp;
 	delete [] variancesWithoutScale;
+	delete [] vectorForCorrection;
 
 	// Calculate error of response functions
 	assert(numOfDataSet > 2);
@@ -4570,9 +4986,9 @@ void AnalysisMultivariateRegression::estimateErrorByFixedWeightsBootstrap( const
 }
 
 // Estimate error by strict bootstrap
-void AnalysisMultivariateRegression::estimateErrorByStrictBootstrap( const int numSegmentsTotal, const double paramB, const double paramC, 
-	std::complex<double>** ftvalOrg, std::complex<double>** respOrg, const double* const variancesWithoutScaleOrg, const double scaleOrg,
-	const double determinantOrg, double** respErr ) const{
+void AnalysisMultivariateRegression::estimateErrorByStrictBootstrap(const int numSegmentsTotal, const double paramB, const double paramC,
+	std::complex<double>** ftvalOrg, std::complex<double>** respOrg, const double* const variancesWithoutScaleOrg, 
+	const double* const covariancesLowerTriangleWithoutScaleOrg, const double scaleOrg,	const double determinantOrg, double** respErr) const {
 
 	OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
 	ptrOutputFiles->writeLogMessage("Strict bootstrap is performed to estimate errors");
@@ -4599,6 +5015,7 @@ void AnalysisMultivariateRegression::estimateErrorByStrictBootstrap( const int n
 		resp[iVar] = new std::complex<double>[numOfReferenceVariables];
 	}
 	double* variancesWithoutScale = new double[numOfOutputAndInputVariables];
+	double* covariancesLowerTriangleWithoutScale = new double[numOfOutputAndInputVariables * (numOfOutputAndInputVariables - 1) / 2];
 	double scales = scaleOrg;
 	double determinants = determinantOrg;
 	double* coherences = new double[numOfOutputVariables];
@@ -4652,13 +5069,16 @@ void AnalysisMultivariateRegression::estimateErrorByStrictBootstrap( const int n
 		for( int iVar = 0; iVar < numOfOutputAndInputVariables; ++iVar ){
 			variancesWithoutScale[iVar] = variancesWithoutScaleOrg[iVar];
 		}
+		for (int i = 0; i < numOfOutputAndInputVariables * (numOfOutputAndInputVariables - 1) / 2; ++i) {
+			covariancesLowerTriangleWithoutScale[i] = covariancesLowerTriangleWithoutScaleOrg[i];
+		}
 		double scales = scaleOrg;
 		double determinants = determinantOrg;
 		for( int iVar = 0; iVar < numOfOutputVariables; ++iVar ){
 			coherences[iVar] = 0.0;
 		}
-		improveCandidate( numSegmentsTotal, numOfMaxIterations, convergenceCriteria, true, paramB, paramC,
-			ftvalForBootstrap, resp, variancesWithoutScale, scales, determinants, coherences );
+		improveCandidate(numSegmentsTotal, numOfMaxIterations, convergenceCriteria, true, paramB, paramC,
+			ftvalForBootstrap, resp, variancesWithoutScale, scales, determinants, coherences, covariancesLowerTriangleWithoutScale);
 		// Calculate estimates of final response functions
 		const int in0 = ptrControl->getChannelIndex( CommonParameters::INPUT, 0 );
 		const int in1 = ptrControl->getChannelIndex( CommonParameters::INPUT, 1 );
@@ -4715,6 +5135,7 @@ void AnalysisMultivariateRegression::estimateErrorByStrictBootstrap( const int n
 	}
 	delete [] resp;
 	delete [] variancesWithoutScale;
+	delete [] covariancesLowerTriangleWithoutScale;
 	delete [] coherences;
 	delete [] segmentIndexes;
 
@@ -4750,9 +5171,10 @@ void AnalysisMultivariateRegression::estimateErrorByStrictBootstrap( const int n
 }
 
 // Estimate error by fixed-weights jackknife
-void AnalysisMultivariateRegression::estimateErrorByFixedWeightsJackknife( const int numSegmentsTotal, const double paramB, const double paramC, 
+void AnalysisMultivariateRegression::estimateErrorByFixedWeightsJackknife(const int numSegmentsTotal, const double paramB, const double paramC,
 	std::complex<double>** ftval, const std::complex<double>* const respOrg0, const std::complex<double>* const respOrg1,
-	std::complex<double>** respOrg, const double* const variancesWithoutScaleOrg, const double scaleOrg, double** respErr ) const{
+	std::complex<double>** respOrg, const double* const variancesWithoutScaleOrg, const double* const covariancesLowerTriangleWithoutScaleOrg,
+	const double scaleOrg, double** respErr) const {
 
 	OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
 	ptrOutputFiles->writeCvgMessage("--------------------------------------------------------------------------------");
@@ -4778,8 +5200,8 @@ void AnalysisMultivariateRegression::estimateErrorByFixedWeightsJackknife( const
 	// Calculate complex residuals
 	calculateComplexResiduals( numSegmentsTotal, ftval, respOrg, complexResidualsOrg );
 	// Calculate Mahalanobis distance
-	calculateMD( numSegmentsTotal, numOfOutputAndInputVariables, complexResidualsOrg,
-		variancesWithoutScaleOrg, MDOrg );
+	calculateMD(numSegmentsTotal, numOfOutputAndInputVariables, complexResidualsOrg, variancesWithoutScaleOrg,
+		covariancesLowerTriangleWithoutScaleOrg, MDOrg);
 	// Calculate original weights
 	double sumOfWeights(0.0);
 	for( int iSeg = 0; iSeg < numSegmentsTotal; ++iSeg ){
@@ -4920,9 +5342,9 @@ void AnalysisMultivariateRegression::estimateErrorByFixedWeightsJackknife( const
 }
 
 // Estimate error by subset deletion jackknife
-void AnalysisMultivariateRegression::estimateErrorBySubsetDeletionJackknife( const int numSegmentsTotal, std::complex<double>** ftvalOrg,
-	std::complex<double>** respOrg, const double* const variancesWithoutScaleOrg, const double scaleOrg, const double determinantOrg, 
-	double** respErr ) const{
+void AnalysisMultivariateRegression::estimateErrorBySubsetDeletionJackknife(const int numSegmentsTotal, std::complex<double>** ftvalOrg,
+	std::complex<double>** respOrg, const double* const variancesWithoutScaleOrg, const double* const covariancesLowerTriangleWithoutScaleOrg, 
+	const double scaleOrg, const double determinantOrg, double** respErr) const {
 
 	OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
 	ptrOutputFiles->writeLogMessage("Subset deletion jackknife is performed to estimate errors");
@@ -4956,8 +5378,8 @@ void AnalysisMultivariateRegression::estimateErrorBySubsetDeletionJackknife( con
 	// Calculate complex residuals
 	calculateComplexResiduals( numSegmentsTotal, ftvalOrg, respOrg, complexResidualsOrg );
 	// Calculate Mahalanobis distance
-	calculateMD( numSegmentsTotal, numOfOutputAndInputVariables, complexResidualsOrg,
-		variancesWithoutScaleOrg, MDOrg );
+	calculateMD(numSegmentsTotal, numOfOutputAndInputVariables, complexResidualsOrg, variancesWithoutScaleOrg,
+		covariancesLowerTriangleWithoutScaleOrg, MDOrg);
 	// Calculate original weights
 	double sumOfWeights(0.0);
 	for( int iSeg = 0; iSeg < numSegmentsTotal; ++iSeg ){
@@ -5016,6 +5438,7 @@ void AnalysisMultivariateRegression::estimateErrorBySubsetDeletionJackknife( con
 		resp[iVar] = new std::complex<double>[numOfReferenceVariables];
 	}
 	double* variancesWithoutScale = new double[numOfOutputAndInputVariables];
+	double* covariancesLowerTriangleWithoutScale = new double[2 * numOfOutputAndInputVariables * (numOfOutputAndInputVariables - 1)];
 	double scales = scaleOrg;
 	double determinants = determinantOrg;
 	double* coherences = new double[numOfOutputVariables];
@@ -5062,13 +5485,16 @@ void AnalysisMultivariateRegression::estimateErrorBySubsetDeletionJackknife( con
 		for( int iVar = 0; iVar < numOfOutputAndInputVariables; ++iVar ){
 			variancesWithoutScale[iVar] = variancesWithoutScaleOrg[iVar];
 		}
+		for (int i = 0; i < 2 * numOfOutputAndInputVariables * (numOfOutputAndInputVariables - 1); ++i) {
+			covariancesLowerTriangleWithoutScale[i] = covariancesLowerTriangleWithoutScaleOrg[i];
+		}
 		double scales = scaleOrg;
 		double determinants = determinantOrg;
 		for( int iVar = 0; iVar < numOfOutputVariables; ++iVar ){
 			coherences[iVar] = 0.0;
 		}
-		improveCandidate( numSegmentsTotal - numOmittedData, numOfMaxIterations, convergenceCriteria, true, paramB, paramC,
-			ftvalForJackknife, resp, variancesWithoutScale, scales, determinants, coherences );
+		improveCandidate(numSegmentsTotal - numOmittedData, numOfMaxIterations, convergenceCriteria, true, paramB, paramC,
+			ftvalForJackknife, resp, variancesWithoutScale, scales, determinants, coherences, covariancesLowerTriangleWithoutScale);
 		// Calculate estimates of final response functions
 		const int in0 = ptrControl->getChannelIndex( CommonParameters::INPUT, 0 );
 		const int in1 = ptrControl->getChannelIndex( CommonParameters::INPUT, 1 );
@@ -5113,6 +5539,7 @@ void AnalysisMultivariateRegression::estimateErrorBySubsetDeletionJackknife( con
 	}
 	delete [] resp;
 	delete [] variancesWithoutScale;
+	delete [] covariancesLowerTriangleWithoutScale;
 	delete [] coherences;
 
 	// Calculate & output error bars
@@ -5156,8 +5583,8 @@ void AnalysisMultivariateRegression::estimateErrorBySubsetDeletionJackknife( con
 
 // Estimate error by a parametric approach
 void AnalysisMultivariateRegression::estimateErrorParametric(const int numSegmentsTotal, const double paramB, const double paramC,
-	std::complex<double>** ftval, std::complex<double>** respOrg, const double* const variancesWithoutScaleOrg, const double scaleOrg, 
-	double** respErr) const {
+	std::complex<double>** ftval, std::complex<double>** respOrg, const double* const variancesWithoutScaleOrg, 
+	const double* const covariancesLowerTriangleWithoutScaleOrg, const double scaleOrg, double** respErr) const {
 
 	OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
 	ptrOutputFiles->writeCvgMessage("--------------------------------------------------------------------------------");
@@ -5190,46 +5617,46 @@ void AnalysisMultivariateRegression::estimateErrorParametric(const int numSegmen
 	calculateComplexResiduals(numSegmentsTotal, ftval, respOrg, complexResidualsOrg);
 	double* MDOrg = new double[numSegmentsTotal];
 	// Calculate Mahalanobis distance
-	calculateMD(numSegmentsTotal, numOfOutputAndInputVariables, complexResidualsOrg,
-		variancesWithoutScaleOrg, MDOrg);
-	double sumOfSquaredDerivativeOfLossFunction(0.0);
+	calculateMD(numSegmentsTotal, numOfOutputAndInputVariables, complexResidualsOrg, variancesWithoutScaleOrg,
+		covariancesLowerTriangleWithoutScaleOrg, MDOrg);
+	double* numerators = new double[numOfOutputAndInputVariables];
+	for (int iVar = 0; iVar < numOfOutputAndInputVariables; ++iVar) {
+		double numerator(0.0);
+		for (int iSeg = 0; iSeg < numSegmentsTotal; ++iSeg) {
+			const double val = MDOrg[iSeg] / scaleOrg;
+			const double influenceFunction = RobustWeightTukeysBiweights::calculateWeights(val, paramC) * val;
+			numerator += pow(influenceFunction, 2);
+		}
+		numerator /= static_cast<double>(numSegmentsTotal - 2);
+		numerator *= pow(scaleOrg, 2) * variancesWithoutScaleOrg[iVar];// Multiply robust estimate of variance
+		numerators[iVar] = numerator;
+	}
 	double sumOfSecondDerivativeOfLossFunction(0.0);
-	double sumfOfBrxNorm(0.0);
-	double sumfOfBryNorm(0.0);
+	double BrxBrx(0.0);
+	double BryBry(0.0);
+	std::complex<double> BrxBry(0.0, 0.0);
 	for (int iSeg = 0; iSeg < numSegmentsTotal; ++iSeg) {
 		const double val = MDOrg[iSeg] / scaleOrg;
-		const double influenceFunction = RobustWeightTukeysBiweights::calculateWeights(val, paramC) * val;
-		sumOfSquaredDerivativeOfLossFunction += pow(influenceFunction, 2);
 		sumOfSecondDerivativeOfLossFunction += RobustWeightTukeysBiweights::calculateSecondDerivativeOfLossFunction(val, paramC);
-		sumfOfBrxNorm += std::norm(ftval[rr0][iSeg]);
-		sumfOfBryNorm += std::norm(ftval[rr1][iSeg]);
+		BrxBrx += std::norm(ftval[rr0][iSeg]);
+		BryBry += std::norm(ftval[rr1][iSeg]);
+		BrxBry += std::conj(ftval[rr0][iSeg]) * ftval[rr1][iSeg];
 	}
-	double* variance = new double[numOfOutputAndInputVariables];
-	for (int iVar = 0; iVar < numOfOutputAndInputVariables; ++iVar) {
-		variance[iVar] = 0.0;
-		for (int iSeg = 0; iSeg < numSegmentsTotal; ++iSeg) {
-			variance[iVar] += std::norm(complexResidualsOrg[iVar][iSeg]);
-		}
-		variance[iVar] /= static_cast<double>(2 * numSegmentsTotal - 4);
+	double determinantOfBrBr = BrxBrx * BryBry - std::norm(BrxBry);
+	if (determinantOfBrBr < 1.0e-10) {
+		determinantOfBrBr = 1.0e-10;
 	}
-	const double numerator = sumOfSquaredDerivativeOfLossFunction / static_cast<double>(numSegmentsTotal);
 	double denominator = pow( sumOfSecondDerivativeOfLossFunction / static_cast<double>(numSegmentsTotal), 2 );
 	if (denominator < 1.0e-10) {
 		denominator = 1.0e-10;
 	}
-	if (sumfOfBrxNorm < 1.0e-10) {
-		sumfOfBrxNorm = 1.0e-10;
-	}
-	if (sumfOfBryNorm < 1.0e-10) {
-		sumfOfBryNorm = 1.0e-10;
-	}
-
 	double** istfErr = new double* [numOfOutputAndInputVariables];
 	for (int iVar = 0; iVar < numOfOutputAndInputVariables; ++iVar) {
 		istfErr[iVar] = new double[2];
-		istfErr[iVar][0] = variance[iVar] * numerator / denominator / sumfOfBrxNorm;
-		istfErr[iVar][1] = variance[iVar] * numerator / denominator / sumfOfBryNorm;
+		istfErr[iVar][0] = sqrt( numerators[iVar] / denominator * BryBry / determinantOfBrBr);
+		istfErr[iVar][1] = sqrt( numerators[iVar] / denominator * BrxBrx / determinantOfBrBr);
 	}
+	delete[] numerators;
 
 	const std::complex<double> czero = std::complex<double>(0.0, 0.0);
 	assert(numOfInputVariables == 2);
@@ -5467,7 +5894,6 @@ void AnalysisMultivariateRegression::estimateErrorParametric(const int numSegmen
 	}
 	delete[] complexResidualsOrg;
 	delete[] MDOrg;
-	delete[] variance;
 	for (int iVar = 0; iVar < numOfOutputAndInputVariables; ++iVar) {
 		delete[] istfErr[iVar];
 	}
@@ -5477,6 +5903,28 @@ void AnalysisMultivariateRegression::estimateErrorParametric(const int numSegmen
 	}
 	delete[] TInvTTInvMatrix;
 
+}
+
+// Get value of covariance matrix
+double AnalysisMultivariateRegression::getValueOfCovarianceMatrix(const int dimension, const double* const variancesWithoutScaleOrg, 
+	const double* const covariancesLowerTriangleWithoutScaleOrg, const int row, const int col) const {
+
+	if (row > col)
+	{
+		// Lower triangle part
+		const int index = row - col - 1 + dimension * (dimension - 1) / 2 - (dimension - col) * (dimension - col - 1) / 2;
+		return covariancesLowerTriangleWithoutScaleOrg[index];
+	}
+	else if(row < col) {
+		// Upper triangle part
+		const int index = col - row - 1 + dimension * (dimension - 1) / 2 - (dimension - row) * (dimension - row - 1) / 2;
+		return covariancesLowerTriangleWithoutScaleOrg[index];
+	}
+	else
+	{
+		// Diagonal components
+		return variancesWithoutScaleOrg[row];
+	}
 
 }
 

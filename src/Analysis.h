@@ -195,7 +195,7 @@ private:
 		const int numSegmentsTotal, std::complex<double>** ftval, const std::vector< std::pair<std::string, std::string> >& times,
 		std::ofstream& ofsResp, std::ofstream& ofsRhoaPhs ) = 0;
 
-	// Output average spectrum
+	// Modify time-series data based on the EOF analysis
 	void modifyTimeSeriesBasedOnEOFAnalysis(std::vector<CommonParameters::DataFileSet>& dataFileSets);
 
 	// Output average spectrum
@@ -216,7 +216,7 @@ private:
 	// Output time-series data
 	void outputTimeSeriesData( const std::vector<CommonParameters::DataFileSet>& dataFileSets, const bool afterPreprocessing ) const;
 
-	// Evaluate characteristics of time-series data prior to the estimation of the response functions
+	// Output calibrated time-series data
 	void outputCalibratedTimeSeriesData(const std::vector<CommonParameters::DataFileSet>& dataFileSets) const;
 
 	// Evaluate characteristics of time-series data prior to the estimation of the response functions

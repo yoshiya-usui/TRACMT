@@ -1132,6 +1132,14 @@ void AnalysisOrdinaryRemoteReference::calculateResponseFunctionsAux(const int iS
 	ptrOutputFiles->writeCvgMessage("Now Frequency(Hz): " + Util::toString(freq) + ", Period(s): " + Util::toString(1.0 / freq));
 	ptrOutputFiles->writeCvgMessage("================================================================================");
 	const Control* const ptrControl = Control::getInstance();
+	if (ptrControl->getErrorEstimationMethod() == Control::ROBUST_BOOTSTRAP) {
+		if (getPointerToRobustWeight(0) == NULL || getPointerToRobustWeight(0)->getNameOfRobustWeight() != "Tukey's biweights") {
+			ptrOutputFiles->writeErrorMessage("The first M-estimator should be Tukey's biweights for robust bootstap method");
+		}
+		if (getPointerToRobustWeight(1) != NULL) {
+			ptrOutputFiles->writeErrorMessage("The second M-estimator should be null for robust bootstap method");
+		}
+	}
 
 	const int in0 = ptrControl->getChannelIndex(CommonParameters::INPUT, 0);
 	const int in1 = ptrControl->getChannelIndex(CommonParameters::INPUT, 1);
@@ -1226,7 +1234,7 @@ void AnalysisOrdinaryRemoteReference::calculateResponseFunctionsAux(const int iS
 				writeResiduals(oss.str(), numSegmentsTotal, times, titles, outputValues);
 			}
 			if (ptrControl->getErrorEstimationMethod() == Control::PARAMETRIC) {
-				parametricErrorEstimation(numSegmentsTotal, weights[iOutVar], ftval, residuals, scales[iOutVar], noRobust, errorMagnitudes0[iOutVar], errorMagnitudes1[iOutVar]);
+				parametricErrorEstimation(numSegmentsTotal, weights[iOutVar], ftval, residuals, scales[iOutVar], noRobust,errorMagnitudes0[iOutVar], errorMagnitudes1[iOutVar]);
 			}
 		}
 		// Release memory
@@ -1242,7 +1250,10 @@ void AnalysisOrdinaryRemoteReference::calculateResponseFunctionsAux(const int iS
 		break;
 	case Control::FIXED_WEIGHTS_BOOTSTRAP:
 		// Fixed-weights bootstrap
-		fixedWeightsBootstrap(freq, numSegmentsTotal, weights, scales, ftval, ofsResp, ofsRhoaPhs, respOut0, respOut1);
+		// Go through
+	case Control::ROBUST_BOOTSTRAP:
+		// Robust bootstrap
+		robustBootstrap(freq, numSegmentsTotal, weights, scales, ftval, ofsResp, ofsRhoaPhs, respOut0, respOut1);
 		break;
 	case Control::SUBSET_DELETION_JACKKNIFE:
 		// Go through
@@ -1250,8 +1261,8 @@ void AnalysisOrdinaryRemoteReference::calculateResponseFunctionsAux(const int iS
 		break;
 	case Control::PARAMETRIC:
 		for (int iOutVar = 0; iOutVar < numOutputVariables; ++iOutVar) {
-			const double dResp0 = sqrt(errorMagnitudes0[iOutVar]);
-			const double dResp1 = sqrt(errorMagnitudes1[iOutVar]);
+			const double dResp0 = errorMagnitudes0[iOutVar];
+			const double dResp1 = errorMagnitudes1[iOutVar];
 			ofsResp << "," << std::setprecision(10) << std::scientific << dResp0;
 			ofsResp << "," << std::setprecision(10) << std::scientific << dResp1;
 			if (ptrControl->doesOutputApparentResistivityAndPhase()) {
@@ -1582,22 +1593,21 @@ void AnalysisOrdinaryRemoteReference::parametricErrorEstimation(const int numSeg
 		}
 	}
 
-	double variance(0.0);
-	for (int iSeg = 0; iSeg < numSegmentsTotal; ++iSeg) {
-		variance += std::norm(residuals[iSeg]);
-	}
-	variance /= static_cast<double>(2 * numSegmentsTotal - 4);
-
 	double numerator(0.0);
 	if (noRobust || index < 0) {
-		numerator = 1.0;
+		double variance(0.0);
+		for (int iSeg = 0; iSeg < numSegmentsTotal; ++iSeg) {
+			variance += std::norm(residuals[iSeg]);
+		}
+		variance /= static_cast<double>(2 * numSegmentsTotal - 4);
+		numerator = variance;
 	}
 	else {
 		for (int iSeg = 0; iSeg < numSegmentsTotal; ++iSeg) {
-			const double influenceFunction = weights[iSeg] * std::abs(residuals[iSeg]) / scale;
-			numerator += pow(influenceFunction, 2);
+			const double weightedAbsResidual = weights[iSeg] * std::abs(residuals[iSeg]);
+			numerator += pow(weightedAbsResidual, 2);
 		}
-		numerator /= static_cast<double>(numSegmentsTotal);
+		numerator /= static_cast<double>(numSegmentsTotal - 2);
 	}
 
 	double denominator = 0.0;
@@ -1652,22 +1662,37 @@ void AnalysisOrdinaryRemoteReference::parametricErrorEstimation(const int numSeg
 	};
 	const std::complex<double> invBrBBrBrinvBBrDiagonalXX = ( invBrBBrBr[0][0] * std::conj(BryBy) - invBrBBrBr[0][1] * std::conj(BrxBy)) / determinantOfBrB / determinantOfBBr;
 	const std::complex<double> invBrBBrBrinvBBrDiagonalYY = (-invBrBBrBr[1][0] * std::conj(BryBx) + invBrBBrBr[1][1] * std::conj(BrxBx)) / determinantOfBrB / determinantOfBBr;
-	error0 = variance * numerator / denominator * std::abs(invBrBBrBrinvBBrDiagonalXX);
-	error1 = variance * numerator / denominator * std::abs(invBrBBrBrinvBBrDiagonalYY);
+	error0 = sqrt( numerator / denominator * std::abs(invBrBBrBrinvBBrDiagonalXX) );
+	error1 = sqrt( numerator / denominator * std::abs(invBrBBrBrinvBBrDiagonalYY) );
 
 }
 
 // Estimate error by fixed-weights bootstrap
-void AnalysisOrdinaryRemoteReference::fixedWeightsBootstrap(const double freq, const int numSegmentsTotal, double** weightsOrg, double* scalesOrg,
-	std::complex<double>** ftval, std::ofstream& ofsResp, std::ofstream& ofsRhoaPhs, const std::complex<double>* const resp0Org, const std::complex<double>* const resp1Org) const {
+void AnalysisOrdinaryRemoteReference::robustBootstrap(const double freq, const int numSegmentsTotal, double** weightsOrg, double* scalesOrg, std::complex<double>** ftval,
+	std::ofstream& ofsResp, std::ofstream& ofsRhoaPhs, const std::complex<double>* const resp0Org, const std::complex<double>* const resp1Org) const{
 
 	OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
 	const Control* const ptrControl = Control::getInstance();
 
 	bool fixedWeights(true);
-	ptrOutputFiles->writeCvgMessage("--------------------------------------------------------------------------------");
-	ptrOutputFiles->writeCvgAndLogMessage("Estimate errors by fixed-weights bootstrap");
-	ptrOutputFiles->writeCvgMessage("--------------------------------------------------------------------------------");
+	const int typeOfErrorEstimationMethod = ptrControl->getErrorEstimationMethod();
+	switch (typeOfErrorEstimationMethod) {
+	case Control::FIXED_WEIGHTS_BOOTSTRAP:
+		fixedWeights = true;
+		ptrOutputFiles->writeCvgMessage("--------------------------------------------------------------------------------");
+		ptrOutputFiles->writeCvgAndLogMessage("Estimate errors by fixed-weights bootstrap");
+		ptrOutputFiles->writeCvgMessage("--------------------------------------------------------------------------------");
+		break;
+	case Control::ROBUST_BOOTSTRAP:
+		fixedWeights = false;
+		ptrOutputFiles->writeCvgMessage("--------------------------------------------------------------------------------");
+		ptrOutputFiles->writeCvgAndLogMessage("Estimate errors by robust bootstrap");
+		ptrOutputFiles->writeCvgMessage("--------------------------------------------------------------------------------");
+		break;
+	default:
+		ptrOutputFiles->writeErrorMessage("Unsupported error estimation method : " + Util::toString(typeOfErrorEstimationMethod));
+		break;
+	}
 
 	const int numOfOutputVariables = ptrControl->getNumOutputVariables();
 	const int numOfInputVariables = ptrControl->getNumInputVariables();
@@ -1707,6 +1732,57 @@ void AnalysisOrdinaryRemoteReference::fixedWeightsBootstrap(const double freq, c
 		// Calculate partial derivatives for robust bootstrap
 		const int dofOfMatrixForCorrection = 2 * numOfInputVariables + 1;
 		DoubleDenseSquareMatrix matrixForCorrection;
+		if (!fixedWeights) {
+			matrixForCorrection.setDegreeOfEquation(dofOfMatrixForCorrection);
+			matrixForCorrection.zeroClearMatrix();
+			for (int irow = 0; irow < dofOfMatrixForCorrection; ++irow) {
+				matrixForCorrection.setValue(irow, irow, 1.0);// Unit matrix
+			}
+#ifdef _DEBUG_WRITE
+			matrixForCorrection.debugWriteMatrix();
+#endif
+			double** derivativesRespsResps = new double* [2 * numOfInputVariables];
+			for (int irow = 0; irow < 2 * numOfInputVariables; ++irow) {
+				derivativesRespsResps[irow] = new double[2 * numOfInputVariables];
+			}
+			double* derivativesRespsScale = new double[2 * numOfInputVariables];
+			calculatePartialDerivativesOfResponses(numSegmentsTotal, paramC, ftval, resp0Org[iOut], resp1Org[iOut], scalesOrg[iOut],
+				complexResidualsOrg, weightsOrg[iOut], iOut, derivativesRespsResps, derivativesRespsScale);
+			for (int irow = 0; irow < 2 * numOfInputVariables; ++irow) {
+				int icol(0);
+				for (; icol < 2 * numOfInputVariables; ++icol) {
+					matrixForCorrection.addValue(irow, icol, -derivativesRespsResps[irow][icol]);
+				}
+				matrixForCorrection.addValue(irow, icol, -derivativesRespsScale[irow]);
+			}
+#ifdef _DEBUG_WRITE
+			matrixForCorrection.debugWriteMatrix();
+#endif
+			for (int irow = 0; irow < 2 * numOfReferenceVariables; ++irow) {
+				delete[] derivativesRespsResps[irow];
+			}
+			delete[] derivativesRespsResps;
+			delete[] derivativesRespsScale;
+
+			double* derivativesScaleResps = new double[2 * numOfInputVariables];
+			double derivativesScaleScale(0.0);
+			calculatePartialDerivativesOfScale(numSegmentsTotal, paramC, paramB, ftval, resp0Org[iOut], resp1Org[iOut], scalesOrg[iOut],
+				complexResidualsOrg, weightsOrg[iOut], iOut, derivativesScaleResps, derivativesScaleScale);
+			{
+				const int irow = dofOfMatrixForCorrection - 1;
+				int icol(0);
+				for (; icol < 2 * numOfInputVariables; ++icol) {
+					matrixForCorrection.addValue(irow, icol, -derivativesScaleResps[icol]);
+				}
+				matrixForCorrection.addValue(irow, icol, -derivativesScaleScale);
+			}
+#ifdef _DEBUG_WRITE
+			matrixForCorrection.debugWriteMatrix();
+#endif
+			delete[] derivativesScaleResps;
+			// Factorize matrix
+			matrixForCorrection.factorizeMatrix();
+		}
 
 		// Bootstrap
 		int* segmentIndexes = new int[numSegmentsTotal];
@@ -1770,6 +1846,52 @@ void AnalysisOrdinaryRemoteReference::fixedWeightsBootstrap(const double freq, c
 				ptrOutputFiles->writeCvgMessage(msg.str());
 				if (!fixedWeights) {
 					ptrOutputFiles->writeCvgMessage("One-step estimate of scale: " + Util::toString(scale));
+				}
+			}
+			if (!fixedWeights) {
+				// Calculate differences between one-step estimates and original estimates
+				// Order: Re(Z11),Im(Z11),Re(Z12),Im(Z12)
+				vectorForCorrection[0] = resp0.real() - resp0Org[iOut].real();
+				vectorForCorrection[1] = resp0.imag() - resp0Org[iOut].imag();
+				vectorForCorrection[2] = resp1.real() - resp1Org[iOut].real();
+				vectorForCorrection[3] = resp1.imag() - resp1Org[iOut].imag();
+				vectorForCorrection[4] = scale - scalesOrg[iOut];
+#if _DEBUG_WRITE
+				std::cout << "[";
+				for (int row = 0; row < dofOfMatrixForCorrection; ++row) {
+					std::cout << vectorForCorrection[row] << " ";
+					if (row + 1 < dofOfMatrixForCorrection) {
+						std::cout << ",";
+					}
+				}
+				std::cout << "]" << std::endl;
+#endif
+				// Solve linear equation
+				matrixForCorrection.solveLinearEquation(vectorForCorrection, vectorForCorrection);
+#if _DEBUG_WRITE
+				std::cout << "[";
+				for (int row = 0; row < dofOfMatrixForCorrection; ++row) {
+					std::cout << vectorForCorrection[row] << " ";
+					if (row + 1 < dofOfMatrixForCorrection) {
+						std::cout << ",";
+					}
+				}
+				std::cout << "]" << std::endl;
+#endif
+				// Calculate corrected version of the output one-step estimates
+				// Order: Re(Z11),Im(Z11),Re(Z12),Im(Z12)
+				resp0 = resp0Org[iOut] + std::complex<double>(vectorForCorrection[0], vectorForCorrection[1]);
+				resp1 = resp1Org[iOut] + std::complex<double>(vectorForCorrection[2], vectorForCorrection[3]);
+				if (ptrControl->getOutputLevel() >= 4) {
+					//Output corrected version of the output one-step estimates
+					ptrOutputFiles->writeCvgMessage("Corrected one-step estimates of response functions:");
+					std::ostringstream msg;
+					msg << "(" << std::setw(12) << std::setprecision(4) << std::scientific << resp0.real() << ","
+						<< std::setw(12) << std::setprecision(4) << std::scientific << resp0.imag() << "), ";
+					msg << "(" << std::setw(12) << std::setprecision(4) << std::scientific << resp1.real() << ","
+						<< std::setw(12) << std::setprecision(4) << std::scientific << resp1.imag() << ")";
+					ptrOutputFiles->writeCvgMessage(msg.str());
+					ptrOutputFiles->writeCvgMessage("--------------------------------------------------------------------------------");
 				}
 			}
 			resp0Sample[iSample] = resp0;

@@ -133,6 +133,11 @@ void Analysis::run( std::vector<CommonParameters::DataFileSet>& dataFileSets ){
 	preprocessing(dataFileSets);
 
 	// Prior evaluation after preprocessing
+	if (ptrControl->doesOutputTimeSeriesToCsv()) {
+		outputTimeSeriesData(dataFileSets, true);
+	}
+
+	// Prior evaluation after preprocessing
 	if( ptrControl->getParamsForTimeDomainEvaluation().doEvaluation ){
 		const Control::ParamsForTimeDomainEvaluation params = ptrControl->getParamsForTimeDomainEvaluation();
 		priorEvaluationOfTimeSeriesData( params.timeSeriesInterval, dataFileSets, true );

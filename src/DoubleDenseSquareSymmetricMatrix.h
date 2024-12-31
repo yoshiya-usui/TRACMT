@@ -47,6 +47,9 @@ public:
 	virtual void factorizeMatrix();
 
 	// Factorize and solve a linear equation with a right-hand-side vector
+	double determinant();
+
+	// Factorize and solve a linear equation with a right-hand-side vector
 	virtual void factorizeAndSolveLinearEquation( const double* const rhsVector, double* result ) const;
 
 	// Set Degree of equation
