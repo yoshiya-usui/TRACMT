@@ -31,3 +31,6 @@ _**v1.3.4**_ July. 14, 2024:  A parametric error estimation method is addd for t
 
 _**v1.3.6**_ August. 15, 2024: A function to read ELOG-DUAL binary files is modified.
 
+_**v2.0.0**_ January. 1, 2025: Fast and robust bootstrap method is added. Equations of parametric error estimation method was modified.
+
+
