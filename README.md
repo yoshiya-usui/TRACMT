@@ -25,12 +25,12 @@ field.
 **Error estimation method**: Parametric approach / Bootstrap method / Jackknife method
 
 ## Release note
-_**v1.2.0**_ June. 13, 2024: Initial release
+_**v1.2.0**_ June. 13, 2024: Initial release.
 
-_**v1.3.4**_ July. 14, 2024:  A parametric error estimation method is addd for the RRMS estimator. Some bugs relating to the ELOG reading option and calibration and fixed.
+_**v1.3.4**_ July. 14, 2024:  A parametric error estimation method was addd for the RRMS estimator. Some bugs relating to the ELOG reading option and calibration were fixed.
 
-_**v1.3.6**_ August. 15, 2024: A function to read ELOG-DUAL binary files is modified.
+_**v1.3.6**_ August. 15, 2024: A function to read ELOG-DUAL binary files was modified.
 
-_**v2.0.0**_ January. 1, 2025: Fast and robust bootstrap method is added. Equations of parametric error estimation method was modified.
+_**v2.0.0**_ January. 1, 2025: Fast and robust bootstrap method was added. Equations of parametric error estimation method was modified.
 
 
