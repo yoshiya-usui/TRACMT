@@ -113,6 +113,18 @@ void RobustPrewhitening::robustPrewhitening( std::vector<CommonParameters::DataF
 			calculateRobustAutoCovarianceMatrix( maxDegreesOfAR, numOfDataSets, numOfData, dataOrg, autoCovarianceMatrixMaxDegreesOfAR );
 		}
 		assert( iSet == numOfDataSets );
+		double squredSigma(0.0);
+		if (params.typeOfEstimator == Control::USE_LEAST_SQUARE_ESTIMATOR_FOR_PREWHITENING) {
+			int numOfDataAll(0);
+			for (int iSet = 0; iSet < numOfDataSets; ++iSet) {
+				const int numData = numOfData[iSet];
+				numOfDataAll += numData;
+				for (int iData = 0; iData < numData; ++iData) {
+					squredSigma += dataMod[iSet][iData] * dataMod[iSet][iData];
+				}
+			}
+			squredSigma /= static_cast<double>(numOfDataAll);
+		}
 		double minAIC(1.0e20);
 		int iDegAROfMinAIC(-1);
 		double scaleOfMinAIC(-1.0);
@@ -152,9 +164,15 @@ void RobustPrewhitening::robustPrewhitening( std::vector<CommonParameters::DataF
 			}else if( params.typeOfEstimator == Control::USE_LEAST_SQUARE_ESTIMATOR_FOR_PREWHITENING ){
 				UtilRobust::computeLSEstimatorForUnivariateLinearRegression( numDataForSEstimator, forwardMMSEResidual, backwardMMSEResidual,
 					-1.0, 1.0, scale, partialAutocorrelationFunction );
-				AIC = 2.0 * static_cast<double>(numDataForSEstimator) * log(scale) + 2.0 * ( static_cast<double>(iDegAR) + 1.0 ) 
+				squredSigma *= (1.0 - partialAutocorrelationFunction * partialAutocorrelationFunction);
+				double sigma = sqrt(squredSigma);
+				if (sigma < CommonParameters::EPS)
+				{
+					sigma = CommonParameters::EPS;
+				}
+				AIC = 2.0 * static_cast<double>(numDataForSEstimator) * log(sigma) + 2.0 * (static_cast<double>(iDegAR) + 1.0)
 					+ static_cast<double>(numDataForSEstimator) + static_cast<double>(numDataForSEstimator) * log(2.0 * CommonParameters::PI);
-				ptrOutputFiles->writeLogMessage("Degree of AR model: " + Util::toString(iDegAR) + ", Sigma: " + Util::toString(scale)
+				ptrOutputFiles->writeLogMessage("Degree of AR model: " + Util::toString(iDegAR) + ", Sigma: " + Util::toString(sigma)
 					+ ", AIC: " + Util::toString(AIC));
 			}else{
 				ptrOutputFiles->writeErrorMessage("Wrong type of estimator for prewhitening: " + Util::toString(params.typeOfEstimator));

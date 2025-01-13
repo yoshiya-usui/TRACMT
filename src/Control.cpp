@@ -1125,9 +1125,6 @@ void Control::readParameterFile(){
 			if( ibuf < 0 ){
 				ptrOutputFiles->writeErrorMessage("Degree of AR model is negative");
 			}
-			if( ibuf > TableOfTukeysBiweightParameters::numDimensions ){
-				ptrOutputFiles->writeErrorMessage("Degree of AR model is too large (" + Util::toString(ibuf) + ")");
-			}
 			m_paramsForPrewhitening.maxDegreeOfARModel = ibuf;
 			ifs >> ibuf;
 			if( ibuf % 2 == 0 ){
@@ -1897,6 +1894,9 @@ void Control::readParameterFile(){
 		}
 	}
 	if( m_paramsForRobustFilter.applyRobustFilter ){
+		if (m_paramsForPrewhitening.maxDegreeOfARModel >= TableOfTukeysBiweightParameters::numDimensions) {
+			ptrOutputFiles->writeErrorMessage("Degree of AR model is too large for the robust filter (" + Util::toString(m_paramsForPrewhitening.maxDegreeOfARModel) + ")");
+		}
 		ptrOutputFiles->writeLogMessage("Parameters for robust filter : ", false);
 		if( m_paramsForRobustFilter.replaceTimeSeriesWithFilteredValues ){
 			ptrOutputFiles->writeLogMessage("     Time-series data are repladed with filtered values", false);
