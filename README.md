@@ -40,6 +40,6 @@ _**v2.0.0**_ January. 1, 2025: The fast and robust bootstrap method was added. S
 
 _**v2.1.0**_ January. 14, 2025: The equation of the AIC is modified.
 
-_**v2.2.0**_ February. 10, 2025: The option for reading MTH5 files (Peacock et al., 2022) is added.
+_**v2.2.0**_ February. 10, 2025: The option for reading MTH5 files is added.
 
 
