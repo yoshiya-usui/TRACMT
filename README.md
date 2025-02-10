@@ -16,9 +16,9 @@ field.
    If your compiler does NOT support C++11, download mt19937-64.tgz from http://math.sci.hiroshima-u.ac.jp/m-mat/MT/mt64.html and rename mt19937-64.c to mt19937-64.cpp. 
    After copying mt19937-64.cpp and mt64.h to the source-file directory of TRACMT, you can compile TRACMT by the make command (Make -f Makefile).
 5) To read MTH5 files (Peacock et al., 2022), please use "Makefile_C++11_MTH5" or "Makefile_MTH5". Before compiling TRACMT, HDF5 library should be installed and path to HDF5 libraries should be added as follows.<br>
-   export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/hdf5/lib"<br>
-   export LIBRARY_PATH="${LIBRARY_PATH}:/usr/local/hdf5/lib"<br>
-   export PATH="${PATH}:/usr/local/hdf5/lib"<br>
+   export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/hdf5-1.10.5/lib"<br>
+   export LIBRARY_PATH="${LIBRARY_PATH}:/usr/local/hdf5-1.10.5/lib"<br>
+   export PATH="${PATH}:/usr/local/hdf5-1.10.5/lib"<br>
 
 ## Functional Overview
 **Input file format**: Text (Ascii) file / .ats files of Metronix instruments / MTH5 files (Peacock et al., 2022) / .dat files of ELOG-MT
