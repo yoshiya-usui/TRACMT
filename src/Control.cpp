@@ -91,6 +91,7 @@ Control::Control() :
 	m_percentageOfOmmitedDataSubsetDeletionJackknife(5.0),
 	m_procedureType(Control::ORDINARY_REMOTE_REFERENCE),
 	m_readAtsBinary(false),
+	m_readMTH5(false),
 	m_readElogDualBinary(false),
 	m_readElogMTBinary(false),
 	m_timingEOFBasedDenoising(Control::BEFORE_DECIMATION),
@@ -208,20 +209,9 @@ Control::~Control(){
 // Run analysis
 void Control::run(const bool outputToConsole){
 
-	////----- For test >>>>>
-	//m_analysis = new AnalysisTwoStage();
-	//m_analysis->test();
-	//return;
-	////----- For test <<<<<
-
 	OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
 	ptrOutputFiles->setOutputToConsole(outputToConsole);
 	readParameterFile();
-
-	////----- For test >>>>>
-	//m_analysis->test2(m_dataFileSets);
-	//return;
-	////----- For test <<<<<
 
 	m_analysis->run(m_dataFileSets);
 
@@ -277,6 +267,11 @@ bool Control::doesOutputCalibratedTimeSeriesToCsv() const {
 // Get flag specifing whether input file is ATS binary file
 bool Control::doesReadAtsBinary() const{
 	return m_readAtsBinary;
+}
+
+// Get flag specifing whether input file is ELOG-Dual binary file
+bool Control::doesReadMTH5() const {
+	return m_readMTH5;
 }
 
 // Get flag specifing whether input file is ELOG-Dual binary file
@@ -781,9 +776,13 @@ void Control::readParameterFile(){
 				ifs >> dataFileSetTemp.numDataPoints;
 				const int numChans = getNumberOfChannels();
 				dataFileSetTemp.dataFile.reserve(numChans);
-				for( int iChan = 0; iChan < numChans; ++iChan ){
+				for (int iChan = 0; iChan < numChans; ++iChan) {
 					CommonParameters::DataFile dataFileTemp;
 					ifs >> dataFileTemp.fileName;
+					if (doesReadMTH5() && Util::extractExtensionOfFileName(dataFileTemp.fileName).find("mth5") != std::string::npos)
+					{
+						ifs >> dataFileTemp.mth5GroupName;
+					}
 					ifs >> dataFileTemp.numSkipData;
 					dataFileTemp.data = NULL;
 					dataFileSetTemp.dataFile.push_back(dataFileTemp);
@@ -838,6 +837,9 @@ void Control::readParameterFile(){
 		}
 		else if( line.find("ATS_BINARY") != std::string::npos ){
 			m_readAtsBinary = true;
+		}
+		else if (line.find("MTH5") != std::string::npos) {
+			m_readMTH5 = true;
 		}
 		else if (line.find("ELOGDUAL_CAL") != std::string::npos) {
 			m_calibForElogDual = true;
@@ -1580,6 +1582,9 @@ void Control::readParameterFile(){
 			oss << std::setw(15) << numDataPoints;
 			oss << std::setw(5) << "";
 			oss << fileName;
+			if (doesReadMTH5() && !dataFileList[iChan].mth5GroupName.empty()){
+				oss << " " << dataFileList[iChan].mth5GroupName;
+			}
 			ptrOutputFiles->writeLogMessage(oss.str(), false);
 		}
 		for( int i = 0; i < m_numInputVariables; ++i ){
@@ -1594,6 +1599,9 @@ void Control::readParameterFile(){
 			oss << std::setw(15) << numDataPoints;
 			oss << std::setw(5) << "";
 			oss << fileName;
+			if (doesReadMTH5() && !dataFileList[iChan].mth5GroupName.empty()) {
+				oss << " " << dataFileList[iChan].mth5GroupName;
+			}
 			ptrOutputFiles->writeLogMessage(oss.str(), false);
 		}
 		for( int i = 0; i < m_numRemoteReferenceVariables; ++i ){
@@ -1608,6 +1616,9 @@ void Control::readParameterFile(){
 			oss << std::setw(15) << numDataPoints;
 			oss << std::setw(5) << "";
 			oss << fileName;
+			if (doesReadMTH5() && !dataFileList[iChan].mth5GroupName.empty()) {
+				oss << " " << dataFileList[iChan].mth5GroupName;
+			}
 			ptrOutputFiles->writeLogMessage(oss.str(), false);
 		}
 	}
@@ -1695,6 +1706,9 @@ void Control::readParameterFile(){
 	}
 	if( doesReadAtsBinary() ){
 		ptrOutputFiles->writeLogMessage("Read binary ATS files", false);
+	}
+	if( doesReadMTH5() ) {
+		ptrOutputFiles->writeLogMessage("Read MTH5 files", false);
 	}
 	if (doesMakeCalibrationFileForMFS()) {
 		ptrOutputFiles->writeLogMessage("Information about the inputs for calibration files : ", false);

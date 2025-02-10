@@ -1,0 +1,49 @@
+CXX           = icpc
+CC            = icpc
+CXXFLAGS      = -O3 \
+                -qopenmp \
+                -DNDEBUG \
+                -D_USE_OMP \
+                -D_LINUX \
+                -D_MTH5 \
+                -I./include \
+                -I/usr/local/hdf5-1.10.5/include
+DEST          = ./
+LIB_DIR       = ./lib
+LIB_MTH5_DIR  = /usr/local/hdf5-1.10.5/lib
+LDFLAGS       = -L${LIB_DIR} -L${LIB_MTH5_DIR} 
+LIBS          = ${LIB_DIR}/lapack_LINUX.a ${LIB_DIR}/blas_LINUX.a ${LIB_DIR}/libf2c.a -lhdf5
+OBJS          = Analysis.cpp \
+		AnalysisMultivariateRegression.cpp \
+		AnalysisTwoStage.cpp \
+		AnalysisOrdinaryRemoteReference.cpp \
+		AnalysisTest.cpp \
+		AnalysisRepeatedMedian.cpp \
+		Ats.cpp \
+		CalibrationFunction.cpp \
+		Control.cpp \
+		DoubleDenseMatrix.cpp \
+		DoubleDenseSquareMatrix.cpp \
+		DoubleDenseSquareSymmetricMatrix.cpp \
+		DoubleDenseSquareSymmetricPositiveDefiniteMatrix.cpp \
+		ElogDual.cpp \
+		ElogMT.cpp \
+		LapackInterface.cpp \
+		OutputFiles.cpp \
+		RobustPrewhitening.cpp \
+		RobustWeight.cpp \
+		RobustWeightHuber.cpp \
+		RobustWeightThomson.cpp \
+		RobustWeightTukeysBiweights.cpp \
+		Util.cpp \
+		UtilRobust.cpp \
+		MTH5.cpp \
+		main.cpp
+PROGRAM       = TRACMT
+
+all:            $(PROGRAM)
+
+$(PROGRAM):     $(OBJS)
+	$(CXX) $(CXXFLAGS) $(OBJS) $(LDFLAGS) $(LIBS) -o $(PROGRAM)
+
+clean:;		rm -f *.o *~ $(PROGRAM)

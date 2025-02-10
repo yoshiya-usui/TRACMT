@@ -26,47 +26,36 @@
 // OR TORT(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //--------------------------------------------------------------------------
-#ifndef DBLDEF_COMMON_PARAMETERS
-#define DBLDEF_COMMON_PARAMETERS
+#ifndef DBLDEF_MTH5
+#define DBLDEF_MTH5
 
 #include <string>
-#include <vector>
 
-namespace CommonParameters{
+// Class of MTH5 file
+class MTH5{
 
-enum DataType{
-	OUTPUT = 0,
-	INPUT,
-	REMOTE_REFERENCE
+public:
+
+	// Return the the instance of the class
+    static MTH5* getInstance();
+
+	// Read MTH5 file
+	void readMTH5File( const std::string& fileName, const std::string groupName, const int numSkipData, const int numDataPoints, double* data ) const;
+
+private:
+
+	// Constructer
+	MTH5();
+
+	// Destructer
+	~MTH5();
+
+	// Copy constructer
+	MTH5(const MTH5& rhs);
+
+	// Assignment operator
+	MTH5& operator=(const MTH5& rhs);
+
 };
-
-struct DataFile{
-	std::string fileName;
-	std::string mth5GroupName;
-	int numSkipData;
-	double* data;
-};
-
-struct DataFileSet{
-	int numDataPoints;
-	std::vector<DataFile> dataFile;
-};
-
-// Circular constant
-const static double PI = 3.14159265358979323846;
-
-// Factor converting values from radians to degrees
-const static double RAD2DEG = 180.0 / PI;
-
-// Factor converting values from degrees to radians
-const static double DEG2RAD = PI / 180.0;
-
-const static double EPS = 1.0e-20;
-
-static char programName[]="TRACMT";
-
-static char version[] = "v2.2.0";
-
-}
 
 #endif

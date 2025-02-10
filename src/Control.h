@@ -293,6 +293,9 @@ public:
 	bool doesReadAtsBinary() const;
 
 	// Get flag specifing whether input file is ELOG-Dual binary file
+	bool doesReadMTH5() const;
+
+	// Get flag specifing whether input file is ELOG-Dual binary file
 	bool doesReadElogDualBinary() const;
 
 	// Get flag specifing whether input file is ELOG-MT binary file
@@ -681,13 +684,16 @@ private:
 	// Flag specifing whether input file is ATS binary file
 	bool m_readAtsBinary;
 
+	// Flag specifing whether input file is MTH5 file
+	bool m_readMTH5;
+
 	// Flag specifing whether ELOG-Dual binary is read
 	bool m_readElogDualBinary;
 
 	// Flag specifing whether ELOG-MT binary is read
 	bool m_readElogMTBinary;
 
-	// Type of ELOG-Dual
+	// Timing of denoising based on EOF
 	int m_timingEOFBasedDenoising;
 
 	// Type of ELOG-Dual

@@ -33,6 +33,9 @@
 #include "UtilRobust.h"
 #include "TableOfTukeysBiweightParameters.h"
 #include "Ats.h"
+#ifdef _MTH5
+#include "MTH5.h"
+#endif
 #include "ElogDual.h"
 #include "ElogMT.h"
 #include "RobustWeightTukeysBiweights.h"
@@ -415,6 +418,7 @@ void Analysis::test() const{
 	delete[] y;
 	delete[] slopeCandidates;
 	delete[] interceptCandidates;
+
 	return;
 
 }
@@ -871,8 +875,15 @@ void Analysis::readTimeSeriesData( std::vector<CommonParameters::DataFileSet>& d
 			dataFileList[iChan].data = new double[numDataPoints];
 			if (ptrControl->doesReadAtsBinary() && Util::extractExtensionOfFileName(fileName).find("ats") != std::string::npos) {
 				Ats* ptrAts = Ats::getInstance();
-				ptrAts->readAtsFile( fileName, numSkipData, numDataPoints, dataFileList[iChan].data );
-			}else{
+				ptrAts->readAtsFile(fileName, numSkipData, numDataPoints, dataFileList[iChan].data);
+			}
+#ifdef _MTH5
+			else if (ptrControl->doesReadMTH5() && Util::extractExtensionOfFileName(fileName).find("mth5") != std::string::npos) {
+				MTH5* ptrMTH5 = MTH5::getInstance();
+				ptrMTH5->readMTH5File(fileName, dataFileList[iChan].mth5GroupName, numSkipData, numDataPoints, dataFileList[iChan].data);
+			}
+#endif
+			else{
 				readOneTimeSeriesData( fileName, numSkipData, numDataPoints, dataFileList[iChan].data );
 			}
 		}
