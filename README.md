@@ -4,7 +4,7 @@ In TRACMT, you can use the RRMS estimator developed by Usui et al. (2024) and th
 
 _Yoshiya Usui, Makoto Uyeshima, Shin'ya Sakanaka, Tasuku Hashimoto, Masahiro Ichiki, Toshiki Kaida, Yusuke Yamaya, Yasuo Ogawa, Masataka Masuda, Takahiro Akiyama, 2024. New robust remote reference estimator using robust multivariate linear regression, Geophysical Journal International, ggae199, [https://doi.org/10.1093/gji/ggae19_9](https://doi.org/10.1093/gji/ggae199)_
 
-_Yoshiya Usui, 2025. Prewhitening of magnetotelluric data using a robust filter and robust PARCOR. Bull. Earthq. Res. Inst. Univ. Tokyo, 99, [https://doi.org/10.15083/0002012817](https://doi.org/10.15083/0002012817)_ 
+_Yoshiya Usui, 2024. Prewhitening of magnetotelluric data using a robust filter and robust PARCOR. Bull. Earthq. Res. Inst. Univ. Tokyo, 99, [https://doi.org/10.15083/0002012817](https://doi.org/10.15083/0002012817)_ 
 
 _Yoshiya Usui, Makoto Uyeshima, Shin'ya Sakanaka, Tasuku Hashimoto, Masahiro Ichiki, Toshiki Kaida, Yusuke Yamaya, Yasuo Ogawa, Masataka Masuda, Takahiro Akiyama, 2025, Application of the fast and robust bootstrap method to the uncertainty analysis of the magnetotelluric transfer function, Geophysical Journal International, ggaf162, [https://doi.org/10.1093/gji/ggaf162](https://doi.org/10.1093/gji/ggaf162)_
 
