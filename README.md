@@ -1,6 +1,6 @@
 # TRACMT
 Robust transfer function analysis code for magnetotellurics.
-In TRACMT, you can use the RRMS estimator developed by Usui et al. (2024).
+In TRACMT, you can use the RRMS estimator developed by Usui et al. (2024) and the fast and robust bootstrap method evaluated by Usui et al (2025).
 
 _Yoshiya Usui, Makoto Uyeshima, Shin'ya Sakanaka, Tasuku Hashimoto, Masahiro Ichiki, Toshiki Kaida, Yusuke Yamaya, Yasuo Ogawa, Masataka Masuda, Takahiro Akiyama, 2024. New robust remote reference estimator using robust multivariate linear regression, Geophysical Journal International, ggae199, [https://doi.org/10.1093/gji/ggae19_9](https://doi.org/10.1093/gji/ggae199)_
 
