@@ -2,11 +2,11 @@
 Robust transfer function analysis code for magnetotellurics.
 In TRACMT, you can use the RRMS estimator developed by Usui et al. (2024) and the fast and robust bootstrap method evaluated by Usui et al (2025).
 
-_Yoshiya Usui, Makoto Uyeshima, Shin'ya Sakanaka, Tasuku Hashimoto, Masahiro Ichiki, Toshiki Kaida, Yusuke Yamaya, Yasuo Ogawa, Masataka Masuda, Takahiro Akiyama, 2024. New robust remote reference estimator using robust multivariate linear regression, Geophysical Journal International, ggae199, [https://doi.org/10.1093/gji/ggae19_9](https://doi.org/10.1093/gji/ggae199)_
+_Yoshiya Usui, Makoto Uyeshima, Shin'ya Sakanaka, Tasuku Hashimoto, Masahiro Ichiki, Toshiki Kaida, Yusuke Yamaya, Yasuo Ogawa, Masataka Masuda, Takahiro Akiyama, 2024. New robust remote reference estimator using robust multivariate linear regression, Geophysical Journal International, 238(2), [https://doi.org/10.1093/gji/ggae19_9](https://doi.org/10.1093/gji/ggae199)_
 
 _Yoshiya Usui, 2024. Prewhitening of magnetotelluric data using a robust filter and robust PARCOR. Bull. Earthq. Res. Inst. Univ. Tokyo, 99, [https://doi.org/10.15083/0002012817](https://doi.org/10.15083/0002012817)_ 
 
-_Yoshiya Usui, Makoto Uyeshima, Shin'ya Sakanaka, Tasuku Hashimoto, Masahiro Ichiki, Toshiki Kaida, Yusuke Yamaya, Yasuo Ogawa, Masataka Masuda, Takahiro Akiyama, 2025, Application of the fast and robust bootstrap method to the uncertainty analysis of the magnetotelluric transfer function, Geophysical Journal International, ggaf162, [https://doi.org/10.1093/gji/ggaf162](https://doi.org/10.1093/gji/ggaf162)_
+_Yoshiya Usui, Makoto Uyeshima, Shin'ya Sakanaka, Tasuku Hashimoto, Masahiro Ichiki, Toshiki Kaida, Yusuke Yamaya, Yasuo Ogawa, Masataka Masuda, Takahiro Akiyama, 2025, Application of the fast and robust bootstrap method to the uncertainty analysis of the magnetotelluric transfer function, Geophysical Journal International, 242(1), [https://doi.org/10.1093/gji/ggaf162](https://doi.org/10.1093/gji/ggaf162)_
 
 We developed the RRMS estimator by applying the robust multivariate linear regression S-estimator to the two-input-multiple-output relationship between the local EM field and the reference magnetic field that leads to the same equation as by the original remote reference method.
 The RRMS estimator can give an unbiased estimate of the MT transfer function and suppress the influence of outliers in the electric field and magnetic
