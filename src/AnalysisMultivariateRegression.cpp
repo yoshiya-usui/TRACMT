@@ -4252,7 +4252,7 @@ void AnalysisMultivariateRegression::improveCandidate( const int numSegmentsTota
 
 }
 
-// Calculate Mahalanobis distances
+// Calculate Mahalanobis distances assuming diagonal matrix
 void AnalysisMultivariateRegression::calculateMD( const int numSegmentsTotal, const int numOfOutputAndInputVariables,
 	std::complex<double>** complexResiduals, const double* const variancesWithoutScale, double* MD ) const{
 
@@ -4277,9 +4277,14 @@ void AnalysisMultivariateRegression::calculateMD( const int numSegmentsTotal, co
 
 }
 
-// Estimate error by fixed-weights bootstrap
+// Calculate Mahalanobis distances
 void AnalysisMultivariateRegression::calculateMD(const int numSegmentsTotal, const int numOfOutputAndInputVariables, std::complex<double>** complexResiduals,
 	const double* const variancesWithoutScale, const double* const covariancesLowerTriangleWithoutScale, double* MD) const {
+
+	if ((Control::getInstance())->getProcedureType() == Control::MULTIVARIATE_REGRESSION) {
+		calculateMD(numSegmentsTotal, numOfOutputAndInputVariables, complexResiduals, variancesWithoutScale, MD);
+		return;
+	}
 
 	DoubleDenseSquareSymmetricMatrix covarianceMatrix;
 	covarianceMatrix.setDegreeOfEquation(numOfOutputAndInputVariables);
