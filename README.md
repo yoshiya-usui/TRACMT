@@ -42,10 +42,10 @@ _**v1.3.6**_ August. 15, 2024: A function to read ELOG-DUAL binary files was mod
 
 _**v2.0.0**_ January. 1, 2025: The fast and robust bootstrap method was added. Some equations of the parametric error estimation method were modified.
 
-_**v2.3.0**_ October. 22, 2025: The computational efficiency of the RRMS estimator was improved.
-
 _**v2.1.0**_ January. 14, 2025: The equation of the AIC is modified.
 
 _**v2.2.0**_ February. 10, 2025: The option for reading MTH5 files is added.
+
+_**v2.3.0**_ October. 22, 2025: The computational efficiency of the RRMS estimator was improved.
 
 
