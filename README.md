@@ -48,4 +48,4 @@ _**v2.2.0**_ February. 10, 2025: The option for reading MTH5 files is added.
 
 _**v2.3.0**_ October. 22, 2025: The computational efficiency of the RRMS estimator was improved.
 
-_**v2.5.0**_ January. 14, 2025: Strengthen the functions to read and correct the data measured with ELOG-MT, ELOG-DUAL, and ELOG1K.
+_**v2.5.0**_ January. 14, 2026: Strengthen the functions to read and correct the data measured with ELOG-MT, ELOG-DUAL, and ELOG1K.
