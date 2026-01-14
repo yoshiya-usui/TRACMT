@@ -25,7 +25,7 @@ field.
    export PATH="${PATH}:/usr/local/hdf5-1.10.5/lib"<br>
 
 ## Functional Overview
-**Input file format**: Text (Ascii) file / .ats files of Metronix instruments / MTH5 files (Peacock et al., 2022) / .dat files of ELOG-MT
+**Input file format**: Text (Ascii) file / ats files of Metronix instruments / MTH5 files (Peacock et al., 2022) / dat files of ELOG-MT, ELOG-DUAL, and ELOG1K
 
 **Prewhitening**: Non-robust prewhitening / Robust prewhitening / Robust prewhitening with robust filter
 
@@ -48,4 +48,4 @@ _**v2.2.0**_ February. 10, 2025: The option for reading MTH5 files is added.
 
 _**v2.3.0**_ October. 22, 2025: The computational efficiency of the RRMS estimator was improved.
 
-
+_**v2.5.0**_ January. 14, 2025: Strengthen the functions to read and correct the data measured with ELOG-MT, ELOG-DUAL, and ELOG1K.
