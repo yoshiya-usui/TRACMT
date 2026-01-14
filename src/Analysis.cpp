@@ -898,60 +898,43 @@ void Analysis::readCalibrationFiles( const std::vector<double>& freq ){
 	const Control* const ptrControl = Control::getInstance();
 
 	if (ptrControl->doesMakeCalibrationFileForMFS()) {
-		const int numFile = ptrControl->getNumCalibrationFilesForMFS();
-		if (numFile > 0) {
-			assert(numFile == ptrControl->getNumberOfChannels());
+		const int numCalFile = ptrControl->getNumCalibrationFilesForMFS();
+		if (numCalFile > 0) {
+			assert(numCalFile == ptrControl->getNumberOfChannels());
 		}
-		for (int iFile = 0; iFile < numFile; ++iFile) {
-			const std::string fileName = ptrControl->getCalibrationFileNameForMFS(iFile);
+		for (int iChan = 0; iChan < numCalFile; ++iChan) {
+			const std::string fileName = ptrControl->getCalibrationFileNameForMFS(iChan);
 			const Ats* ptrAts = Ats::getInstance();
-			ptrAts->makeCalibrationFile(fileName, iFile, freq);
+			ptrAts->makeCalibrationFile(fileName, iChan, freq);
+			if (iChan == 0 || iChan == 1) {
+				//@note: Calibrations of the data measured with ELOG-Dual or ELOG-MT are performed just before the response function estimation
+				if (ptrControl->doesMakeCalibrationFileForElogDual()) {
+					ptrAts->makeCalibrationFileOnlyWithDipoleLength(fileName, iChan);
+				}
+				else if (ptrControl->doesMakeCalibrationFileForElogMT()) {
+					const int elogMTReadingOption = ptrControl->getElogMTReadingOption();
+					if (elogMTReadingOption == Control::READ_EX_EY_HX_HY_HZ_HRX_HRY_FROM_ELOGMT_DATA ||
+						elogMTReadingOption == Control::READ_EX_EY_HX_HY_HRX_HRY_FROM_ELOGMT_DATA ||
+						elogMTReadingOption == Control::READ_EX_EY_HX_HY_HZ_FROM_ELOGMT_DATA ||
+						elogMTReadingOption == Control::READ_EX_EY_HX_HY_FROM_ELOGMT_DATA ||
+						elogMTReadingOption == Control::READ_EX_EY_FROM_ELOGMT_DATA) {
+						ptrAts->makeCalibrationFileOnlyWithDipoleLength(fileName, iChan);
+					}
+				}
+			}
 		}
 	}
 
-	if( ptrControl->doesMakeCalibrationFileForElogDual() ){
-		const Control::ParamsForElogCalibration params = ptrControl->getParamsForElogDualCalibration();
-		ElogDual* ptrElogDual = ElogDual::getInstance();
-		if (ptrControl->doesMakeCalibrationFileForMFS()) {
-			double dbuf(0.0);
-			std::istringstream issX(ptrControl->getCalibrationFileNameForMFS(0));
-			issX >> dbuf;
-			const double dipoleLengthX = dbuf;
-			std::istringstream issY(ptrControl->getCalibrationFileNameForMFS(1));
-			issY >> dbuf;
-			const double dipoleLengthY = dbuf;
-			ptrElogDual->makeCalibrationFile(params.fileName, params.unitGroupDelay, 0, 1, dipoleLengthX, dipoleLengthY, freq);
-		}
+	if (m_calibrationFunctions != NULL) {
+		delete[] m_calibrationFunctions;
 	}
-
-	if (ptrControl->doesMakeCalibrationFileForElogMT()) {
-		const Control::ParamsForElogCalibration params = ptrControl->getParamsForElogMTCalibration();
-		ElogMT* ptrElogMT = ElogMT::getInstance();
-		if (ptrControl->doesMakeCalibrationFileForMFS()) {
-			double dbuf(0.0);
-			std::istringstream issX(ptrControl->getCalibrationFileNameForMFS(0));
-			issX >> dbuf;
-			const double dipoleLengthX = dbuf;
-			std::istringstream issY(ptrControl->getCalibrationFileNameForMFS(1));
-			issY >> dbuf;
-			const double dipoleLengthY = dbuf;
-			std::vector<int> channelIndexes;
-			channelIndexes.push_back(0);
-			channelIndexes.push_back(1);
-			ptrElogMT->makeCalibrationFile(params.fileName, params.unitGroupDelay, channelIndexes, dipoleLengthX, dipoleLengthY, freq);
-		}
-	}
-
 	const int numCalFile = ptrControl->getNumCalibrationFiles();
-	if( numCalFile > 0 ){
-		assert( numCalFile == ptrControl->getNumberOfChannels() );
-	}
-	if( m_calibrationFunctions != NULL ){
-		delete [] m_calibrationFunctions;
-	}
-	m_calibrationFunctions = new CalibrationFunction[numCalFile];
-	for( int iFile = 0; iFile < numCalFile; ++iFile ){
-		m_calibrationFunctions[iFile].readCalibrationFunction(ptrControl->getCalibrationFileName(iFile));
+	if (numCalFile > 0) {
+		assert(numCalFile == ptrControl->getNumberOfChannels());
+		m_calibrationFunctions = new CalibrationFunction[numCalFile];
+		for (int iChan = 0; iChan < numCalFile; ++iChan) {
+			m_calibrationFunctions[iChan].readCalibrationFunction(ptrControl->getCalibrationFileName(iChan));
+		}
 	}
 
 }
@@ -1286,7 +1269,15 @@ void Analysis::calibrationCorrection(const int iChan, const int numSegmentsTotal
 	}else{
 		calCorrFunc *= m_calibrationFunctions[iChan].calculateCalibrationFunction(freq);
 	}
-	
+	if (ptrControl->doesMakeCalibrationFileForElogDual()) {
+		const Control::ParamsForElogCalibration params = ptrControl->getParamsForElogDualCalibration();
+		calCorrFunc *= (ElogDual::getInstance())->calculateCalibrationFunction(params.fileName, freq, params.unitGroupDelay, iChan);
+	}
+	if (ptrControl->doesMakeCalibrationFileForElogMT()) {
+		const Control::ParamsForElogCalibration params = ptrControl->getParamsForElogMTCalibration();
+		calCorrFunc *= (ElogMT::getInstance())->calculateCalibrationFunction(params.fileName, freq, params.unitGroupDelay, iChan);
+	}
+
 	if(ptrControl->getParamsForDecimation().applyDecimation){
 		const Control::ParamsForDecimation params = ptrControl->getParamsForDecimation();
 		double* coeff = new double[params.filterLength + 1];
@@ -2892,7 +2883,7 @@ void Analysis::outputTimeSeriesData( const std::vector<CommonParameters::DataFil
 
 }
 
-// Evaluate characteristics of time-series data prior to the estimation of the response functions
+// Output calibrated time-series data
 void Analysis::outputCalibratedTimeSeriesData(const std::vector<CommonParameters::DataFileSet>& dataFileSets) const {
 
 	OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
@@ -3142,10 +3133,10 @@ void Analysis::priorEvaluationOfDataSegments( const int numSegmentsTotal, std::c
 			const int out = ptrControl->getChannelIndex( CommonParameters::OUTPUT, iVar );
 			const int in0 = ptrControl->getChannelIndex( CommonParameters::INPUT, 0 );
 			const int in1 = ptrControl->getChannelIndex( CommonParameters::INPUT, 1 );
-			ofs << ",resp_real_" << out << "_" << in0;
-			ofs << ",resp_imag_" << out << "_" << in0;
-			ofs << ",resp_real_" << out << "_" << in1;
-			ofs << ",resp_imag_" << out << "_" << in1;
+			ofs << ",amp_resp_" << out << "_" << in0;
+			ofs << ",phs_resp_" << out << "_" << in0;
+			ofs << ",amp_resp_" << out << "_" << in1;
+			ofs << ",phs_resp_" << out << "_" << in1;
 		}
 	}
 	for( int iVar = 0; iVar < numOutputVariables / 2; ++iVar ){
@@ -3246,11 +3237,11 @@ void Analysis::priorEvaluationOfDataSegmentsAux( const std::vector<int>& segment
 			ofs << "," << std::setprecision(10) << std::scientific << coherence;
 		}
 		// Response functions
-		for( int iVar = 0; iVar < numOutputVariables; ++iVar ){
-			ofs << "," << std::setprecision(10) << std::scientific << resp0[iVar].real();
-			ofs << "," << std::setprecision(10) << std::scientific << resp0[iVar].imag();
-			ofs << "," << std::setprecision(10) << std::scientific << resp1[iVar].real();
-			ofs << "," << std::setprecision(10) << std::scientific << resp1[iVar].imag();
+		for (int iVar = 0; iVar < numOutputVariables; ++iVar) {
+			ofs << "," << std::setprecision(10) << std::scientific << std::abs(resp0[iVar]);
+			ofs << "," << std::setprecision(10) << std::scientific << std::arg(resp0[iVar]) * CommonParameters::RAD2DEG;
+			ofs << "," << std::setprecision(10) << std::scientific << std::abs(resp1[iVar]);
+			ofs << "," << std::setprecision(10) << std::scientific << std::arg(resp1[iVar]) * CommonParameters::RAD2DEG;
 		}
 	}
 
@@ -3774,7 +3765,7 @@ void Analysis::writeHeaderToOutputFileForApparentResistivityAndPhase( std::ofstr
 		ofs << ",phase_" << out << "_" << in0;
 		ofs << ",app_res_" << out << "_" << in1;
 		ofs << ",phase_" << out << "_" << in1;
-		ofs << ",coherence_" << out << "_" << in0 << "+" << in1;
+		ofs << ",coherence_" << out;
 	}
 	for( int iVar = 0; iVar < numOutputVariables; ++iVar ){
 		const int out = ptrControl->getChannelIndex( CommonParameters::OUTPUT, iVar );
@@ -3806,7 +3797,7 @@ void Analysis::writeHeaderToOutputFileForResponseFunctions( std::ofstream& ofs )
 		ofs << ",resp_imag_" << out << "_" << in0;
 		ofs << ",resp_real_" << out << "_" << in1;
 		ofs << ",resp_imag_" << out << "_" << in1;
-		ofs << ",coherence_" << out << "_" << in0 << "+" << in1;
+		ofs << ",coherence_" << out;
 	}
 	for( int iVar = 0; iVar < numOutputVariables; ++iVar ){
 		const int out = ptrControl->getChannelIndex( CommonParameters::OUTPUT, iVar );

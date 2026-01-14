@@ -157,165 +157,140 @@ std::string ElogDual::getCalibrationFileName(const int channelIndex) const {
 
 }
 
-// Make calibration file
-void ElogDual::makeCalibrationFile( const std::string& fileName, const double unitGroupDelay, const int channelIndexX, const int channelIndexY,
-	const double dipoleLengthX, const double dipoleLengthY, const std::vector<double>& freq) const {
+// Calculate calibration function
+std::complex<double> ElogDual::calculateCalibrationFunction(const std::string& elogCalFileName, const double freq, const double unitGroupDelay, const int channelIndex) const {
 
-	OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
-
-	const int numFreq = static_cast<int>(freq.size());
-	if( numFreq < 1 ){
-		ptrOutputFiles->writeErrorMessage( "Number of the frequencies for which calibrations are estimated is less than 1 : " + Util::toString(numFreq) );
+	if (channelIndex < 0 || channelIndex > 1) {
+		return 1.0;
 	}
-
-	const std::string outputFileNameX = getCalibrationFileName(channelIndexX);
-	std::ofstream ofsX;
-	ofsX.open( outputFileNameX.c_str(), std::ios::out );
-	if( ofsX.fail() ){
-		ptrOutputFiles->writeErrorMessage( "File open error : " + outputFileNameX );
-	}
-	const double dipoleLengthXkm = dipoleLengthX / -1000.0;// [m] -> [km] and invert sign
-	ofsX << std::setw(20) << std::scientific << std::setprecision(9) << 1.0/dipoleLengthXkm << std::endl;
-	ofsX << std::setw(10) << numFreq << std::endl;
-
-	const std::string outputFileNameY = getCalibrationFileName(channelIndexY);
-	std::ofstream ofsY;
-	ofsY.open( outputFileNameY.c_str(), std::ios::out );
-	if( ofsY.fail() ){
-		ptrOutputFiles->writeErrorMessage( "File open error : " + outputFileNameY );
-	}
-	const double dipoleLengthYkm = dipoleLengthY / -1000.0;// [m] -> [km] and invert sign
-	ofsY << std::setw(20) << std::scientific << std::setprecision(9) << 1.0/dipoleLengthYkm << std::endl;
-	ofsY << std::setw(10) << numFreq << std::endl;
 
 	const Control* const ptrControl = Control::getInstance();
-	for( int iFreq = 0; iFreq < numFreq; ++iFreq ){
-		std::complex<double> calElogX(1.0,0.0);
-		std::complex<double> calElogY(1.0,0.0);
-		calculateCalibrationFunctionForAnalogFilter(fileName, freq[iFreq], calElogX, calElogY);
+	std::complex<double> calElogX(1.0, 0.0);
+	std::complex<double> calElogY(1.0, 0.0);
+	calculateCalibrationFunctionForAnalogFilter(elogCalFileName, freq, calElogX, calElogY);
 #ifdef _DEBUG_WRITE
-		std::cout << "elog analog filter" << std::endl;
-		std::cout << std::setw(20) << std::setprecision(12) << 1.0/freq[iFreq];
+	std::cout << "elog analog filter" << std::endl;
+	std::cout << std::setw(20) << std::setprecision(12) << 1.0 / freq;
+	std::cout << std::setw(20) << std::setprecision(12) << std::abs(calElogX);
+	std::cout << std::setw(20) << std::setprecision(12) << atan2(calElogX.imag(), calElogX.real()) * CommonParameters::RAD2DEG;
+	std::cout << std::endl;
+	std::cout << std::setw(20) << std::setprecision(12) << 1.0 / freq;
+	std::cout << std::setw(20) << std::setprecision(12) << std::abs(calElogY);
+	std::cout << std::setw(20) << std::setprecision(12) << atan2(calElogY.imag(), calElogY.real()) * CommonParameters::RAD2DEG;
+	std::cout << std::endl;
+#endif
+	{
+		//------- 1st fir filer from measured calibration table
+		std::string path = "";
+		if (!ptrControl->getDirectoryOfLoggerCalibrationFiles().empty()) {
+#ifdef _LINUX
+			path = ptrControl->getDirectoryOfLoggerCalibrationFiles() + "\/";
+#else
+			path = ptrControl->getDirectoryOfLoggerCalibrationFiles() + "\\";
+#endif
+		}
+		std::string fileName = "firh.txt";
+		if (ptrControl->getTypeOfElogDual() == Control::ELOGDUAL_ADU_MODE) {
+			fileName = "firh_adu.txt";
+		}
+		else if (ptrControl->getTypeOfElogDual() == Control::ELOGDUAL_PHX_MODE) {
+			fileName = "firh_phx.txt";
+		}
+		const std::complex<double> firh = Util::calculateCalibrationForFIRFilterType1(path + fileName, 14336.0, freq, true);
+		calElogX *= firh;
+		calElogY *= firh;
+#ifdef _DEBUG_WRITE
+		std::cout << "elog firh" << std::endl;
+		std::cout << std::setw(20) << std::setprecision(12) << 1.0 / freq;
 		std::cout << std::setw(20) << std::setprecision(12) << std::abs(calElogX);
-		std::cout << std::setw(20) << std::setprecision(12) << atan2(calElogX.imag(),calElogX.real()) * CommonParameters::RAD2DEG;
+		std::cout << std::setw(20) << std::setprecision(12) << atan2(calElogX.imag(), calElogX.real()) * CommonParameters::RAD2DEG;
 		std::cout << std::endl;
-		std::cout << std::setw(20) << std::setprecision(12) << 1.0/freq[iFreq];
+		std::cout << std::setw(20) << std::setprecision(12) << 1.0 / freq;
 		std::cout << std::setw(20) << std::setprecision(12) << std::abs(calElogY);
-		std::cout << std::setw(20) << std::setprecision(12) << atan2(calElogY.imag(),calElogY.real()) * CommonParameters::RAD2DEG;
+		std::cout << std::setw(20) << std::setprecision(12) << atan2(calElogY.imag(), calElogY.real()) * CommonParameters::RAD2DEG;
 		std::cout << std::endl;
 #endif
-		{
-			//------- 1st fir filer from measured calibration table
-			std::string path = "";
-			if (!ptrControl->getDirectoryOfLoggerCalibrationFiles().empty()) {
+	}
+	{
+		//------ 2nd fir filter ---
+		// 4900 is described in elog cal file (4.9 Vpp input)
+		calElogX /= 4900.0;
+		calElogY /= 4900.0;
+#ifdef _DEBUG_WRITE
+		std::cout << "elog 2nd fir filter" << std::endl;
+		std::cout << std::setw(20) << std::setprecision(12) << 1.0 / freq;
+		std::cout << std::setw(20) << std::setprecision(12) << std::abs(calElogX);
+		std::cout << std::setw(20) << std::setprecision(12) << atan2(calElogX.imag(), calElogX.real()) * CommonParameters::RAD2DEG;
+		std::cout << std::endl;
+		std::cout << std::setw(20) << std::setprecision(12) << 1.0 / freq;
+		std::cout << std::setw(20) << std::setprecision(12) << std::abs(calElogY);
+		std::cout << std::setw(20) << std::setprecision(12) << atan2(calElogY.imag(), calElogY.real()) * CommonParameters::RAD2DEG;
+		std::cout << std::endl;
+#endif
+	}
+	{
+		//------ Gain correction ---
+		const double tsGroupDelay = 1.0 / 14336.0 * unitGroupDelay;
+		const double angle = 2.0 * CommonParameters::PI * freq * tsGroupDelay;
+		const std::complex<double> groupDelay = std::complex<double>(cos(angle), sin(angle));
+		calElogX /= groupDelay;
+		calElogY /= groupDelay;
+#ifdef _DEBUG_WRITE
+		std::cout << "elog gain correction" << std::endl;
+		std::cout << std::setw(20) << std::setprecision(12) << 1.0 / freq;
+		std::cout << std::setw(20) << std::setprecision(12) << std::abs(calElogX);
+		std::cout << std::setw(20) << std::setprecision(12) << atan2(calElogX.imag(), calElogX.real()) * CommonParameters::RAD2DEG;
+		std::cout << std::endl;
+		std::cout << std::setw(20) << std::setprecision(12) << 1.0 / freq;
+		std::cout << std::setw(20) << std::setprecision(12) << std::abs(calElogY);
+		std::cout << std::setw(20) << std::setprecision(12) << atan2(calElogY.imag(), calElogY.real()) * CommonParameters::RAD2DEG;
+		std::cout << std::endl;
+#endif
+	}
+	if (fabs(ptrControl->getSamplingFrequencyOrg() - 32.0) < CommonParameters::EPS) {
+		//------ Group delay correction ---
+		std::string path = "";
+		if (!ptrControl->getDirectoryOfLoggerCalibrationFiles().empty()) {
 #ifdef _LINUX
-				path = ptrControl->getDirectoryOfLoggerCalibrationFiles() + "\/";
+			path = ptrControl->getDirectoryOfLoggerCalibrationFiles() + "\/";
 #else
-				path = ptrControl->getDirectoryOfLoggerCalibrationFiles() + "\\";
-#endif
-			}
-			std::string fileName = "firh.txt";
-			if (ptrControl->getTypeOfElogDual() == Control::ELOGDUAL_ADU_MODE) {
-				fileName = "firh_adu.txt";
-			}
-			else if (ptrControl->getTypeOfElogDual() == Control::ELOGDUAL_PHX_MODE) {
-				fileName = "firh_phx.txt";
-			}
-			const std::complex<double> firh = Util::calculateCalibrationForFIRFilterType1(path + fileName, 9, 14336.0, freq[iFreq], true);
-			calElogX *= firh;
-			calElogY *= firh;
-#ifdef _DEBUG_WRITE
-			std::cout << "elog firh" << std::endl;
-			std::cout << std::setw(20) << std::setprecision(12) << 1.0/freq[iFreq];
-			std::cout << std::setw(20) << std::setprecision(12) << std::abs(calElogX);
-			std::cout << std::setw(20) << std::setprecision(12) << atan2(calElogX.imag(),calElogX.real()) * CommonParameters::RAD2DEG;
-			std::cout << std::endl;
-			std::cout << std::setw(20) << std::setprecision(12) << 1.0/freq[iFreq];
-			std::cout << std::setw(20) << std::setprecision(12) << std::abs(calElogY);
-			std::cout << std::setw(20) << std::setprecision(12) << atan2(calElogY.imag(),calElogY.real()) * CommonParameters::RAD2DEG;
-			std::cout << std::endl;
+			path = ptrControl->getDirectoryOfLoggerCalibrationFiles() + "\\";
 #endif
 		}
-		{
-			//------ 2nd fir filter ---
-			// 4900 is described in elog cal file (4.9 Vpp input)
-			calElogX /= 4900.0;
-			calElogY /= 4900.0;
-#ifdef _DEBUG_WRITE
-			std::cout << "elog 2nd fir filter" << std::endl;
-			std::cout << std::setw(20) << std::setprecision(12) << 1.0/freq[iFreq];
-			std::cout << std::setw(20) << std::setprecision(12) << std::abs(calElogX);
-			std::cout << std::setw(20) << std::setprecision(12) << atan2(calElogX.imag(),calElogX.real()) * CommonParameters::RAD2DEG;
-			std::cout << std::endl;
-			std::cout << std::setw(20) << std::setprecision(12) << 1.0/freq[iFreq];
-			std::cout << std::setw(20) << std::setprecision(12) << std::abs(calElogY);
-			std::cout << std::setw(20) << std::setprecision(12) << atan2(calElogY.imag(),calElogY.real()) * CommonParameters::RAD2DEG;
-			std::cout << std::endl;
-#endif
+		std::string fileName = "firl.txt";
+		if (ptrControl->getTypeOfElogDual() == Control::ELOGDUAL_ADU_MODE) {
+			fileName = "firl_adu.txt";
 		}
-		{
-			//------ Gain correction ---
-			const double tsGroupDelay = 1.0 / 14336.0 * unitGroupDelay;
-			const double angle = 2.0 * CommonParameters::PI * freq[iFreq] * tsGroupDelay;
-			const std::complex<double> groupDelay = std::complex<double>(cos(angle), sin(angle));
-			calElogX /= groupDelay;
-			calElogY /= groupDelay;
-#ifdef _DEBUG_WRITE
-			std::cout << "elog gain correction" << std::endl;
-			std::cout << std::setw(20) << std::setprecision(12) << 1.0/freq[iFreq];
-			std::cout << std::setw(20) << std::setprecision(12) << std::abs(calElogX);
-			std::cout << std::setw(20) << std::setprecision(12) << atan2(calElogX.imag(),calElogX.real()) * CommonParameters::RAD2DEG;
-			std::cout << std::endl;
-			std::cout << std::setw(20) << std::setprecision(12) << 1.0/freq[iFreq];
-			std::cout << std::setw(20) << std::setprecision(12) << std::abs(calElogY);
-			std::cout << std::setw(20) << std::setprecision(12) << atan2(calElogY.imag(),calElogY.real()) * CommonParameters::RAD2DEG;
-			std::cout << std::endl;
-#endif
+		else if (ptrControl->getTypeOfElogDual() == Control::ELOGDUAL_PHX_MODE) {
+			fileName = "firl_phx.txt";
 		}
-		if( fabs(ptrControl->getSamplingFrequencyOrg() - 32.0) < CommonParameters::EPS ) {
-			//------ Group delay correction ---
-			std::string path = "";
-			if (!ptrControl->getDirectoryOfLoggerCalibrationFiles().empty()) {
-#ifdef _LINUX
-				path = ptrControl->getDirectoryOfLoggerCalibrationFiles() + "\/";
-#else
-				path = ptrControl->getDirectoryOfLoggerCalibrationFiles() + "\\";
-#endif
-			}
-			std::string fileName = "firl.txt";
-			if (ptrControl->getTypeOfElogDual() == Control::ELOGDUAL_ADU_MODE) {
-				fileName = "firl_adu.txt";
-			}
-			else if (ptrControl->getTypeOfElogDual() == Control::ELOGDUAL_PHX_MODE) {
-				fileName = "firl_phx.txt";
-			}
-			const std::complex<double> firl = Util::calculateCalibrationForFIRFilterType2(path + fileName, 9, 1024.0, freq[iFreq], -361, 0);
-			calElogX *= firl;
-			calElogY *= firl;
+		const std::complex<double> firl = Util::calculateCalibrationForFIRFilterType2(path + fileName, 1024.0, freq, true, 0, 0);
+		calElogX *= firl;
+		calElogY *= firl;
 #ifdef _DEBUG_WRITE
-			std::cout << "elog roup delay correction" << std::endl;
-			std::cout << std::setw(20) << std::setprecision(12) << 1.0/freq[iFreq];
-			std::cout << std::setw(20) << std::setprecision(12) << std::abs(calElogX);
-			std::cout << std::setw(20) << std::setprecision(12) << atan2(calElogX.imag(),calElogX.real()) * CommonParameters::RAD2DEG;
-			std::cout << std::endl;
-			std::cout << std::setw(20) << std::setprecision(12) << 1.0/freq[iFreq];
-			std::cout << std::setw(20) << std::setprecision(12) << std::abs(calElogY);
-			std::cout << std::setw(20) << std::setprecision(12) << atan2(calElogY.imag(),calElogY.real()) * CommonParameters::RAD2DEG;
-			std::cout << std::endl;
+		std::cout << "elog roup delay correction" << std::endl;
+		std::cout << std::setw(20) << std::setprecision(12) << 1.0 / freq;
+		std::cout << std::setw(20) << std::setprecision(12) << std::abs(calElogX);
+		std::cout << std::setw(20) << std::setprecision(12) << atan2(calElogX.imag(), calElogX.real()) * CommonParameters::RAD2DEG;
+		std::cout << std::endl;
+		std::cout << std::setw(20) << std::setprecision(12) << 1.0 / freq;
+		std::cout << std::setw(20) << std::setprecision(12) << std::abs(calElogY);
+		std::cout << std::setw(20) << std::setprecision(12) << atan2(calElogY.imag(), calElogY.real()) * CommonParameters::RAD2DEG;
+		std::cout << std::endl;
 #endif
-		}
-		const std::complex<double> invCalX = 1.0 / calElogX;
-		ofsX << std::setw(20) << std::scientific << std::setprecision(9) << freq[iFreq];
-		ofsX << std::setw(20) << std::scientific << std::setprecision(9) << invCalX.real();
-		ofsX << std::setw(20) << std::scientific << std::setprecision(9) << invCalX.imag() << std::endl;
-		const std::complex<double> invCalY = 1.0 / calElogY;
-		ofsY << std::setw(20) << std::scientific << std::setprecision(9) << freq[iFreq];
-		ofsY << std::setw(20) << std::scientific << std::setprecision(9) << invCalY.real();
-		ofsY << std::setw(20) << std::scientific << std::setprecision(9) << invCalY.imag() << std::endl;
 	}
 
-	ofsX.close();
-	ofsY.close();
+	switch (channelIndex)
+	{
+	case 0:
+		return 1.0 / calElogX;
+		break;
+	case 1:
+		return 1.0 / calElogY;
+		break;
+	default:
+		return 1.0;
+	}
 
 }
 

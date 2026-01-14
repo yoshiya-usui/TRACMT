@@ -852,7 +852,7 @@ void Control::readParameterFile(){
 			double dbuf(0.0);
 			ifs >> dbuf;
 			m_paramsForElogDualCalibration.unitGroupDelay = dbuf;
-			}
+		}
 		else if (line.find("ELOGDUAL_BINARY") != std::string::npos) {
 			m_readElogDualBinary = true;
 		}

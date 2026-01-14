@@ -65,7 +65,7 @@ const static double EPS = 1.0e-20;
 
 static char programName[]="TRACMT";
 
-static char version[] = "v2.3.0";
+static char version[] = "v2.5.0";
 
 }
 

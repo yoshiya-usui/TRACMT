@@ -191,6 +191,31 @@ void Ats::makeCalibrationFile( const std::string& inputString, const int channel
 }
 
 // Get flag specifing whether the calibration function for ADU is calculated
+void Ats::makeCalibrationFileOnlyWithDipoleLength(const std::string& inputString, const int channelIndex) const {
+
+	OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
+
+	const std::string outputFileName = getCalibrationFileName(channelIndex);
+	std::ofstream ofs;
+	ofs.open(outputFileName.c_str(), std::ios::out);
+	if (ofs.fail()) {
+		ptrOutputFiles->writeErrorMessage("File open error: " + outputFileName);
+	}
+
+	// Channel for the electric field [mV/km]
+	// The input should be dipole length [m]
+	std::istringstream iss(inputString);
+	double dipoleLength(0.0);
+	iss >> dipoleLength;
+	dipoleLength /= -1000.0;// [m] -> [km] and invert sign
+	ofs << std::setw(20) << std::scientific << std::setprecision(9) << 1.0 / dipoleLength << std::endl;
+	ofs << std::setw(10) << 0 << std::endl;
+
+	ofs.close();
+
+}
+
+// Get flag specifing whether the calibration function for ADU is calculated
 bool Ats::isCalADUResp() const{
 	return m_isCalADUResp;
 }

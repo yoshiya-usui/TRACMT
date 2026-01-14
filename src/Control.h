@@ -490,9 +490,6 @@ public:
 	// Set sampling frequency
 	void setSamplingFrequency( const double samplingFrequency );
 
-	// Set original sampling frequency
-	void setSamplingFrequencyOrg(const double samplingFrequency);
-
 private:
 
 	// Constructer

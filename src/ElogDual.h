@@ -26,8 +26,8 @@
 // OR TORT(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //--------------------------------------------------------------------------
-#ifndef DBLDEF_ELOGDual
-#define DBLDEF_ELOGDual
+#ifndef DBLDEF_ELOG_DUAL
+#define DBLDEF_ELOG_DUAL
 
 #include <stdio.h>
 #include <stdint.h>
@@ -62,9 +62,8 @@ public:
 	// Get calibration file name
 	std::string getCalibrationFileName( const int channelIndex ) const;
 
-	// Make calibration file
-	void makeCalibrationFile( const std::string& fileName, const double unitGroupDelay, const int channelIndexX, const int channelIndexY,
-		const double dipoleLengthX, const double dipoleLengthY, const std::vector<double>& freq ) const;
+	// Calculate calibration function
+	std::complex<double> calculateCalibrationFunction(const std::string& elogCalFileName, const double freq, const double unitGroupDelay, const int channelIndex) const;
 
 private:
 
