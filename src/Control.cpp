@@ -269,7 +269,7 @@ bool Control::doesReadAtsBinary() const{
 	return m_readAtsBinary;
 }
 
-// Get flag specifing whether input file is ELOG-Dual binary file
+// Get flag specifing whether input file is MTH5 file
 bool Control::doesReadMTH5() const {
 	return m_readMTH5;
 }
@@ -668,7 +668,7 @@ int Control::getProcedureType () const{
 
 }
 
-// Get type of ELOG-Dual
+// Get timing of denoising based on EOF
 int Control::getTimingEOFBasedDenoising() const {
 
 	return m_timingEOFBasedDenoising;

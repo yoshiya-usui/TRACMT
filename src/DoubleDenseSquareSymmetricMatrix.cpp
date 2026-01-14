@@ -68,7 +68,7 @@ void DoubleDenseSquareSymmetricMatrix::factorizeMatrix(){
 
 }
 
-// Factorize and solve a linear equation with a right-hand-side vector
+// Calculate determinant
 double DoubleDenseSquareSymmetricMatrix::determinant() {
 
 	if (m_factorizedMatrix == NULL) {

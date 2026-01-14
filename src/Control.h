@@ -107,7 +107,7 @@ public:
 		NUM_OF_THRESHOLD_TYPE_OF_DIFFERENCE_OF_RESPONSE_FUCTIONS
 	};
 
-	// Segment length and the index of the frequency where response functions are estimated
+	// Timing of denoising based on EOF
 	enum TimingEOFBasedDenoising{
 		BEFORE_DECIMATION = 0 ,
 		AFTER_DEGITAL_FILTERS,
@@ -286,13 +286,13 @@ public:
 	// Get flag specifing wheter output time series data as csv file
 	bool doesOutputTimeSeriesToCsv() const;
 
-	// Get flag specifing whether input file is ATS binary file
+	// Get flag specifing wheter output calibrated time series data as csv file
 	bool doesOutputCalibratedTimeSeriesToCsv() const;
 
 	// Get flag specifing whether input file is ATS binary file
 	bool doesReadAtsBinary() const;
 
-	// Get flag specifing whether input file is ELOG-Dual binary file
+	// Get flag specifing whether input file is MTH5 file
 	bool doesReadMTH5() const;
 
 	// Get flag specifing whether input file is ELOG-Dual binary file
@@ -301,7 +301,7 @@ public:
 	// Get flag specifing whether input file is ELOG-MT binary file
 	bool doesReadElogMTBinary() const;
 
-	// Get azimuth
+	// Get flag specifing whether denoising based on EOF is performed
 	bool doesPeformEOFBasedDenoising() const;
 
 	// Get azimuth
@@ -331,7 +331,7 @@ public:
 	// Get sampling frequency
 	double getSamplingFrequency() const;
 
-	// Get number of threads
+	// Get origonal sampling frequency
 	double getSamplingFrequencyOrg() const;
 
 	// Get number of threads
@@ -525,7 +525,7 @@ private:
 	// Flag specifing whether IIR low-pass filter is applied
 	bool m_doesApplyIIRLowPassFilter;
 
-	// Option of ELOG-Dual binary data reading
+	// Flag specifing whether denoising based on EOF is performed
 	bool m_doesPeformEOFBasedDenoising;
 
 	// Option of ELOG-Dual binary data reading
@@ -546,7 +546,7 @@ private:
 	// Number of remote reference variables
 	int m_numRemoteReferenceVariables;
 
-	// Sampling frequency
+	// Original sampling frequency
 	double m_samplingFrequencyOrg;
 
 	// Sampling frequency

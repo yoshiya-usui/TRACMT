@@ -114,7 +114,7 @@ void Analysis::run( std::vector<CommonParameters::DataFileSet>& dataFileSets ){
 	// Read calibration files for main analysis
 	readCalibrationFiles(freqAll);
 
-	// Prior evaluation before preprocessing
+	// Output time-series data
 	if( ptrControl->doesOutputTimeSeriesToCsv() ){
 		outputTimeSeriesData( dataFileSets, false );
 	}
@@ -135,7 +135,7 @@ void Analysis::run( std::vector<CommonParameters::DataFileSet>& dataFileSets ){
 	// Pre-processings
 	preprocessing(dataFileSets);
 
-	// Prior evaluation after preprocessing
+	// Output time-series data
 	if (ptrControl->doesOutputTimeSeriesToCsv()) {
 		outputTimeSeriesData(dataFileSets, true);
 	}
@@ -2418,7 +2418,7 @@ void Analysis::calculateRotatedFields( const int numSegmentsTotal, std::complex<
 
 }
 
-// Output average spectrum
+// Modify time-series data based on the EOF analysis
 void Analysis::modifyTimeSeriesBasedOnEOFAnalysis(std::vector<CommonParameters::DataFileSet>& dataFileSets) {
 
 	OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
@@ -3236,7 +3236,7 @@ void Analysis::priorEvaluationOfDataSegmentsAux( const std::vector<int>& segment
 				data[var], data[in0], data[in1], data[rr0], data[rr1], resp0[iVar], resp1[iVar] );
 			ofs << "," << std::setprecision(10) << std::scientific << coherence;
 		}
-		// Response functions
+		// Amplitudes and phases of the response functions
 		for (int iVar = 0; iVar < numOutputVariables; ++iVar) {
 			ofs << "," << std::setprecision(10) << std::scientific << std::abs(resp0[iVar]);
 			ofs << "," << std::setprecision(10) << std::scientific << std::arg(resp0[iVar]) * CommonParameters::RAD2DEG;

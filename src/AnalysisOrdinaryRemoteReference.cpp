@@ -1667,7 +1667,7 @@ void AnalysisOrdinaryRemoteReference::parametricErrorEstimation(const int numSeg
 
 }
 
-// Estimate error by fixed-weights bootstrap
+// Estimate error by robust bootstrap
 void AnalysisOrdinaryRemoteReference::robustBootstrap(const double freq, const int numSegmentsTotal, double** weightsOrg, double* scalesOrg, std::complex<double>** ftval,
 	std::ofstream& ofsResp, std::ofstream& ofsRhoaPhs, const std::complex<double>* const resp0Org, const std::complex<double>* const resp1Org) const{
 

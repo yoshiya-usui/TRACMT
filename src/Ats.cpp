@@ -190,7 +190,7 @@ void Ats::makeCalibrationFile( const std::string& inputString, const int channel
 
 }
 
-// Get flag specifing whether the calibration function for ADU is calculated
+// Make calibration file only with dipole length
 void Ats::makeCalibrationFileOnlyWithDipoleLength(const std::string& inputString, const int channelIndex) const {
 
 	OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
