@@ -30,6 +30,21 @@
 #define DBLDEF_MTH5
 
 #include <string>
+#include <vector>
+
+// Structure to hold filter information
+struct FilterInfo {
+	std::string name;           // Filter name
+	std::string type;           // Filter type (zpk, coefficient, time_delay, fap, fir)
+	std::string units_in;       // Input units
+	std::string units_out;      // Output units
+	int sequence_number;        // Order in filter chain
+	
+	// Filter-specific data (usage depends on filter type)
+	std::vector<double> data;   // Generic data array
+	
+	FilterInfo() : sequence_number(0) {}
+};
 
 // Class of MTH5 file
 class MTH5{
@@ -42,7 +57,25 @@ public:
 	// Read MTH5 file
 	void readMTH5File( const std::string& fileName, const std::string groupName, const int numSkipData, const int numDataPoints, double* data ) const;
 
+	// Read filter names from channel dataset attribute
+	std::vector<std::string> readFilterNamesFromChannel( const std::string& fileName, const std::string& channelPath ) const;
+	
+	// Read a single filter from the Filters group
+	FilterInfo readFilter( const std::string& fileName, const std::string& filterPath, const std::string& filterName, int sequenceNumber ) const;
+	
+	// Get all filters for a channel (similar to Python's channel_response property)
+	std::vector<FilterInfo> getChannelFilters( const std::string& fileName, const std::string& channelPath ) const;
+
 private:
+	
+	// Helper: Read string attribute from HDF5 object
+	std::string readStringAttribute( hid_t obj_id, const std::string& attrName ) const;
+	
+	// Helper: Read string array attribute from HDF5 object  
+	std::vector<std::string> readStringArrayAttribute( hid_t obj_id, const std::string& attrName ) const;
+	
+	// Helper: Navigate channel path to Filters group path
+	std::string getFiltersGroupPath( const std::string& channelPath ) const;
 
 	// Constructer
 	MTH5();
