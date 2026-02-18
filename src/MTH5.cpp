@@ -328,8 +328,158 @@ std::vector<FilterInfo> MTH5::getChannelFilters(const std::string& fileName, con
 		}
 	}
 	
+	// Step 4: Sort filters by sequence_number to ensure correct order
+	// This is critical because filter order determines the signal processing chain
+	if (filters.size() > 1) {
+		std::sort(filters.begin(), filters.end(), 
+			[](const FilterInfo& a, const FilterInfo& b) {
+				return a.sequence_number < b.sequence_number;
+			});
+		ptrOutputFiles->writeLogMessage("Sorted filters by sequence number");
+	}
+	
 	ptrOutputFiles->writeLogMessage("Loaded " + Util::toString(static_cast<int>(filters.size())) + " filter(s)");
 	
 	return filters;
 
+}
+
+// Validate filter list for unit consistency
+// This ensures that the output units of each filter match the input units of the next filter,
+// similar to the _check_consistency_of_units method in Python's ChannelResponse class.
+bool MTH5::validateFilterUnits(const std::vector<FilterInfo>& filters, std::string& errorMessage) const {
+	OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
+	
+	if (filters.empty()) {
+		return true; // Empty filter list is valid
+	}
+	
+	if (filters.size() == 1) {
+		return true; // Single filter is always valid
+	}
+	
+	// Check that output units of one filter match input units of the next
+	// Also verify that sequence numbers are sequential
+	for (size_t i = 0; i < filters.size() - 1; i++) {
+		const FilterInfo& currentFilter = filters[i];
+		const FilterInfo& nextFilter = filters[i + 1];
+		
+		// Verify sequence numbers are in order
+		if (currentFilter.sequence_number >= nextFilter.sequence_number) {
+			std::ostringstream oss;
+			oss << "Filter sequence error: Filter '" << currentFilter.name 
+			    << "' has sequence " << currentFilter.sequence_number
+			    << " but next filter '" << nextFilter.name 
+			    << "' has sequence " << nextFilter.sequence_number;
+			errorMessage = oss.str();
+			ptrOutputFiles->writeErrorMessage(errorMessage);
+			return false;
+		}
+		
+		if (currentFilter.units_out != nextFilter.units_in) {
+			std::ostringstream oss;
+			oss << "Unit consistency error: Filter '" << currentFilter.name 
+			    << "' (seq " << currentFilter.sequence_number << ") outputs " << currentFilter.units_out 
+			    << " but filter '" << nextFilter.name 
+			    << "' (seq " << nextFilter.sequence_number << ") expects " << nextFilter.units_in;
+			errorMessage = oss.str();
+			ptrOutputFiles->writeErrorMessage(errorMessage);
+			return false;
+		}
+	}
+	
+	ptrOutputFiles->writeLogMessage("Filter units are consistent");
+	return true;
+}
+
+// Combine filters into a complete channel response
+// This method validates the filter chain and combines them into a single ChannelResponse object,
+// similar to the ChannelResponse class in Python. The response includes:
+// - All filters in the proper sequence
+// - Input units from the first filter
+// - Output units from the last filter
+// - Validation status and any error messages
+//
+// Example usage:
+//   std::vector<FilterInfo> filters = mth5->getChannelFilters(fileName, "/Survey/Stations/MT001/MT001a/Ex");
+//   ChannelResponse response = mth5->createChannelResponse(filters);
+//   if (response.is_valid) {
+//       // Use the response for calibration
+//   }
+ChannelResponse MTH5::createChannelResponse(const std::vector<FilterInfo>& filters) const {
+	OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
+	
+	ChannelResponse response;
+	response.filters_list = filters;
+	
+	// Validate the filter list
+	if (filters.empty()) {
+		ptrOutputFiles->writeWarningMessage("No filters provided for channel response");
+		response.is_valid = false;
+		response.error_message = "No filters provided";
+		return response;
+	}
+	
+	// Check unit consistency
+	std::string errorMessage;
+	if (!validateFilterUnits(filters, errorMessage)) {
+		response.is_valid = false;
+		response.error_message = errorMessage;
+		return response;
+	}
+	
+	// Set input and output units from first and last filters
+	response.units_in = filters.front().units_in;
+	response.units_out = filters.back().units_out;
+	
+	// Set normalization frequency (default to 1.0 Hz if not specified)
+	// In a more complete implementation, this could be computed from pass band
+	response.normalization_frequency = 1.0;
+	
+	response.is_valid = true;
+	
+	ptrOutputFiles->writeLogMessage("Created channel response with " + 
+	                                Util::toString(static_cast<int>(filters.size())) + 
+	                                " filter(s)");
+	ptrOutputFiles->writeLogMessage("  Input units:  " + response.units_in);
+	ptrOutputFiles->writeLogMessage("  Output units: " + response.units_out);
+	
+	// Log the filter sequence for verification
+	for (const auto& filter : filters) {
+		ptrOutputFiles->writeLogMessage("  [" + Util::toString(filter.sequence_number) + "] " + 
+		                                filter.name + " (" + filter.type + "): " + 
+		                                filter.units_in + " -> " + filter.units_out);
+	}
+	
+	return response;
+}
+
+// Combine filters for a channel into a complete channel response
+// This is a convenience method that combines getChannelFilters() and createChannelResponse()
+// into a single call, similar to the channel_response property in Python's ChannelDataset.
+//
+// Example usage:
+//   ChannelResponse response = mth5->getChannelResponse("test.h5", "/Survey/Stations/MT001/MT001a/Ex");
+//   if (response.is_valid) {
+//       std::cout << "Channel response has " << response.getFilterCount() << " filter(s)" << std::endl;
+//       std::cout << "Units: " << response.units_in << " -> " << response.units_out << std::endl;
+//   }
+ChannelResponse MTH5::getChannelResponse(const std::string& fileName, const std::string& channelPath) const {
+	OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
+	
+	ptrOutputFiles->writeLogMessage("Getting complete channel response for: " + channelPath);
+	
+	// Step 1: Get all filters for the channel
+	std::vector<FilterInfo> filters = getChannelFilters(fileName, channelPath);
+	
+	// Step 2: Combine them into a channel response
+	ChannelResponse response = createChannelResponse(filters);
+	
+	if (!response.is_valid) {
+		ptrOutputFiles->writeErrorMessage("Failed to create valid channel response: " + response.error_message);
+	} else {
+		ptrOutputFiles->writeLogMessage("Successfully created channel response");
+	}
+	
+	return response;
 }
