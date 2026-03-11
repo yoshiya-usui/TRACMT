@@ -1,3 +1,6 @@
+<div align="center">
+  <img src="tracmt_logo.png" alt="TRACMT Logo" width="600"/>
+</div>
 # TRACMT
 Robust transfer function analysis code for magnetotellurics.
 In TRACMT, you can use the RRMS estimator developed by Usui et al. (2024) and the fast and robust bootstrap method evaluated by Usui et al (2025).
