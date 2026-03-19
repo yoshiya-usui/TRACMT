@@ -15,6 +15,15 @@ We developed the RRMS estimator by applying the robust multivariate linear regre
 The RRMS estimator can give an unbiased estimate of the MT transfer function and suppress the influence of outliers in the electric field and magnetic
 field.
 
+## Functional Overview
+**Input file format**: Text (Ascii) file / ats files of Metronix instruments / MTH5 files (Peacock et al., 2022) / dat files of ELOG-MT, ELOG-DUAL, and ELOG1K
+
+**Prewhitening**: Non-robust prewhitening / Robust prewhitening / Robust prewhitening with robust filter
+
+**Transfer function estimation method**: Ordinary least square / Non-robust remote reference / Robust remote reference / RRMS estimator
+
+**Error estimation method**: Parametric approach / Bootstrap method / Jackknife method
+
 ## How to compile TRACMT
 1) Download all source files of TRACMT to a directory.
 2) Download source files of CLAPACK (https://www.netlib.org/clapack/) to another directory and make library files.
@@ -26,15 +35,6 @@ field.
    export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/hdf5-1.10.5/lib"<br>
    export LIBRARY_PATH="${LIBRARY_PATH}:/usr/local/hdf5-1.10.5/lib"<br>
    export PATH="${PATH}:/usr/local/hdf5-1.10.5/lib"<br>
-
-## Functional Overview
-**Input file format**: Text (Ascii) file / ats files of Metronix instruments / MTH5 files (Peacock et al., 2022) / dat files of ELOG-MT, ELOG-DUAL, and ELOG1K
-
-**Prewhitening**: Non-robust prewhitening / Robust prewhitening / Robust prewhitening with robust filter
-
-**Transfer function estimation method**: Ordinary least square / Non-robust remote reference / Robust remote reference / RRMS estimator
-
-**Error estimation method**: Parametric approach / Bootstrap method / Jackknife method
 
 ## Release note
 _**v1.2.0**_ June. 13, 2024: Initial release.
