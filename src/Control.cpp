@@ -39,6 +39,9 @@
 #include "RobustWeightThomson.h"
 #include "RobustWeightTukeysBiweights.h"
 #include "Ats.h"
+#ifdef _MTH5
+#include "MTH5.h"
+#endif
 
 #include <cmath>
 #include <stdlib.h>
@@ -212,6 +215,10 @@ void Control::run(const bool outputToConsole){
 	OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
 	ptrOutputFiles->setOutputToConsole(outputToConsole);
 	readParameterFile();
+
+#ifdef _MTH5
+	(MTH5::getInstance())->createChannelResponses(m_filterInfoForMTH5);
+#endif
 
 	m_analysis->run(m_dataFileSets);
 
@@ -420,10 +427,26 @@ int Control::getNumCalibrationFilesForMFS() const {
 	return static_cast<int>(m_calibrationFilesForMFS.size());
 }
 
+// Get number of filter info (pair of file name and path) for MTH5
+int Control::getNumFilterInfoMTH5() const {
+	return static_cast<int>(m_filterInfoForMTH5.size());
+}
+
 // Get name of calibration file for MFS
 std::string Control::getCalibrationFileNameForMFS(const int iFile) const {
 	return m_calibrationFilesForMFS[iFile];
 }
+
+// Get name of MTH5 file storing filter
+std::string Control::getFileNameForFilterInMTH5(const int i) const {
+	return m_filterInfoForMTH5[i].first;
+}
+
+// Get path of the filter in MTH5 file
+std::string Control::getPathFilterInMTH5(const int i) const {
+	return m_filterInfoForMTH5[i].second;
+}
+
 // Get numebur of calibration files
 int Control::getNumCalibrationFiles() const{
 	return static_cast<int>( m_calibrationFiles.size() );
@@ -779,7 +802,7 @@ void Control::readParameterFile(){
 				for (int iChan = 0; iChan < numChans; ++iChan) {
 					CommonParameters::DataFile dataFileTemp;
 					ifs >> dataFileTemp.fileName;
-					if (doesReadMTH5() && Util::extractExtensionOfFileName(dataFileTemp.fileName).find("mth5") != std::string::npos)
+					if (doesReadMTH5())
 					{
 						ifs >> dataFileTemp.mth5GroupName;
 					}
@@ -838,8 +861,34 @@ void Control::readParameterFile(){
 		else if( line.find("ATS_BINARY") != std::string::npos ){
 			m_readAtsBinary = true;
 		}
+#ifdef _MTH5
+		else if (line.find("MTH5_FILTERS") != std::string::npos) {
+			const int numChannels = getNumberOfChannels();
+			m_filterInfoForMTH5.clear();
+			m_filterInfoForMTH5.reserve(numChannels);
+			m_calibrationFiles.clear();
+			m_calibrationFiles.reserve(numChannels);
+			for (int iChan = 0; iChan < numChannels; ++iChan) {
+				std::string fileName;
+				std::string channelPath;
+				ifs >> fileName >> channelPath;
+				m_filterInfoForMTH5.push_back(std::make_pair(fileName, channelPath));
+				m_calibrationFiles.push_back(MTH5::getCalibrationFileName(iChan));
+			}
+		}
 		else if (line.find("MTH5") != std::string::npos) {
 			m_readMTH5 = true;
+		}
+#endif
+		else if( line.find("CAL_FILES") != std::string::npos ){
+			const int numChannels = getNumberOfChannels();
+			m_calibrationFiles.clear();
+			m_calibrationFiles.reserve(numChannels);
+			for( int iChan = 0; iChan < numChannels; ++iChan ){
+				std::string sbuf;
+				ifs >> sbuf;
+				m_calibrationFiles.push_back(sbuf);
+			}
 		}
 		else if (line.find("ELOGDUAL_CAL") != std::string::npos) {
 			m_calibForElogDual = true;
@@ -883,16 +932,6 @@ void Control::readParameterFile(){
 			std::string sbuf;
 			ifs >> sbuf;
 			m_directoryOfLoggerCalibrationFiles = sbuf;
-		}
-		else if( line.find("CAL_FILES") != std::string::npos ){
-			const int numChannels = getNumberOfChannels();
-			m_calibrationFiles.clear();
-			m_calibrationFiles.reserve(numChannels);
-			for( int iChan = 0; iChan < numChannels; ++iChan ){
-				std::string sbuf;
-				ifs >> sbuf;
-				m_calibrationFiles.push_back(sbuf);
-			}
 		}
 		else if( line.find("OUTPUT_LEVEL") != std::string::npos ){
 			int ibuf(0);
@@ -1709,6 +1748,16 @@ void Control::readParameterFile(){
 	}
 	if( doesReadMTH5() ) {
 		ptrOutputFiles->writeLogMessage("Read MTH5 files", false);
+		ptrOutputFiles->writeLogMessage("Filters stored in MTH5 files are used for the calibration", false);
+		ptrOutputFiles->writeLogMessage("     File       Path", false);
+		for (std::vector< std::pair< std::string, std::string> >::const_iterator itr = m_filterInfoForMTH5.begin(); itr != m_filterInfoForMTH5.end(); ++itr) {
+			std::ostringstream oss;
+			oss << std::setw(5) << "";
+			oss << itr->first;
+			oss << std::setw(5) << " ";
+			oss << itr->second;
+			ptrOutputFiles->writeLogMessage(oss.str(), false);
+		}
 	}
 	if (doesMakeCalibrationFileForMFS()) {
 		ptrOutputFiles->writeLogMessage("Information about the inputs for calibration files : ", false);

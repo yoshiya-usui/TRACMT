@@ -6117,7 +6117,7 @@ void AnalysisMultivariateRegression::calculateResponseFunctions( const int iSegL
 	// Estimate errors
 	double** respErr = new double*[numOfOutputVariables];
 	for( int iOut = 0; iOut < numOfOutputVariables; ++iOut ){
-		respErr[iOut] = new double[numOfReferenceVariables];
+		respErr[iOut] = new double[numOfInputVariables];
 	}
 	const int typeOfErrorEstimationMethod = ptrControl->getErrorEstimationMethod();
 	switch (typeOfErrorEstimationMethod) {
@@ -7559,7 +7559,7 @@ void AnalysisMultivariateRegression::estimateErrorByRobustBootstrap(const int nu
 		}
 		respFinal[iDataSet] = new std::complex<double>*[numOfOutputVariables];
 		for (int iOut = 0; iOut < numOfOutputVariables; ++iOut) {
-			respFinal[iDataSet][iOut] = new std::complex<double>[numOfReferenceVariables];
+			respFinal[iDataSet][iOut] = new std::complex<double>[numOfInputVariables];
 		}
 		if( ptrControl->getOutputLevel() >= 4 ){
 			ptrOutputFiles->writeCvgMessage("One-step estimate of scale: " + Util::toString(scale));
@@ -7753,20 +7753,20 @@ void AnalysisMultivariateRegression::estimateErrorByRobustBootstrap(const int nu
 	// Calculate error of response functions
 	assert(numOfDataSet > 2);
 	for( int iOut = 0; iOut < numOfOutputVariables; ++iOut ){
-		for( int iRR = 0; iRR < numOfReferenceVariables; ++iRR ){
+		for( int iInp = 0; iInp < numOfInputVariables; ++iInp){
 			// Calculate average
 			std::complex<double> average = std::complex<double>(0.0, 0.0);
 			for( int iDataSet = 0; iDataSet < numOfDataSet; ++iDataSet ){
-				average += respFinal[iDataSet][iOut][iRR];
+				average += respFinal[iDataSet][iOut][iInp];
 			}
 			average /= static_cast<double>(numOfDataSet);
 			// Calculate variance
 			double variance(0.0);
 			for( int iDataSet = 0; iDataSet < numOfDataSet; ++iDataSet ){
-				variance += std::norm(respFinal[iDataSet][iOut][iRR] - average);
+				variance += std::norm(respFinal[iDataSet][iOut][iInp] - average);
 			}
 			variance /= static_cast<double>(2 * numOfDataSet - 4);
-			respErr[iOut][iRR] = sqrt(variance);
+			respErr[iOut][iInp] = sqrt(variance);
 		}
 	}
 
@@ -7887,7 +7887,7 @@ void AnalysisMultivariateRegression::estimateErrorByStrictBootstrap(const int nu
 		}
 		respFinal[iSample] = new std::complex<double>*[numOfOutputVariables];
 		for( int iOut = 0; iOut < numOfOutputVariables; ++iOut ){
-			respFinal[iSample][iOut] = new std::complex<double>[numOfReferenceVariables];
+			respFinal[iSample][iOut] = new std::complex<double>[numOfInputVariables];
 			const int index = ptrControl->getChannelIndex( CommonParameters::OUTPUT, iOut );
 			const std::complex<double> U_x = resp[index][0];
 			const std::complex<double> U_y = resp[index][1];
@@ -7937,20 +7937,20 @@ void AnalysisMultivariateRegression::estimateErrorByStrictBootstrap(const int nu
 	// Calculate error of response functions
 	assert(numOfSamples > 2);
 	for( int iOut = 0; iOut < numOfOutputVariables; ++iOut ){
-		for( int iRR = 0; iRR < numOfReferenceVariables; ++iRR ){
+		for (int iInp = 0; iInp < numOfInputVariables; ++iInp) {
 			// Calculate average
 			std::complex<double> average = std::complex<double>(0.0, 0.0);
 			for( int iSample = 0; iSample < numOfSamples; ++iSample ){
-				average += respFinal[iSample][iOut][iRR];
+				average += respFinal[iSample][iOut][iInp];
 			}
 			average /= static_cast<double>(numOfSamples);
 			// Calculate variance
 			double variance(0.0);
 			for( int iSample = 0; iSample < numOfSamples; ++iSample ){
-				variance += std::norm(respFinal[iSample][iOut][iRR] - average);
+				variance += std::norm(respFinal[iSample][iOut][iInp] - average);
 			}
 			variance /= static_cast<double>(2 * numOfSamples - 4);
-			respErr[iOut][iRR] = sqrt(variance);
+			respErr[iOut][iInp] = sqrt(variance);
 		}
 	}
 

@@ -26,47 +26,31 @@
 // OR TORT(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //--------------------------------------------------------------------------
-#ifndef DBLDEF_COMMON_PARAMETERS
-#define DBLDEF_COMMON_PARAMETERS
+#include "MTH5TimeDelayFilter.h"
+#include "CommonParameters.h"
 
-#include <string>
-#include <vector>
+// Constructer
+MTH5TimeDelayFilter::MTH5TimeDelayFilter():
+	MTH5Filter(),
+	m_delay(0.0)
+{
+}
 
-namespace CommonParameters{
+// Destructer
+MTH5TimeDelayFilter::~MTH5TimeDelayFilter() {
+}
 
-enum DataType{
-	OUTPUT = 0,
-	INPUT,
-	REMOTE_REFERENCE
-};
+// Set delay
+void MTH5TimeDelayFilter::setDelay(const double delay) {
+	m_delay = delay;
+}
 
-struct DataFile{
-	std::string fileName;
-	std::string mth5GroupName;
-	int numSkipData;
-	double* data;
-};
+// Get frequency response functions using the requency response functions of filter
+// @note under construction
+std::complex<double> MTH5TimeDelayFilter::getFrequencyResponse(const double freq) const {
 
-struct DataFileSet{
-	int numDataPoints;
-	std::vector<DataFile> dataFile;
-};
-
-// Circular constant
-const static double PI = 3.14159265358979323846;
-
-// Factor converting values from radians to degrees
-const static double RAD2DEG = 180.0 / PI;
-
-// Factor converting values from degrees to radians
-const static double DEG2RAD = PI / 180.0;
-
-const static double EPS = 1.0e-20;
-
-static char programName[]="TRACMT";
-
-static char version[] = "v2.6";
+	const double omega = 2.0 * CommonParameters::PI * freq;
+	return m_delay * std::complex<double>(cos(omega), sin(omega));
 
 }
 
-#endif

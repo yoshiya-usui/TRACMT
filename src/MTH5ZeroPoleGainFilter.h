@@ -26,47 +26,54 @@
 // OR TORT(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //--------------------------------------------------------------------------
-#ifndef DBLDEF_COMMON_PARAMETERS
-#define DBLDEF_COMMON_PARAMETERS
+#ifndef DBLDEF_MTH5_POLE_ZERO_FILTER
+#define DBLDEF_MTH5_POLE_ZERO_FILTER
 
-#include <string>
-#include <vector>
+#include "MTH5Filter.h"
 
-namespace CommonParameters{
+// Class to hold filter information for MTH5 pole-zero files
+class MTH5ZeroPoleGainFilter : public MTH5Filter {
 
-enum DataType{
-	OUTPUT = 0,
-	INPUT,
-	REMOTE_REFERENCE
+public:
+
+	// Constructer
+	MTH5ZeroPoleGainFilter();
+
+	// Destructer
+	~MTH5ZeroPoleGainFilter();
+
+	// Set normalization factor
+	void setNormalizationFactor(const double normalizationFactor);
+
+	// Set poles
+	void setPoles( const std::vector< std::complex<double> >& poles );
+
+	// Set zeros
+	void setZeros(const std::vector< std::complex<double> >& zeros);
+
+	// Get frequency response functions using the requency response functions of filter
+	virtual std::complex<double> getFrequencyResponse(const double freq) const;
+
+private:
+
+	// Normalization factor
+	double m_normalizationFactor;
+
+	// Poles
+	std::vector< std::complex<double> > m_poles;
+
+	// Zeros
+	std::vector< std::complex<double> > m_zeros;
+
+	// Calculate frequency response functions of filter
+	std::complex<double> calcResponse(const double freq, const double samplingFreq, const std::complex<double>& respones) const;
+
+	// Copy constructer
+	MTH5ZeroPoleGainFilter(const MTH5ZeroPoleGainFilter& rhs);
+
+	// Assignment operator
+	MTH5ZeroPoleGainFilter& operator=(const MTH5ZeroPoleGainFilter& rhs);
+
 };
-
-struct DataFile{
-	std::string fileName;
-	std::string mth5GroupName;
-	int numSkipData;
-	double* data;
-};
-
-struct DataFileSet{
-	int numDataPoints;
-	std::vector<DataFile> dataFile;
-};
-
-// Circular constant
-const static double PI = 3.14159265358979323846;
-
-// Factor converting values from radians to degrees
-const static double RAD2DEG = 180.0 / PI;
-
-// Factor converting values from degrees to radians
-const static double DEG2RAD = PI / 180.0;
-
-const static double EPS = 1.0e-20;
-
-static char programName[]="TRACMT";
-
-static char version[] = "v2.6";
-
-}
 
 #endif

@@ -26,47 +26,83 @@
 // OR TORT(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //--------------------------------------------------------------------------
-#ifndef DBLDEF_COMMON_PARAMETERS
-#define DBLDEF_COMMON_PARAMETERS
+#ifndef DBLDEF_MTH5_FILTER
+#define DBLDEF_MTH5_FILTER
 
+#include <complex>
 #include <string>
 #include <vector>
 
-namespace CommonParameters{
+// Class to hold filter information of MTH5 files
+class MTH5Filter {
 
-enum DataType{
-	OUTPUT = 0,
-	INPUT,
-	REMOTE_REFERENCE
+public:
+
+	// Constructer
+	MTH5Filter();
+
+	// Destructer
+	~MTH5Filter();
+
+	// Copy constructer
+	MTH5Filter(const MTH5Filter& rhs);
+
+	// Assignment operator
+	MTH5Filter& operator=(const MTH5Filter& rhs);
+
+	// Get filter name
+	std::string getName() const;
+
+	// Get filter type (zpk, coefficient, time_delay, fap, fir)
+	std::string getType() const;
+
+	// Input units
+	std::string getUnitsIn() const;
+
+	// Output units
+	std::string getUnitsOut() const;
+
+	// Get order in filter chain
+	int getSequenceNumber() const;
+
+	// Set filter name
+	void setName(const std::string& name);
+
+	// Set filter type (zpk, coefficient, time_delay, fap, fir)
+	void setType(const std::string& type);
+
+	// Set input units
+	void setUnitsIn(const std::string& unitsIn);
+
+	// Set output units
+	void setUnitsOut(const std::string& unitsOut);
+
+	// Set order in filter chain
+	void setSequenceNumber(const int sequenceNumber);
+
+	// Get frequency response functions using the requency response functions of filter
+	virtual  std::complex<double> getFrequencyResponse(const double freq) const;
+
+protected:
+	
+	// Filter name
+	std::string m_name;
+
+	// Filter type (zpk, coefficient, time_delay, fap, fir)
+	std::string m_type;
+
+	// Input units
+	std::string m_unitsIn;
+
+	// Output units
+	std::string m_unitsOut;
+
+	// Order in filter chain
+	int m_sequenceNumber;
+
+	// Filter-specific data (usage depends on filter type)
+	std::vector<double> m_data;
+
 };
-
-struct DataFile{
-	std::string fileName;
-	std::string mth5GroupName;
-	int numSkipData;
-	double* data;
-};
-
-struct DataFileSet{
-	int numDataPoints;
-	std::vector<DataFile> dataFile;
-};
-
-// Circular constant
-const static double PI = 3.14159265358979323846;
-
-// Factor converting values from radians to degrees
-const static double RAD2DEG = 180.0 / PI;
-
-// Factor converting values from degrees to radians
-const static double DEG2RAD = PI / 180.0;
-
-const static double EPS = 1.0e-20;
-
-static char programName[]="TRACMT";
-
-static char version[] = "v2.6";
-
-}
 
 #endif

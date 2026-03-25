@@ -26,47 +26,72 @@
 // OR TORT(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //--------------------------------------------------------------------------
-#ifndef DBLDEF_COMMON_PARAMETERS
-#define DBLDEF_COMMON_PARAMETERS
+#ifndef DBLDEF_MTH5_FIR_FILTER
+#define DBLDEF_MTH5_FIR_FILTER
 
-#include <string>
-#include <vector>
+#include "MTH5Filter.h"
 
-namespace CommonParameters{
+// Class to hold filter information for MTH5 FIR files
+class MTH5FIRFilter : public MTH5Filter {
 
-enum DataType{
-	OUTPUT = 0,
-	INPUT,
-	REMOTE_REFERENCE
+public:
+
+	// Constructer
+	MTH5FIRFilter();
+
+	// Destructer
+	~MTH5FIRFilter();
+
+	// Type of symmetry
+	enum {
+		EVEN,
+		ADD,
+		ASYMMETRIC,
+	};
+
+	// Set input samping rate befor decimation
+	void setDecimationInputSampleRate( const int decimationInputSampleRate );
+
+	// Set gain
+	void setGain( const double gain );
+
+	// Set type of symmetry
+	void setTypeOfSymmetry( const int typeOfSymmetry );
+
+	// Set decimation factor
+	void setDecimationFactor( const int decimationFactor );
+
+	// Set FIR coefficients
+	void setFIRCoefficients ( const std::vector<double>& coefficients );
+
+	// Get frequency response functions using the requency response functions of filter
+	virtual  std::complex<double> getFrequencyResponse(const double freq) const;
+
+private:
+
+	// input samping rate befor decimation
+	int m_decimationInputSampleRate;
+
+	// Gain
+	double m_gain;
+
+	// Type of symmetry
+	int m_typeOfSymmetry;
+
+	// Decimation factor
+	int m_decimationFactor;
+
+	// FIR coefficients
+	std::vector<double> m_FIRCoefficients;
+
+	// Calculate frequency response functions of filter
+	std::complex<double> calcResponse(const double freq, const double samplingFreq) const;
+
+	// Copy constructer
+	MTH5FIRFilter(const MTH5FIRFilter& rhs);
+
+	// Assignment operator
+	MTH5FIRFilter& operator=(const MTH5FIRFilter& rhs);
+
 };
-
-struct DataFile{
-	std::string fileName;
-	std::string mth5GroupName;
-	int numSkipData;
-	double* data;
-};
-
-struct DataFileSet{
-	int numDataPoints;
-	std::vector<DataFile> dataFile;
-};
-
-// Circular constant
-const static double PI = 3.14159265358979323846;
-
-// Factor converting values from radians to degrees
-const static double RAD2DEG = 180.0 / PI;
-
-// Factor converting values from degrees to radians
-const static double DEG2RAD = PI / 180.0;
-
-const static double EPS = 1.0e-20;
-
-static char programName[]="TRACMT";
-
-static char version[] = "v2.6";
-
-}
-
 #endif

@@ -31,14 +31,22 @@
 #include "OutputFiles.h"
 
 #include <H5Cpp.h>
+#include <algorithm>
+#include <sstream>
+#include <iomanip>
 
 // Default constructer
-MTH5::MTH5()
+MTH5::MTH5():
+	m_numOfChannelRespones(0),
+	m_channelResponses(NULL)
 {
 }
 
 // Destructer
 MTH5::~MTH5(){
+	if (m_channelResponses != NULL) {
+		delete[] m_channelResponses;
+	}
 }
 
 // Return the instance of the class
@@ -75,5 +83,48 @@ void MTH5::readMTH5File(const std::string& fileName, const std::string groupName
 	hsize_t rcount[1] = { numDataPoints };
 	H5Sselect_hyperslab(filespace_id, H5S_SELECT_SET, roffset, NULL, rcount, NULL);
 	H5Dread(dataset_id, H5T_NATIVE_DOUBLE, memspace_id, filespace_id, H5P_DEFAULT, data);
+	
+	H5Sclose(memspace_id);
+	H5Sclose(filespace_id);
+	H5Dclose(dataset_id);
+	H5Fclose(file_id);
+}
+
+// Get name of the calibration file name made from the channel responses 
+std::string MTH5::getCalibrationFileName(const int channelIndex){
+
+	std::ostringstream fileName;
+	fileName << "channel" << channelIndex << ".cal";
+	return fileName.str();
+
+}
+
+// Get all filters and combine filters into a complete channel response for each channel
+void MTH5::createChannelResponses(const std::vector< std::pair< std::string, std::string> >& fileNameAndPath) {
+
+	if (fileNameAndPath.empty()) {
+		return;
+	}
+	m_numOfChannelRespones = static_cast<int>(fileNameAndPath.size());
+	m_channelResponses = new MTH5ChannelResponse[m_numOfChannelRespones];
+	int iChan(0);
+	for (std::vector< std::pair< std::string, std::string> >::const_iterator itr = fileNameAndPath.begin(); itr != fileNameAndPath.end(); ++itr, ++iChan) {
+		m_channelResponses[iChan].createChannelResponse(itr->first, itr->second);
+	}
+
+}
+
+// Make calibration files using the requency response functions of all filter 
+void MTH5::makeCalibrationFile(const int channelIndex, const std::vector<double>& freqs) const {
+
+	if (m_channelResponses[channelIndex].isAppliedForwardly()) {
+		return;
+	}
+	
+	if (channelIndex < 0 && channelIndex >= m_numOfChannelRespones) {
+		OutputFiles::getInstance()->writeErrorMessage("Channel index is out of range: " + Util::toString(channelIndex));
+	}
+	
+	m_channelResponses[channelIndex].makeCalibrationFile(getCalibrationFileName(channelIndex), channelIndex, freqs);
 
 }

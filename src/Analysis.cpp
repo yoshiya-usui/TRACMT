@@ -306,8 +306,7 @@ void Analysis::run( std::vector<CommonParameters::DataFileSet>& dataFileSets ){
 				outputFrequencyDomainData( iSegLen, freqDegree, numOfRemainingSegments, ftval );
 			}
 			// Calculate response functions
-			calculateResponseFunctions( iSegLen, freqDegree, timeLength, freq, numOfRemainingSegments, ftval, times, ofsResp, ofsRhoaPhs );
-
+			calculateResponseFunctions(iSegLen, freqDegree, timeLength, freq, numOfRemainingSegments, ftval, times, ofsResp, ofsRhoaPhs);
 			// Delete arrays
 			for( int iChan = 0; iChan < numChannels; ++iChan ){
 				delete [] ftvalOrg[iChan];
@@ -878,7 +877,7 @@ void Analysis::readTimeSeriesData( std::vector<CommonParameters::DataFileSet>& d
 				ptrAts->readAtsFile(fileName, numSkipData, numDataPoints, dataFileList[iChan].data);
 			}
 #ifdef _MTH5
-			else if (ptrControl->doesReadMTH5() && Util::extractExtensionOfFileName(fileName).find("mth5") != std::string::npos) {
+			else if (ptrControl->doesReadMTH5()){
 				MTH5* ptrMTH5 = MTH5::getInstance();
 				ptrMTH5->readMTH5File(fileName, dataFileList[iChan].mth5GroupName, numSkipData, numDataPoints, dataFileList[iChan].data);
 			}
@@ -924,6 +923,22 @@ void Analysis::readCalibrationFiles( const std::vector<double>& freq ){
 			}
 		}
 	}
+#ifdef _MTH5
+	else if (ptrControl->doesReadMTH5()) {
+		const int numFilterInfo = ptrControl->getNumFilterInfoMTH5();
+		if (numFilterInfo > 0) {
+			if (numFilterInfo != ptrControl->getNumberOfChannels()) {
+				(OutputFiles::getInstance())->writeErrorMessage("Number of the filter info should be equal to channel number");
+			}
+			const MTH5* ptrMTH5 = MTH5::getInstance();
+			for (int iChan = 0; iChan < numFilterInfo; ++iChan) {
+				const std::string fileName = ptrControl->getFileNameForFilterInMTH5(iChan);
+				const std::string path = ptrControl->getPathFilterInMTH5(iChan);
+				ptrMTH5->makeCalibrationFile(iChan, freq);
+			}
+		}
+	}
+#endif
 
 	if (m_calibrationFunctions != NULL) {
 		delete[] m_calibrationFunctions;
@@ -2352,6 +2367,7 @@ void Analysis::mergeSections( std::vector<CommonParameters::DataFileSet>& dataFi
 	dataFileSets.swap(dataFileSetsAfterMerge);
 
 }
+
 // Calculate rotated fields
 void Analysis::calculateRotatedFields( const int numSegmentsTotal, std::complex<double>** ftval ) const{
 

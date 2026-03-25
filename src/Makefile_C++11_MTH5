@@ -38,6 +38,13 @@ OBJS          = Analysis.cpp \
 		Util.cpp \
 		UtilRobust.cpp \
 		MTH5.cpp \
+		MTH5ChannelResponse.cpp \
+		MTH5CoefficientFilter.cpp \
+		MTH5FIRFilter.cpp \
+		MTH5Filter.cpp \
+		MTH5FrequencyResponseTableFilter.cpp \
+		MTH5TimeDelayFilter.cpp \
+		MTH5ZeroPoleGainFilter.cpp \
 		main.cpp
 PROGRAM       = TRACMT
 

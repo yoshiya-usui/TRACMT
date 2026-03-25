@@ -30,6 +30,10 @@
 #define DBLDEF_MTH5
 
 #include <string>
+#include <vector>
+#include <H5Cpp.h>
+
+#include "MTH5ChannelResponse.h"
 
 // Class of MTH5 file
 class MTH5{
@@ -42,7 +46,25 @@ public:
 	// Read MTH5 file
 	void readMTH5File( const std::string& fileName, const std::string groupName, const int numSkipData, const int numDataPoints, double* data ) const;
 
+	// Get name of the calibration file name made from the channel responses 
+	static std::string getCalibrationFileName(const int channelIndex);
+
+	// Get all filters and combine filters into a complete channel response for each channel
+	void createChannelResponses(const std::vector< std::pair< std::string, std::string> >& fileNameAndPath);
+
+	//// Correct frequency response functions using the requency response functions of all filter
+	//void correctResponse(const int channelIndex, const double freq, const double samplingFreq, std::complex<double>& response) const;
+
+	// Make calibration files using the requency response functions of all filter 
+	void makeCalibrationFile(const int channelIndex, const std::vector<double>& freqs) const;
+
 private:
+
+	// Number of channel responses
+	int m_numOfChannelRespones;
+
+	// List of channel response (combination of all filters)
+	MTH5ChannelResponse* m_channelResponses;
 
 	// Constructer
 	MTH5();

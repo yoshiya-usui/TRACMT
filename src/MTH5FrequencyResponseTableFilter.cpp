@@ -26,47 +26,56 @@
 // OR TORT(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //--------------------------------------------------------------------------
-#ifndef DBLDEF_COMMON_PARAMETERS
-#define DBLDEF_COMMON_PARAMETERS
+#include "MTH5FrequencyResponseTableFilter.h"
+#include "Util.h"
 
-#include <string>
-#include <vector>
-
-namespace CommonParameters{
-
-enum DataType{
-	OUTPUT = 0,
-	INPUT,
-	REMOTE_REFERENCE
-};
-
-struct DataFile{
-	std::string fileName;
-	std::string mth5GroupName;
-	int numSkipData;
-	double* data;
-};
-
-struct DataFileSet{
-	int numDataPoints;
-	std::vector<DataFile> dataFile;
-};
-
-// Circular constant
-const static double PI = 3.14159265358979323846;
-
-// Factor converting values from radians to degrees
-const static double RAD2DEG = 180.0 / PI;
-
-// Factor converting values from degrees to radians
-const static double DEG2RAD = PI / 180.0;
-
-const static double EPS = 1.0e-20;
-
-static char programName[]="TRACMT";
-
-static char version[] = "v2.6";
-
+// Constructer
+MTH5FrequencyResponseTableFilter::MTH5FrequencyResponseTableFilter():
+	MTH5Filter()
+{
 }
 
-#endif
+// Destructer
+MTH5FrequencyResponseTableFilter::~MTH5FrequencyResponseTableFilter() {
+}
+
+// Set frequencies
+void MTH5FrequencyResponseTableFilter::setFrequencies(const std::vector<double>& frequencies) {
+	m_frequencies = frequencies;
+}
+
+// Set amplitudes
+void MTH5FrequencyResponseTableFilter::setAmplitude(const std::vector<double>& amplitudes) {
+	m_amplitudes = amplitudes;
+}
+
+// Set phases
+void MTH5FrequencyResponseTableFilter::setPhases(const std::vector<double>& phases) {
+	m_phases = phases;
+}
+
+// Get frequency response functions using the requency response functions of filter
+std::complex<double> MTH5FrequencyResponseTableFilter::getFrequencyResponse(const double freq) const {
+
+	if (m_frequencies.empty()) {
+		return std::complex<double>(1.0, 0.0);
+	}
+
+	const int numFreqs = static_cast<int>(m_frequencies.size());
+	double* log10Frequencies = new double[numFreqs];
+	double* log10Amplitudes = new double[numFreqs];
+	double* phases = new double[numFreqs];
+	for (int i = 0; i < numFreqs; ++i) {
+		log10Frequencies[i] = log10(m_frequencies[i]);
+		log10Amplitudes[i] = log10(m_amplitudes[i]);
+		phases[i] = m_phases[i];
+	}
+	const double log10Freq = log10(freq);
+	const double logAmp = Util::interpolationAkima(numFreqs, log10Frequencies, log10Amplitudes, log10Freq);
+	const double phs = Util::interpolationAkima(numFreqs, log10Frequencies, phases, log10Freq);
+	delete[] log10Frequencies;
+	delete[] log10Amplitudes;
+	delete[] phases;
+	return pow(10.0, logAmp) * std::complex<double>(cos(phs), sin(phs));
+
+}

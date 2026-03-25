@@ -26,47 +26,50 @@
 // OR TORT(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //--------------------------------------------------------------------------
-#ifndef DBLDEF_COMMON_PARAMETERS
-#define DBLDEF_COMMON_PARAMETERS
+#include "MTH5ZeroPoleGainFilter.h"
+#include "CommonParameters.h"
 
-#include <string>
-#include <vector>
-
-namespace CommonParameters{
-
-enum DataType{
-	OUTPUT = 0,
-	INPUT,
-	REMOTE_REFERENCE
-};
-
-struct DataFile{
-	std::string fileName;
-	std::string mth5GroupName;
-	int numSkipData;
-	double* data;
-};
-
-struct DataFileSet{
-	int numDataPoints;
-	std::vector<DataFile> dataFile;
-};
-
-// Circular constant
-const static double PI = 3.14159265358979323846;
-
-// Factor converting values from radians to degrees
-const static double RAD2DEG = 180.0 / PI;
-
-// Factor converting values from degrees to radians
-const static double DEG2RAD = PI / 180.0;
-
-const static double EPS = 1.0e-20;
-
-static char programName[]="TRACMT";
-
-static char version[] = "v2.6";
-
+// Constructer
+MTH5ZeroPoleGainFilter::MTH5ZeroPoleGainFilter() :
+	MTH5Filter(),
+	m_normalizationFactor(0.0)
+{
 }
 
-#endif
+// Destructer
+MTH5ZeroPoleGainFilter::~MTH5ZeroPoleGainFilter() {
+}
+
+// Set normalization factor
+void MTH5ZeroPoleGainFilter::setNormalizationFactor(const double normalizationFactor) {
+	m_normalizationFactor = normalizationFactor;
+}
+
+// Set poles
+void MTH5ZeroPoleGainFilter::setPoles(const std::vector< std::complex<double> >& poles) {
+	m_poles = poles;
+}
+
+// Set zeros
+void MTH5ZeroPoleGainFilter::setZeros(const std::vector< std::complex<double> >& zeros) {
+	m_zeros = zeros;
+}
+
+// Get frequency response functions using the requency response functions of filter
+// @note under construction
+std::complex<double> MTH5ZeroPoleGainFilter::getFrequencyResponse(const double freq) const {
+
+	// Analog ZPK filter in the Laplace domain: H(s) = K * prod(s - z_i) / prod(s - p_i)
+	// Evaluate on the imaginary axis: s = j*omega, omega = 2*pi*freq
+	const std::complex<double> s(0.0, 2.0 * CommonParameters::PI * freq);
+	std::complex<double> numerator(1.0, 0.0);
+	for (std::vector< std::complex<double> >::const_iterator itr = m_zeros.begin(); itr != m_zeros.end(); ++itr) {
+		numerator *= (s - *itr);
+	}
+	std::complex<double> denominator(1.0, 0.0);
+	for (std::vector< std::complex<double> >::const_iterator itr = m_poles.begin(); itr != m_poles.end(); ++itr) {
+		denominator *= (s - *itr);
+	}
+	return m_normalizationFactor * numerator / denominator;
+
+}

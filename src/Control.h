@@ -364,11 +364,20 @@ public:
 	// Get rotation angle
 	double getRotationAngle() const;
 
-	// Get numebur of calibration files for MFS
+	// Get number of calibration files for MFS
 	int getNumCalibrationFilesForMFS() const;
+
+	// Get number of filter info (pair of file name and path) for MTH5
+	int getNumFilterInfoMTH5() const;
 
 	// Get name of calibration file for MFS
 	std::string getCalibrationFileNameForMFS(const int iFile) const;
+
+	// Get name of MTH5 file storing filter
+	std::string getFileNameForFilterInMTH5(const int i) const;
+
+	// Get path of the filter in MTH5 file
+	std::string getPathFilterInMTH5(const int i) const;
 
 	// Get numebur of calibration files
 	int getNumCalibrationFiles() const;
@@ -593,6 +602,9 @@ private:
 
 	// Calibration file for MFS
 	std::vector<std::string> m_calibrationFilesForMFS;
+
+	// Filter information in MTH5 files
+	std::vector< std::pair< std::string, std::string> > m_filterInfoForMTH5;
 
 	// Percentage of ommited data in subset deletion jackknife
 	double m_percentageOfOmmitedDataSubsetDeletionJackknife;

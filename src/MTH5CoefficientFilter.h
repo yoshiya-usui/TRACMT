@@ -26,47 +26,39 @@
 // OR TORT(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //--------------------------------------------------------------------------
-#ifndef DBLDEF_COMMON_PARAMETERS
-#define DBLDEF_COMMON_PARAMETERS
+#ifndef DBLDEF_MTH5_COEFFICIENT_FILTER
+#define DBLDEF_MTH5_COEFFICIENT_FILTER
 
-#include <string>
-#include <vector>
+#include "MTH5Filter.h"
 
-namespace CommonParameters{
+// Class to hold filter information for MTH5 coefficient files
+class MTH5CoefficientFilter : public MTH5Filter {
 
-enum DataType{
-	OUTPUT = 0,
-	INPUT,
-	REMOTE_REFERENCE
+public:
+
+	// Constructer
+	MTH5CoefficientFilter();
+
+	// Destructer
+	~MTH5CoefficientFilter();
+
+	// Set gain
+	void setGain( const double gain );
+
+	// Get frequency response functions using the requency response functions of filter
+	virtual  std::complex<double> getFrequencyResponse(const double freq) const;
+
+private:
+	
+	// Gain
+	double m_gain;
+
+	// Copy constructer
+	MTH5CoefficientFilter(const MTH5CoefficientFilter& rhs);
+
+	// Assignment operator
+	MTH5CoefficientFilter& operator=(const MTH5CoefficientFilter& rhs);
+
 };
-
-struct DataFile{
-	std::string fileName;
-	std::string mth5GroupName;
-	int numSkipData;
-	double* data;
-};
-
-struct DataFileSet{
-	int numDataPoints;
-	std::vector<DataFile> dataFile;
-};
-
-// Circular constant
-const static double PI = 3.14159265358979323846;
-
-// Factor converting values from radians to degrees
-const static double RAD2DEG = 180.0 / PI;
-
-// Factor converting values from degrees to radians
-const static double DEG2RAD = PI / 180.0;
-
-const static double EPS = 1.0e-20;
-
-static char programName[]="TRACMT";
-
-static char version[] = "v2.6";
-
-}
 
 #endif
