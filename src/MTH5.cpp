@@ -34,19 +34,23 @@
 #include <algorithm>
 #include <sstream>
 #include <iomanip>
+#include <assert.h>
 
 // Default constructer
 MTH5::MTH5():
-	m_numOfChannelRespones(0),
-	m_channelResponses(NULL)
+	m_numOfChannelRespones(0)
 {
 }
 
 // Destructer
 MTH5::~MTH5(){
-	if (m_channelResponses != NULL) {
-		delete[] m_channelResponses;
+	
+	for (std::vector<MTH5ChannelResponse*>::iterator itr = m_channelResponses.begin(); itr != m_channelResponses.end(); ++itr) {
+		if ( *itr != NULL) {
+			delete[] * itr;
+		}
 	}
+
 }
 
 // Return the instance of the class
@@ -99,32 +103,30 @@ std::string MTH5::getCalibrationFileName(const int channelIndex){
 
 }
 
-// Get all filters and combine filters into a complete channel response for each channel
-void MTH5::createChannelResponses(const std::vector< std::pair< std::string, std::string> >& fileNameAndPath) {
+// Calculate frequency response functions using the frequency response functions of all filter
+std::complex<double> MTH5::calcResponse(const int sectionIndex, const int channelIndex, const double freq) const {
 
-	if (fileNameAndPath.empty()) {
-		return;
-	}
-	m_numOfChannelRespones = static_cast<int>(fileNameAndPath.size());
-	m_channelResponses = new MTH5ChannelResponse[m_numOfChannelRespones];
-	int iChan(0);
-	for (std::vector< std::pair< std::string, std::string> >::const_iterator itr = fileNameAndPath.begin(); itr != fileNameAndPath.end(); ++itr, ++iChan) {
-		m_channelResponses[iChan].createChannelResponse(itr->first, itr->second);
-	}
+	assert(sectionIndex >= 0 && sectionIndex < m_channelResponses.size());
+	assert(channelIndex >= 0);
+
+	return m_channelResponses[sectionIndex][channelIndex].calcResponse(freq);
 
 }
 
-// Make calibration files using the requency response functions of all filter 
-void MTH5::makeCalibrationFile(const int channelIndex, const std::vector<double>& freqs) const {
+// Read filters for indivial sections and channels
+void MTH5::readFiltersAll(const int numChannels, const std::vector<CommonParameters::DataFileSet>& dataFileSets) {
 
-	if (m_channelResponses[channelIndex].isAppliedForwardly()) {
-		return;
+	m_numOfChannelRespones = numChannels;
+
+	for(std::vector<CommonParameters::DataFileSet>::const_iterator itr = dataFileSets.begin(); itr != dataFileSets.end(); ++itr){
+		const std::vector<CommonParameters::DataFile>& dataFileList = itr->dataFile;
+		MTH5ChannelResponse* channelResponses = new MTH5ChannelResponse[numChannels];
+		for (int iChan = 0; iChan < numChannels; ++iChan) {
+			const std::string fileName = dataFileList[iChan].fileName;
+			const std::string channelPath = dataFileList[iChan].mth5GroupName;
+			channelResponses[iChan].createChannelResponse(fileName, channelPath);
+		}
+		m_channelResponses.push_back(channelResponses);
 	}
-	
-	if (channelIndex < 0 && channelIndex >= m_numOfChannelRespones) {
-		OutputFiles::getInstance()->writeErrorMessage("Channel index is out of range: " + Util::toString(channelIndex));
-	}
-	
-	m_channelResponses[channelIndex].makeCalibrationFile(getCalibrationFileName(channelIndex), channelIndex, freqs);
 
 }

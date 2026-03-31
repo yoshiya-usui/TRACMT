@@ -34,6 +34,7 @@
 #include <H5Cpp.h>
 
 #include "MTH5ChannelResponse.h"
+#include "CommonParameters.h"
 
 // Class of MTH5 file
 class MTH5{
@@ -49,14 +50,11 @@ public:
 	// Get name of the calibration file name made from the channel responses 
 	static std::string getCalibrationFileName(const int channelIndex);
 
-	// Get all filters and combine filters into a complete channel response for each channel
-	void createChannelResponses(const std::vector< std::pair< std::string, std::string> >& fileNameAndPath);
+	// Read filters for indivial sections and channels
+	void readFiltersAll(const int numChannels, const std::vector<CommonParameters::DataFileSet>& dataFileSets);
 
-	//// Correct frequency response functions using the requency response functions of all filter
-	//void correctResponse(const int channelIndex, const double freq, const double samplingFreq, std::complex<double>& response) const;
-
-	// Make calibration files using the requency response functions of all filter 
-	void makeCalibrationFile(const int channelIndex, const std::vector<double>& freqs) const;
+	// Calculate frequency response functions using the frequency response functions of all filter
+	std::complex<double> calcResponse(const int sectionIndex, const int channelIndex, const double freq) const;
 
 private:
 
@@ -64,7 +62,7 @@ private:
 	int m_numOfChannelRespones;
 
 	// List of channel response (combination of all filters)
-	MTH5ChannelResponse* m_channelResponses;
+	std::vector<MTH5ChannelResponse*> m_channelResponses;
 
 	// Constructer
 	MTH5();

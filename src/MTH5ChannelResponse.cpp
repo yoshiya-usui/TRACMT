@@ -152,35 +152,14 @@ void MTH5ChannelResponse::createChannelResponse(const std::string& fileName, con
 
 }
 
-// Make calibration file using the requency response functions of all filter
-void MTH5ChannelResponse::makeCalibrationFile(const std::string& calibrationFileName, const int channelIndex, const std::vector<double>& freqs) const {
+// Calculate frequency response functions using the requency response functions of all filter
+std::complex<double> MTH5ChannelResponse::calcResponse(const double freq) const {
 
-	OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
-	std::ofstream ofs;
-	ofs.open(calibrationFileName.c_str(), std::ios::out);
-	if (ofs.fail()) {
-		ptrOutputFiles->writeErrorMessage("File open error: " + calibrationFileName);
+	std::complex<double> resp(1.0, 0.0);
+	for (std::vector<MTH5Filter*>::const_iterator itr = m_filtersList.begin(); itr != m_filtersList.end(); ++itr) {
+		resp *= (*itr)->getFrequencyResponse(freq);
 	}
-
-	const int numFreq = static_cast<int>(freqs.size());
-	if (numFreq < 1) {
-		ptrOutputFiles->writeErrorMessage("Number of the frequencies for which calibrations are estimated is less than 1 : " + Util::toString(numFreq));
-	}
-
-	ofs << std::setw(20) << std::scientific << std::setprecision(9) << 1.0 << std::endl;
-	ofs << std::setw(10) << numFreq << std::endl;
-	for (int iFreq = 0; iFreq < numFreq; ++iFreq) {
-		std::complex<double> calibFunc(1.0, 0.0);
-		for (std::vector<MTH5Filter*>::const_iterator itr = m_filtersList.begin(); itr != m_filtersList.end(); ++itr) {
-			calibFunc *= (*itr)->getFrequencyResponse(freqs[iFreq]);
-		}
-		const std::complex<double> invCal = 1.0 / calibFunc;
-		ofs << std::setw(20) << std::scientific << std::setprecision(9) << freqs[iFreq];
-		ofs << std::setw(20) << std::scientific << std::setprecision(9) << invCal.real();
-		ofs << std::setw(20) << std::scientific << std::setprecision(9) << invCal.imag() << std::endl;
-	}
-
-	ofs.close();
+	return resp;
 
 }
 

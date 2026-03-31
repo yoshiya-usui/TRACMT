@@ -86,8 +86,8 @@ public:
 	// - Validation status and any error messages
 	void createChannelResponse(const std::string& fileName, const std::string& channelPath);
 
-	// Make calibration file using the requency response functions of all filter
-	void makeCalibrationFile(const std::string& calibrationFileName, const int channelIndex, const std::vector<double>& freqs) const;
+	// Calculate frequency response functions using the requency response functions of all filter
+	std::complex<double> calcResponse(const double freq) const;
 
 private:
 

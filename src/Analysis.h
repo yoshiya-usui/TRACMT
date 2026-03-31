@@ -35,6 +35,7 @@
 #include "RobustWeightThomson.h"
 #include "RobustWeightTukeysBiweights.h"
 #include <vector>
+#include <map>
 
 // Class of analysis
 class Analysis{
@@ -271,6 +272,11 @@ private:
 
 	// M-estimators
 	RobustWeight* m_robustWeight[2];
+
+#ifdef _MTH5
+	// Map segment index to sectionindex
+	std::map<int, int> m_segmentIndexToSectionIndex;
+#endif
 
 };
 

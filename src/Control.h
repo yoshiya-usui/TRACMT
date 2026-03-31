@@ -295,6 +295,9 @@ public:
 	// Get flag specifing whether input file is MTH5 file
 	bool doesReadMTH5() const;
 
+	// Get flag specifing whether MTH5 filters are read or not
+	bool doesReadMTH5Filters() const;
+
 	// Get flag specifing whether input file is ELOG-Dual binary file
 	bool doesReadElogDualBinary() const;
 
@@ -372,12 +375,6 @@ public:
 
 	// Get name of calibration file for MFS
 	std::string getCalibrationFileNameForMFS(const int iFile) const;
-
-	// Get name of MTH5 file storing filter
-	std::string getFileNameForFilterInMTH5(const int i) const;
-
-	// Get path of the filter in MTH5 file
-	std::string getPathFilterInMTH5(const int i) const;
 
 	// Get numebur of calibration files
 	int getNumCalibrationFiles() const;
@@ -603,9 +600,6 @@ private:
 	// Calibration file for MFS
 	std::vector<std::string> m_calibrationFilesForMFS;
 
-	// Filter information in MTH5 files
-	std::vector< std::pair< std::string, std::string> > m_filterInfoForMTH5;
-
 	// Percentage of ommited data in subset deletion jackknife
 	double m_percentageOfOmmitedDataSubsetDeletionJackknife;
 
@@ -695,6 +689,9 @@ private:
 
 	// Flag specifing whether input file is MTH5 file
 	bool m_readMTH5;
+
+	// Flag specifing whether input file is MTH5 filters
+	bool m_readMTH5Filters;
 
 	// Flag specifing whether ELOG-Dual binary is read
 	bool m_readElogDualBinary;

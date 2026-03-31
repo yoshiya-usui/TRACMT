@@ -31,27 +31,80 @@
 
 // Constructer
 MTH5FrequencyResponseTableFilter::MTH5FrequencyResponseTableFilter():
-	MTH5Filter()
+	MTH5Filter(),
+	m_log10Frequencies(NULL),
+	m_log10Amplitudes(NULL),
+	m_phaseArray(NULL)
 {
 }
 
 // Destructer
 MTH5FrequencyResponseTableFilter::~MTH5FrequencyResponseTableFilter() {
+
+	if (m_log10Frequencies != NULL) {
+		delete [] m_log10Frequencies;
+	}
+	if (m_log10Amplitudes != NULL) {
+		delete[] m_log10Amplitudes;
+	}
+	if (m_phaseArray != NULL) {
+		delete[] m_phaseArray;
+	}
+
 }
 
 // Set frequencies
 void MTH5FrequencyResponseTableFilter::setFrequencies(const std::vector<double>& frequencies) {
+
 	m_frequencies = frequencies;
+
+	if (m_log10Frequencies != NULL) {
+		delete[] m_log10Frequencies;
+	}
+	if (frequencies.size() > 0){
+		m_log10Frequencies = new double[frequencies.size()];
+		int icount(0);
+		for (std::vector<double>::const_iterator itr = frequencies.begin(); itr != frequencies.end(); ++itr, ++icount){
+			m_log10Frequencies[icount] = log10(*itr);
+		}
+	}
+
 }
 
 // Set amplitudes
 void MTH5FrequencyResponseTableFilter::setAmplitude(const std::vector<double>& amplitudes) {
+
 	m_amplitudes = amplitudes;
+
+	if (m_log10Amplitudes != NULL) {
+		delete[] m_log10Amplitudes;
+	}
+	if (amplitudes.size() > 0) {
+		m_log10Amplitudes = new double[amplitudes.size()];
+		int icount(0);
+		for (std::vector<double>::const_iterator itr = amplitudes.begin(); itr != amplitudes.end(); ++itr, ++icount) {
+			m_log10Amplitudes[icount] = log10(*itr);
+		}
+	}
+
 }
 
 // Set phases
 void MTH5FrequencyResponseTableFilter::setPhases(const std::vector<double>& phases) {
+	
 	m_phases = phases;
+
+	if (m_phaseArray != NULL) {
+		delete[] m_phaseArray;
+	}
+	if (phases.size() > 0) {
+		m_phaseArray = new double[phases.size()];
+		int icount(0);
+		for (std::vector<double>::const_iterator itr = phases.begin(); itr != phases.end(); ++itr, ++icount) {
+			m_phaseArray[icount] = *itr;
+		}
+	}
+
 }
 
 // Get frequency response functions using the requency response functions of filter
@@ -62,20 +115,9 @@ std::complex<double> MTH5FrequencyResponseTableFilter::getFrequencyResponse(cons
 	}
 
 	const int numFreqs = static_cast<int>(m_frequencies.size());
-	double* log10Frequencies = new double[numFreqs];
-	double* log10Amplitudes = new double[numFreqs];
-	double* phases = new double[numFreqs];
-	for (int i = 0; i < numFreqs; ++i) {
-		log10Frequencies[i] = log10(m_frequencies[i]);
-		log10Amplitudes[i] = log10(m_amplitudes[i]);
-		phases[i] = m_phases[i];
-	}
 	const double log10Freq = log10(freq);
-	const double logAmp = Util::interpolationAkima(numFreqs, log10Frequencies, log10Amplitudes, log10Freq);
-	const double phs = Util::interpolationAkima(numFreqs, log10Frequencies, phases, log10Freq);
-	delete[] log10Frequencies;
-	delete[] log10Amplitudes;
-	delete[] phases;
+	const double logAmp = Util::interpolationAkima(numFreqs, m_log10Frequencies, m_log10Amplitudes, log10Freq);
+	const double phs = Util::interpolationAkima(numFreqs, m_log10Frequencies, m_phaseArray, log10Freq);
 	return pow(10.0, logAmp) * std::complex<double>(cos(phs), sin(phs));
 
 }

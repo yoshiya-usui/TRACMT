@@ -65,6 +65,15 @@ private:
 	// Phases
 	std::vector<double> m_phases;
 
+	// Array of log10(frequency)
+	double* m_log10Frequencies;
+
+	// Array of log10(amplitude)
+	double* m_log10Amplitudes;
+
+	// Array of Phases
+	double* m_phaseArray;
+
 	// Calculate frequency response functions of filter
 	std::complex<double> calcResponse(const double freq) const;
 
