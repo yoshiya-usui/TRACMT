@@ -62,12 +62,11 @@ void quickSort( const int numOfIDs, double* values );
 double calculateAbsoluteValue( const std::complex<double> value );
 
 // Calculate calibration function for FIR filter (Type1)
-std::complex<double> calculateCalibrationForFIRFilterType1( const std::string& fileName, const int nskip,
-	const double samplingFreq, const double freq, const bool groupDelay );
+std::complex<double> calculateCalibrationForFIRFilterType1( const std::string& fileName, const double samplingFreq, const double freq, const bool groupDelay );
 
 // Calculate calibration function for FIR filter (Type2)
-std::complex<double> calculateCalibrationForFIRFilterType2( const std::string& fileName, const int nskip,
-	const double samplingFreq, const double freq, const int nfstart, const int nfend );
+std::complex<double> calculateCalibrationForFIRFilterType2( const std::string& fileName, const double samplingFreq, const double freq, const bool isELOG, 
+	int nfstart, int nfend );
 
 // Calculate determinant of real square matrix
 double calculateDeterminantOfMatrix( const int dimension, const double* const matrix );

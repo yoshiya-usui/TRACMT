@@ -39,6 +39,9 @@
 #include "RobustWeightThomson.h"
 #include "RobustWeightTukeysBiweights.h"
 #include "Ats.h"
+#ifdef _MTH5
+#include "MTH5.h"
+#endif
 
 #include <cmath>
 #include <stdlib.h>
@@ -92,6 +95,7 @@ Control::Control() :
 	m_procedureType(Control::ORDINARY_REMOTE_REFERENCE),
 	m_readAtsBinary(false),
 	m_readMTH5(false),
+	m_readMTH5Filters(false),
 	m_readElogDualBinary(false),
 	m_readElogMTBinary(false),
 	m_timingEOFBasedDenoising(Control::BEFORE_DECIMATION),
@@ -207,7 +211,7 @@ Control::~Control(){
 }
 
 // Run analysis
-void Control::run(const bool outputToConsole){
+void Control::run(const bool outputToConsole) {
 
 	OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
 	ptrOutputFiles->setOutputToConsole(outputToConsole);
@@ -269,9 +273,14 @@ bool Control::doesReadAtsBinary() const{
 	return m_readAtsBinary;
 }
 
-// Get flag specifing whether input file is ELOG-Dual binary file
+// Get flag specifing whether input file is MTH5 file
 bool Control::doesReadMTH5() const {
 	return m_readMTH5;
+}
+
+// Get flag specifing whether MTH5 filters are read or not
+bool Control::doesReadMTH5Filters() const {
+	return m_readMTH5Filters;
 }
 
 // Get flag specifing whether input file is ELOG-Dual binary file
@@ -424,6 +433,7 @@ int Control::getNumCalibrationFilesForMFS() const {
 std::string Control::getCalibrationFileNameForMFS(const int iFile) const {
 	return m_calibrationFilesForMFS[iFile];
 }
+
 // Get numebur of calibration files
 int Control::getNumCalibrationFiles() const{
 	return static_cast<int>( m_calibrationFiles.size() );
@@ -668,7 +678,7 @@ int Control::getProcedureType () const{
 
 }
 
-// Get type of ELOG-Dual
+// Get timing of denoising based on EOF
 int Control::getTimingEOFBasedDenoising() const {
 
 	return m_timingEOFBasedDenoising;
@@ -779,7 +789,7 @@ void Control::readParameterFile(){
 				for (int iChan = 0; iChan < numChans; ++iChan) {
 					CommonParameters::DataFile dataFileTemp;
 					ifs >> dataFileTemp.fileName;
-					if (doesReadMTH5() && Util::extractExtensionOfFileName(dataFileTemp.fileName).find("mth5") != std::string::npos)
+					if (doesReadMTH5())
 					{
 						ifs >> dataFileTemp.mth5GroupName;
 					}
@@ -838,8 +848,23 @@ void Control::readParameterFile(){
 		else if( line.find("ATS_BINARY") != std::string::npos ){
 			m_readAtsBinary = true;
 		}
+#ifdef _MTH5
+		else if (line.find("MTH5_FILTERS") != std::string::npos) {
+			m_readMTH5Filters = true;
+		}
 		else if (line.find("MTH5") != std::string::npos) {
 			m_readMTH5 = true;
+		}
+#endif
+		else if( line.find("CAL_FILES") != std::string::npos ){
+			const int numChannels = getNumberOfChannels();
+			m_calibrationFiles.clear();
+			m_calibrationFiles.reserve(numChannels);
+			for( int iChan = 0; iChan < numChannels; ++iChan ){
+				std::string sbuf;
+				ifs >> sbuf;
+				m_calibrationFiles.push_back(sbuf);
+			}
 		}
 		else if (line.find("ELOGDUAL_CAL") != std::string::npos) {
 			m_calibForElogDual = true;
@@ -852,7 +877,7 @@ void Control::readParameterFile(){
 			double dbuf(0.0);
 			ifs >> dbuf;
 			m_paramsForElogDualCalibration.unitGroupDelay = dbuf;
-			}
+		}
 		else if (line.find("ELOGDUAL_BINARY") != std::string::npos) {
 			m_readElogDualBinary = true;
 		}
@@ -883,16 +908,6 @@ void Control::readParameterFile(){
 			std::string sbuf;
 			ifs >> sbuf;
 			m_directoryOfLoggerCalibrationFiles = sbuf;
-		}
-		else if( line.find("CAL_FILES") != std::string::npos ){
-			const int numChannels = getNumberOfChannels();
-			m_calibrationFiles.clear();
-			m_calibrationFiles.reserve(numChannels);
-			for( int iChan = 0; iChan < numChannels; ++iChan ){
-				std::string sbuf;
-				ifs >> sbuf;
-				m_calibrationFiles.push_back(sbuf);
-			}
 		}
 		else if( line.find("OUTPUT_LEVEL") != std::string::npos ){
 			int ibuf(0);
@@ -1709,6 +1724,9 @@ void Control::readParameterFile(){
 	}
 	if( doesReadMTH5() ) {
 		ptrOutputFiles->writeLogMessage("Read MTH5 files", false);
+		if (doesReadMTH5Filters()) {
+			ptrOutputFiles->writeLogMessage("Read MTH5 filters", false);
+		}
 	}
 	if (doesMakeCalibrationFileForMFS()) {
 		ptrOutputFiles->writeLogMessage("Information about the inputs for calibration files : ", false);

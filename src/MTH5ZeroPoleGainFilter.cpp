@@ -26,56 +26,50 @@
 // OR TORT(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //--------------------------------------------------------------------------
-#ifndef DBLDEF_MTH5
-#define DBLDEF_MTH5
-
-#include <string>
-#include <vector>
-#include <H5Cpp.h>
-
-#include "MTH5ChannelResponse.h"
+#include "MTH5ZeroPoleGainFilter.h"
 #include "CommonParameters.h"
 
-// Class of MTH5 file
-class MTH5{
+// Constructer
+MTH5ZeroPoleGainFilter::MTH5ZeroPoleGainFilter() :
+	MTH5Filter(),
+	m_normalizationFactor(0.0)
+{
+}
 
-public:
+// Destructer
+MTH5ZeroPoleGainFilter::~MTH5ZeroPoleGainFilter() {
+}
 
-	// Return the the instance of the class
-    static MTH5* getInstance();
+// Set normalization factor
+void MTH5ZeroPoleGainFilter::setNormalizationFactor(const double normalizationFactor) {
+	m_normalizationFactor = normalizationFactor;
+}
 
-	// Read MTH5 file
-	void readMTH5File( const std::string& fileName, const std::string groupName, const int numSkipData, const int numDataPoints, double* data ) const;
+// Set poles
+void MTH5ZeroPoleGainFilter::setPoles(const std::vector< std::complex<double> >& poles) {
+	m_poles = poles;
+}
 
-	// Get name of the calibration file name made from the channel responses 
-	static std::string getCalibrationFileName(const int channelIndex);
+// Set zeros
+void MTH5ZeroPoleGainFilter::setZeros(const std::vector< std::complex<double> >& zeros) {
+	m_zeros = zeros;
+}
 
-	// Read filters for indivial sections and channels
-	void readFiltersAll(const int numChannels, const std::vector<CommonParameters::DataFileSet>& dataFileSets);
+// Get frequency response functions using the requency response functions of filter
+// @note under construction
+std::complex<double> MTH5ZeroPoleGainFilter::getFrequencyResponse(const double freq) const {
 
-	// Calculate frequency response functions using the frequency response functions of all filter
-	std::complex<double> calcResponse(const int sectionIndex, const int channelIndex, const double freq) const;
+	// Analog ZPK filter in the Laplace domain: H(s) = K * prod(s - z_i) / prod(s - p_i)
+	// Evaluate on the imaginary axis: s = j*omega, omega = 2*pi*freq
+	const std::complex<double> s(0.0, 2.0 * CommonParameters::PI * freq);
+	std::complex<double> numerator(1.0, 0.0);
+	for (std::vector< std::complex<double> >::const_iterator itr = m_zeros.begin(); itr != m_zeros.end(); ++itr) {
+		numerator *= (s - *itr);
+	}
+	std::complex<double> denominator(1.0, 0.0);
+	for (std::vector< std::complex<double> >::const_iterator itr = m_poles.begin(); itr != m_poles.end(); ++itr) {
+		denominator *= (s - *itr);
+	}
+	return m_normalizationFactor * numerator / denominator;
 
-private:
-
-	// Number of channel responses
-	int m_numOfChannelRespones;
-
-	// List of channel response (combination of all filters)
-	std::vector<MTH5ChannelResponse*> m_channelResponses;
-
-	// Constructer
-	MTH5();
-
-	// Destructer
-	~MTH5();
-
-	// Copy constructer
-	MTH5(const MTH5& rhs);
-
-	// Assignment operator
-	MTH5& operator=(const MTH5& rhs);
-
-};
-
-#endif
+}

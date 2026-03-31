@@ -26,55 +26,38 @@
 // OR TORT(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //--------------------------------------------------------------------------
-#ifndef DBLDEF_MTH5
-#define DBLDEF_MTH5
+#ifndef DBLDEF_MTH5_COEFFICIENT_FILTER
+#define DBLDEF_MTH5_COEFFICIENT_FILTER
 
-#include <string>
-#include <vector>
-#include <H5Cpp.h>
+#include "MTH5Filter.h"
 
-#include "MTH5ChannelResponse.h"
-#include "CommonParameters.h"
-
-// Class of MTH5 file
-class MTH5{
+// Class to hold filter information for MTH5 coefficient files
+class MTH5CoefficientFilter : public MTH5Filter {
 
 public:
 
-	// Return the the instance of the class
-    static MTH5* getInstance();
-
-	// Read MTH5 file
-	void readMTH5File( const std::string& fileName, const std::string groupName, const int numSkipData, const int numDataPoints, double* data ) const;
-
-	// Get name of the calibration file name made from the channel responses 
-	static std::string getCalibrationFileName(const int channelIndex);
-
-	// Read filters for indivial sections and channels
-	void readFiltersAll(const int numChannels, const std::vector<CommonParameters::DataFileSet>& dataFileSets);
-
-	// Calculate frequency response functions using the frequency response functions of all filter
-	std::complex<double> calcResponse(const int sectionIndex, const int channelIndex, const double freq) const;
-
-private:
-
-	// Number of channel responses
-	int m_numOfChannelRespones;
-
-	// List of channel response (combination of all filters)
-	std::vector<MTH5ChannelResponse*> m_channelResponses;
-
 	// Constructer
-	MTH5();
+	MTH5CoefficientFilter();
 
 	// Destructer
-	~MTH5();
+	~MTH5CoefficientFilter();
+
+	// Set gain
+	void setGain( const double gain );
+
+	// Get frequency response functions using the requency response functions of filter
+	virtual  std::complex<double> getFrequencyResponse(const double freq) const;
+
+private:
+	
+	// Gain
+	double m_gain;
 
 	// Copy constructer
-	MTH5(const MTH5& rhs);
+	MTH5CoefficientFilter(const MTH5CoefficientFilter& rhs);
 
 	// Assignment operator
-	MTH5& operator=(const MTH5& rhs);
+	MTH5CoefficientFilter& operator=(const MTH5CoefficientFilter& rhs);
 
 };
 

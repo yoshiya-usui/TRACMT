@@ -1,6 +1,9 @@
-# TRACMT
-Robust transfer function analysis code for magnetotellurics.
-In TRACMT, you can use the RRMS estimator developed by Usui et al. (2024) and the fast and robust bootstrap method.
+<div align="center">
+  <img src="tracmt_logo.png" alt="TRACMT Logo" width="600"/>
+</div>
+
+## TRACMT
+TRACMT is a robust transfer function analysis code for magnetotellurics, based on the following studies. It supports the RRMS estimator developed by Usui et al. (2024) and the fast and robust bootstrap method.
 
 _Yoshiya Usui, Makoto Uyeshima, Shin'ya Sakanaka, Tasuku Hashimoto, Masahiro Ichiki, Toshiki Kaida, Yusuke Yamaya, Yasuo Ogawa, Masataka Masuda, Takahiro Akiyama, 2024. New robust remote reference estimator using robust multivariate linear regression, Geophysical Journal International, 238(2), [https://doi.org/10.1093/gji/ggae19_9](https://doi.org/10.1093/gji/ggae199)_
 
@@ -11,6 +14,15 @@ _Yoshiya Usui, Makoto Uyeshima, Shin'ya Sakanaka, Tasuku Hashimoto, Masahiro Ich
 We developed the RRMS estimator by applying the robust multivariate linear regression S-estimator to the two-input-multiple-output relationship between the local EM field and the reference magnetic field that leads to the same equation as by the original remote reference method.
 The RRMS estimator can give an unbiased estimate of the MT transfer function and suppress the influence of outliers in the electric field and magnetic
 field.
+
+## Functional Overview
+**Input file format**: Text (Ascii) file / ats files of Metronix instruments / MTH5 files (Peacock et al., 2022) / dat files of ELOG-MT, ELOG-DUAL, and ELOG1K
+
+**Prewhitening**: Non-robust prewhitening / Robust prewhitening / Robust prewhitening with robust filter
+
+**Transfer function estimation method**: Ordinary least square / Non-robust remote reference / Robust remote reference / RRMS estimator
+
+**Error estimation method**: Parametric approach / Bootstrap method / Jackknife method
 
 ## How to compile TRACMT
 1) Download all source files of TRACMT to a directory.
@@ -23,15 +35,6 @@ field.
    export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/hdf5-1.10.5/lib"<br>
    export LIBRARY_PATH="${LIBRARY_PATH}:/usr/local/hdf5-1.10.5/lib"<br>
    export PATH="${PATH}:/usr/local/hdf5-1.10.5/lib"<br>
-
-## Functional Overview
-**Input file format**: Text (Ascii) file / .ats files of Metronix instruments / MTH5 files (Peacock et al., 2022) / .dat files of ELOG-MT
-
-**Prewhitening**: Non-robust prewhitening / Robust prewhitening / Robust prewhitening with robust filter
-
-**Transfer function estimation method**: Ordinary least square / Non-robust remote reference / Robust remote reference / RRMS estimator
-
-**Error estimation method**: Parametric approach / Bootstrap method / Jackknife method
 
 ## Release note
 _**v1.2.0**_ June. 13, 2024: Initial release.
@@ -46,4 +49,11 @@ _**v2.1.0**_ January. 14, 2025: The equation of the AIC is modified.
 
 _**v2.2.0**_ February. 10, 2025: The option for reading MTH5 files is added.
 
+_**v2.3.0**_ October. 22, 2025: The computational efficiency of the RRMS estimator was improved.
 
+_**v2.5.0**_ January. 14, 2026: Strengthened the functions to read and correct the data measured with ELOG-MT, ELOG-DUAL, and ELOG1K.
+
+_**v2.6**_ March. 31, 2026: Added the functions of reading filters from MTH5 files.
+
+## Acknowledgments
+I would like to thank Dr. Jared Peacock (USGS) for his valuable advice on handling MTH5 files.

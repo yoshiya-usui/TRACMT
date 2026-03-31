@@ -46,7 +46,7 @@ public:
 	// Factorize matrix
 	virtual void factorizeMatrix();
 
-	// Factorize and solve a linear equation with a right-hand-side vector
+	// Calculate determinant
 	double determinant();
 
 	// Factorize and solve a linear equation with a right-hand-side vector

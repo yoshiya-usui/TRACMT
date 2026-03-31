@@ -31,14 +31,26 @@
 #include "OutputFiles.h"
 
 #include <H5Cpp.h>
+#include <algorithm>
+#include <sstream>
+#include <iomanip>
+#include <assert.h>
 
 // Default constructer
-MTH5::MTH5()
+MTH5::MTH5():
+	m_numOfChannelRespones(0)
 {
 }
 
 // Destructer
 MTH5::~MTH5(){
+	
+	for (std::vector<MTH5ChannelResponse*>::iterator itr = m_channelResponses.begin(); itr != m_channelResponses.end(); ++itr) {
+		if ( *itr != NULL) {
+			delete[] * itr;
+		}
+	}
+
 }
 
 // Return the instance of the class
@@ -75,5 +87,46 @@ void MTH5::readMTH5File(const std::string& fileName, const std::string groupName
 	hsize_t rcount[1] = { numDataPoints };
 	H5Sselect_hyperslab(filespace_id, H5S_SELECT_SET, roffset, NULL, rcount, NULL);
 	H5Dread(dataset_id, H5T_NATIVE_DOUBLE, memspace_id, filespace_id, H5P_DEFAULT, data);
+	
+	H5Sclose(memspace_id);
+	H5Sclose(filespace_id);
+	H5Dclose(dataset_id);
+	H5Fclose(file_id);
+}
+
+// Get name of the calibration file name made from the channel responses 
+std::string MTH5::getCalibrationFileName(const int channelIndex){
+
+	std::ostringstream fileName;
+	fileName << "channel" << channelIndex << ".cal";
+	return fileName.str();
+
+}
+
+// Calculate frequency response functions using the frequency response functions of all filter
+std::complex<double> MTH5::calcResponse(const int sectionIndex, const int channelIndex, const double freq) const {
+
+	assert(sectionIndex >= 0 && sectionIndex < m_channelResponses.size());
+	assert(channelIndex >= 0);
+
+	return m_channelResponses[sectionIndex][channelIndex].calcResponse(freq);
+
+}
+
+// Read filters for indivial sections and channels
+void MTH5::readFiltersAll(const int numChannels, const std::vector<CommonParameters::DataFileSet>& dataFileSets) {
+
+	m_numOfChannelRespones = numChannels;
+
+	for(std::vector<CommonParameters::DataFileSet>::const_iterator itr = dataFileSets.begin(); itr != dataFileSets.end(); ++itr){
+		const std::vector<CommonParameters::DataFile>& dataFileList = itr->dataFile;
+		MTH5ChannelResponse* channelResponses = new MTH5ChannelResponse[numChannels];
+		for (int iChan = 0; iChan < numChannels; ++iChan) {
+			const std::string fileName = dataFileList[iChan].fileName;
+			const std::string channelPath = dataFileList[iChan].mth5GroupName;
+			channelResponses[iChan].createChannelResponse(fileName, channelPath);
+		}
+		m_channelResponses.push_back(channelResponses);
+	}
 
 }

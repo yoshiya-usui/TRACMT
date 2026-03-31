@@ -26,56 +26,31 @@
 // OR TORT(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //--------------------------------------------------------------------------
-#ifndef DBLDEF_MTH5
-#define DBLDEF_MTH5
-
-#include <string>
-#include <vector>
-#include <H5Cpp.h>
-
-#include "MTH5ChannelResponse.h"
+#include "MTH5TimeDelayFilter.h"
 #include "CommonParameters.h"
 
-// Class of MTH5 file
-class MTH5{
+// Constructer
+MTH5TimeDelayFilter::MTH5TimeDelayFilter():
+	MTH5Filter(),
+	m_delay(0.0)
+{
+}
 
-public:
+// Destructer
+MTH5TimeDelayFilter::~MTH5TimeDelayFilter() {
+}
 
-	// Return the the instance of the class
-    static MTH5* getInstance();
+// Set delay
+void MTH5TimeDelayFilter::setDelay(const double delay) {
+	m_delay = delay;
+}
 
-	// Read MTH5 file
-	void readMTH5File( const std::string& fileName, const std::string groupName, const int numSkipData, const int numDataPoints, double* data ) const;
+// Get frequency response functions using the requency response functions of filter
+// @note under construction
+std::complex<double> MTH5TimeDelayFilter::getFrequencyResponse(const double freq) const {
 
-	// Get name of the calibration file name made from the channel responses 
-	static std::string getCalibrationFileName(const int channelIndex);
+	const double omega = 2.0 * CommonParameters::PI * freq;
+	return m_delay * std::complex<double>(cos(omega), sin(omega));
 
-	// Read filters for indivial sections and channels
-	void readFiltersAll(const int numChannels, const std::vector<CommonParameters::DataFileSet>& dataFileSets);
+}
 
-	// Calculate frequency response functions using the frequency response functions of all filter
-	std::complex<double> calcResponse(const int sectionIndex, const int channelIndex, const double freq) const;
-
-private:
-
-	// Number of channel responses
-	int m_numOfChannelRespones;
-
-	// List of channel response (combination of all filters)
-	std::vector<MTH5ChannelResponse*> m_channelResponses;
-
-	// Constructer
-	MTH5();
-
-	// Destructer
-	~MTH5();
-
-	// Copy constructer
-	MTH5(const MTH5& rhs);
-
-	// Assignment operator
-	MTH5& operator=(const MTH5& rhs);
-
-};
-
-#endif

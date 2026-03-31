@@ -30,6 +30,9 @@
 #define DBLDEF_ANALYSIS_MULTIVARIATE_REGRESSION
 
 #include "Analysis.h"
+#ifdef _MOD_FRB
+#include "DoubleDenseSquareSymmetricMatrix.h"
+#endif
 
 #include <vector>
 #include <complex>
@@ -78,6 +81,27 @@ private:
 		std::complex<double>** complexResiduals, const double* const MD, const double* const weights,
 		double** derivativesRegardingResps, double** derivativesRegardingVariancesWithoutScale, double* derivativesRegardingScale ) const;
 
+#ifdef _MOD_FRB
+	// Calculate partial derivatives of responses for robust bootstrap (MRRMS version)
+	void calculatePartialDerivativesOfResponsesMRRMS(const int numSegments, const double paramC, std::complex<double>** ftval,
+		std::complex<double>** resp, const double* const variancesWithoutScale, const double* const covariancesLowerTriangleWithoutScale,
+		const double scale, std::complex<double>** complexResiduals, const double* const MD, const double* const weights,
+		double** derivativesRegardingResps, double** derivativesRegardingSigma, double** derivativesRegardingCovarianceLowerTriangle,
+		double* derivativesRegardingScale) const;
+
+	// Calculate partial derivatives of scale (MRRMS version)
+	void calculatePartialDerivativesOfScaleMRRMS(const int numSegments, const double paramB, const double paramC,
+		std::complex<double>** ftval, std::complex<double>** resp, const double* const variancesWithoutScale, const double scale,
+		std::complex<double>** complexResiduals, const double* const MD, const double* const weights,
+		double* derivativesRegardingResps, double* derivativesRegardingVariancesWithoutScale, double& derivativesRegardingScale) const;
+
+	// Calculate partial derivatives of variances without scale for robust bootstrap (MRRMS version)
+	void calculatePartialDerivativesOfVariancesWithoutScaleMRRMS(const int numSegments, const double paramC,
+		std::complex<double>** ftval, std::complex<double>** resp, const double* const variancesWithoutScale, const double scale, const double determinant,
+		std::complex<double>** complexResiduals, const double* const MD, const double* const weights,
+		double** derivativesRegardingResps, double** derivativesRegardingVariancesWithoutScale, double* derivativesRegardingScale) const;
+#endif
+
 	// Calculate response functions
 	virtual void calculateResponseFunctions( const int iSegLen, const int freqDegree, const double timeLength, const double freq,
 		const int numSegmentsTotal, std::complex<double>** ftval, const std::vector< std::pair<std::string, std::string> >& times, 
@@ -93,6 +117,12 @@ private:
 	void calculateVectorForPartialDerivatives( const int iSeg, std::complex<double>** ftval, 
 		const double* const variancesWithoutScale, std::complex<double>** complexResiduals,
 		std::complex<double>** hSigmaMatrix, double* vector ) const;
+
+#ifdef _MOD_FRB
+	// Calculate a vector for partial derivatives (MRRMS version)
+	void calculateVectorForPartialDerivativesMRRMS(const int iSeg, std::complex<double>** ftval, const DoubleDenseSquareSymmetricMatrix& covarianceMatrix, 
+		const std::complex<double>* const sigmaInvResidual, std::complex<double>** sigmarh, std::complex<double>* vecSigmarh) const;
+#endif
 
 	// Determine candidates
 	void determineCandidates( const double freq, const int numSegmentsTotal, std::complex<double>** ftval, 
@@ -117,9 +147,16 @@ private:
 	void calculateMD(const int numSegmentsTotal, const int numOfOutputAndInputVariables, std::complex<double>** complexResiduals,
 		const double* const variancesWithoutScale, double* MD) const;
 
-	// Estimate error by fixed-weights bootstrap
+	// Calculate Mahalanobis distances using covarinace
 	void calculateMD(const int numSegmentsTotal, const int numOfOutputAndInputVariables, std::complex<double>** complexResiduals, 
 		const double* const variancesWithoutScale, const double* const covariancesLowerTriangleWithoutScale, double* MD) const;
+
+#ifdef _MOD_FRB
+	// Calculate Mahalanobis distances using covarinace
+	void calculateMD(const int numSegmentsTotal, const int numOfOutputAndInputVariables, std::complex<double>** complexResiduals,
+		const DoubleDenseSquareSymmetricMatrix& covarianceMatrix, double* MD) const;
+#endif
+
 	// Estimate error by robust bootstrap
 	void estimateErrorByRobustBootstrap(const int numSegmentsTotal, const double paramB, const double paramC,
 		std::complex<double>** ftval, std::complex<double>** respOrg, const double* const variancesWithoutScaleOrg, 

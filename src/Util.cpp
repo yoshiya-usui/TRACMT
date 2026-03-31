@@ -285,8 +285,7 @@ double Util::calculateAbsoluteValue( const std::complex<double> value ){
 
 
 // Calculate calibration function for FIR filter (Type1)
-std::complex<double> Util::calculateCalibrationForFIRFilterType1( const std::string& fileName, const int nskip, 
-	const double samplingFreq, const double freq, const bool groupDelay ){
+std::complex<double> Util::calculateCalibrationForFIRFilterType1( const std::string& fileName, const double samplingFreq, const double freq, const bool groupDelay ){
 
 	OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
 
@@ -297,13 +296,17 @@ std::complex<double> Util::calculateCalibrationForFIRFilterType1( const std::str
 	//ptrOutputFiles->writeLogMessage("Read FIR filter coefficients from " + fileName );
 
 	std::string sbuf;
-	for( int i = 0; i < nskip; ++i){
-		getline(ifs,sbuf);
-	}
+	//for( int i = 0; i < nskip; ++i){
+	//	getline(ifs,sbuf);
+	//}
 
 	std::vector<double> h;
 	double sumh(0.0); 
 	while(getline(ifs,sbuf)){
+		if (sbuf.substr(0, 1).compare("#") == 0) {
+			// Skip comment lines
+			continue;
+		}
 		std::istringstream iss(sbuf);
 		double dbuf;
 		iss >> dbuf;
@@ -347,8 +350,8 @@ std::complex<double> Util::calculateCalibrationForFIRFilterType1( const std::str
 }
 
 // Calculate calibration function for FIR filter (Type2)
-std::complex<double> Util::calculateCalibrationForFIRFilterType2( const std::string& fileName, const int nskip, const double samplingFreq, const double freq,
-	const int nfstart, const int nfend ){
+std::complex<double> Util::calculateCalibrationForFIRFilterType2( const std::string& fileName, const double samplingFreq, const double freq, const bool isELOG,
+	int nfstart, int nfend ){
 
 	OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
 
@@ -356,16 +359,19 @@ std::complex<double> Util::calculateCalibrationForFIRFilterType2( const std::str
 	if( ifs.fail() ){
 		ptrOutputFiles->writeErrorMessage("File open error : " + fileName);
 	}
-	//ptrOutputFiles->writeLogMessage("Read FIR filter coefficients from " + fileName );
 
 	std::string sbuf;
-	for( int i = 0; i < nskip; ++i){
-		getline(ifs,sbuf);
-	}
+	//for( int i = 0; i < nskip; ++i){
+	//	getline(ifs,sbuf);
+	//}
 
 	std::vector<double> h;
 	double sumh(0.0);
 	while(getline(ifs,sbuf)){
+		if (sbuf.substr(0, 1).compare("#") == 0) {
+			// Skip comment lines
+			continue;
+		}
 		std::istringstream iss(sbuf);
 		double dbuf;
 		iss >> dbuf;
@@ -374,10 +380,15 @@ std::complex<double> Util::calculateCalibrationForFIRFilterType2( const std::str
 	}
 	
 	const int numh = static_cast<int>( h.size() );
-	//ptrOutputFiles->writeLogMessage("FIR filter length: " + Util::toString(numh) );
 
-	if( numh != nfend- nfstart + 1 ){
-		ptrOutputFiles->writeErrorMessage("nfend-nfstart+1 is not equal to filter length: " + Util::toString(nfend-nfstart+1) );
+	if (isELOG) {
+		nfend = 0;
+		nfstart = nfend - numh + 1;
+	}
+	else {
+		if( numh != nfend- nfstart + 1 ){
+			ptrOutputFiles->writeErrorMessage("nfend-nfstart+1 is not equal to filter length: " + Util::toString(nfend-nfstart+1) );
+		}
 	}
 	
 	const double omega = 2.0 * CommonParameters::PI * freq / samplingFreq;
@@ -409,7 +420,7 @@ double Util::calculateDeterminantOfMatrix( const int dimension, const double* co
 	int numPivoting(0);
 	// Change to triangular matrix
 	for( int col = 0; col < dimension - 1; ++col ){
-		// Search maximum diagonal component
+		// Search maximum component
 		double maxAbsDiag(0.0);
 		int rowMax(-1);
 		for( int row = col; row < dimension; ++row ){

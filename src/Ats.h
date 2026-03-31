@@ -55,6 +55,9 @@ public:
 	// Make calibration file
 	void makeCalibrationFile( const std::string& inputString, const int channelIndex, const std::vector<double>& freq ) const;
 
+	// Make calibration file only with dipole length
+	void makeCalibrationFileOnlyWithDipoleLength(const std::string& inputString, const int channelIndex) const;
+
 	// Get flag specifing whether the calibration function for ADU is calculated
 	bool isCalADUResp() const;
 

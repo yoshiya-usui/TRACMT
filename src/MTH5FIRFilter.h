@@ -26,56 +26,72 @@
 // OR TORT(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //--------------------------------------------------------------------------
-#ifndef DBLDEF_MTH5
-#define DBLDEF_MTH5
+#ifndef DBLDEF_MTH5_FIR_FILTER
+#define DBLDEF_MTH5_FIR_FILTER
 
-#include <string>
-#include <vector>
-#include <H5Cpp.h>
+#include "MTH5Filter.h"
 
-#include "MTH5ChannelResponse.h"
-#include "CommonParameters.h"
-
-// Class of MTH5 file
-class MTH5{
+// Class to hold filter information for MTH5 FIR files
+class MTH5FIRFilter : public MTH5Filter {
 
 public:
 
-	// Return the the instance of the class
-    static MTH5* getInstance();
+	// Constructer
+	MTH5FIRFilter();
 
-	// Read MTH5 file
-	void readMTH5File( const std::string& fileName, const std::string groupName, const int numSkipData, const int numDataPoints, double* data ) const;
+	// Destructer
+	~MTH5FIRFilter();
 
-	// Get name of the calibration file name made from the channel responses 
-	static std::string getCalibrationFileName(const int channelIndex);
+	// Type of symmetry
+	enum {
+		EVEN,
+		ADD,
+		ASYMMETRIC,
+	};
 
-	// Read filters for indivial sections and channels
-	void readFiltersAll(const int numChannels, const std::vector<CommonParameters::DataFileSet>& dataFileSets);
+	// Set input samping rate befor decimation
+	void setDecimationInputSampleRate( const int decimationInputSampleRate );
 
-	// Calculate frequency response functions using the frequency response functions of all filter
-	std::complex<double> calcResponse(const int sectionIndex, const int channelIndex, const double freq) const;
+	// Set gain
+	void setGain( const double gain );
+
+	// Set type of symmetry
+	void setTypeOfSymmetry( const int typeOfSymmetry );
+
+	// Set decimation factor
+	void setDecimationFactor( const int decimationFactor );
+
+	// Set FIR coefficients
+	void setFIRCoefficients ( const std::vector<double>& coefficients );
+
+	// Get frequency response functions using the requency response functions of filter
+	virtual  std::complex<double> getFrequencyResponse(const double freq) const;
 
 private:
 
-	// Number of channel responses
-	int m_numOfChannelRespones;
+	// input samping rate befor decimation
+	int m_decimationInputSampleRate;
 
-	// List of channel response (combination of all filters)
-	std::vector<MTH5ChannelResponse*> m_channelResponses;
+	// Gain
+	double m_gain;
 
-	// Constructer
-	MTH5();
+	// Type of symmetry
+	int m_typeOfSymmetry;
 
-	// Destructer
-	~MTH5();
+	// Decimation factor
+	int m_decimationFactor;
+
+	// FIR coefficients
+	std::vector<double> m_FIRCoefficients;
+
+	// Calculate frequency response functions of filter
+	std::complex<double> calcResponse(const double freq, const double samplingFreq) const;
 
 	// Copy constructer
-	MTH5(const MTH5& rhs);
+	MTH5FIRFilter(const MTH5FIRFilter& rhs);
 
 	// Assignment operator
-	MTH5& operator=(const MTH5& rhs);
+	MTH5FIRFilter& operator=(const MTH5FIRFilter& rhs);
 
 };
-
 #endif

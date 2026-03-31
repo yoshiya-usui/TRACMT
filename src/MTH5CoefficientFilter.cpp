@@ -26,56 +26,25 @@
 // OR TORT(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //--------------------------------------------------------------------------
-#ifndef DBLDEF_MTH5
-#define DBLDEF_MTH5
+#include "MTH5CoefficientFilter.h"
 
-#include <string>
-#include <vector>
-#include <H5Cpp.h>
+// Constructer
+MTH5CoefficientFilter::MTH5CoefficientFilter():
+	MTH5Filter(),
+	m_gain(0.0)
+{
+}
 
-#include "MTH5ChannelResponse.h"
-#include "CommonParameters.h"
+// Destructer
+MTH5CoefficientFilter::~MTH5CoefficientFilter() {
+}
 
-// Class of MTH5 file
-class MTH5{
+// Set gain
+void MTH5CoefficientFilter::setGain(const double gain){
+	m_gain = gain;
+}
 
-public:
-
-	// Return the the instance of the class
-    static MTH5* getInstance();
-
-	// Read MTH5 file
-	void readMTH5File( const std::string& fileName, const std::string groupName, const int numSkipData, const int numDataPoints, double* data ) const;
-
-	// Get name of the calibration file name made from the channel responses 
-	static std::string getCalibrationFileName(const int channelIndex);
-
-	// Read filters for indivial sections and channels
-	void readFiltersAll(const int numChannels, const std::vector<CommonParameters::DataFileSet>& dataFileSets);
-
-	// Calculate frequency response functions using the frequency response functions of all filter
-	std::complex<double> calcResponse(const int sectionIndex, const int channelIndex, const double freq) const;
-
-private:
-
-	// Number of channel responses
-	int m_numOfChannelRespones;
-
-	// List of channel response (combination of all filters)
-	std::vector<MTH5ChannelResponse*> m_channelResponses;
-
-	// Constructer
-	MTH5();
-
-	// Destructer
-	~MTH5();
-
-	// Copy constructer
-	MTH5(const MTH5& rhs);
-
-	// Assignment operator
-	MTH5& operator=(const MTH5& rhs);
-
-};
-
-#endif
+// Get frequency response functions using the requency response functions of filter
+std::complex<double> MTH5CoefficientFilter::getFrequencyResponse(const double freq) const {
+	return m_gain;
+}

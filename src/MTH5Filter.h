@@ -26,55 +26,82 @@
 // OR TORT(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //--------------------------------------------------------------------------
-#ifndef DBLDEF_MTH5
-#define DBLDEF_MTH5
+#ifndef DBLDEF_MTH5_FILTER
+#define DBLDEF_MTH5_FILTER
 
+#include <complex>
 #include <string>
 #include <vector>
-#include <H5Cpp.h>
 
-#include "MTH5ChannelResponse.h"
-#include "CommonParameters.h"
-
-// Class of MTH5 file
-class MTH5{
+// Class to hold filter information of MTH5 files
+class MTH5Filter {
 
 public:
 
-	// Return the the instance of the class
-    static MTH5* getInstance();
-
-	// Read MTH5 file
-	void readMTH5File( const std::string& fileName, const std::string groupName, const int numSkipData, const int numDataPoints, double* data ) const;
-
-	// Get name of the calibration file name made from the channel responses 
-	static std::string getCalibrationFileName(const int channelIndex);
-
-	// Read filters for indivial sections and channels
-	void readFiltersAll(const int numChannels, const std::vector<CommonParameters::DataFileSet>& dataFileSets);
-
-	// Calculate frequency response functions using the frequency response functions of all filter
-	std::complex<double> calcResponse(const int sectionIndex, const int channelIndex, const double freq) const;
-
-private:
-
-	// Number of channel responses
-	int m_numOfChannelRespones;
-
-	// List of channel response (combination of all filters)
-	std::vector<MTH5ChannelResponse*> m_channelResponses;
-
 	// Constructer
-	MTH5();
+	MTH5Filter();
 
 	// Destructer
-	~MTH5();
+	~MTH5Filter();
 
 	// Copy constructer
-	MTH5(const MTH5& rhs);
+	MTH5Filter(const MTH5Filter& rhs);
 
 	// Assignment operator
-	MTH5& operator=(const MTH5& rhs);
+	MTH5Filter& operator=(const MTH5Filter& rhs);
+
+	// Get filter name
+	std::string getName() const;
+
+	// Get filter type (zpk, coefficient, time_delay, fap, fir)
+	std::string getType() const;
+
+	// Input units
+	std::string getUnitsIn() const;
+
+	// Output units
+	std::string getUnitsOut() const;
+
+	// Get order in filter chain
+	int getSequenceNumber() const;
+
+	// Set filter name
+	void setName(const std::string& name);
+
+	// Set filter type (zpk, coefficient, time_delay, fap, fir)
+	void setType(const std::string& type);
+
+	// Set input units
+	void setUnitsIn(const std::string& unitsIn);
+
+	// Set output units
+	void setUnitsOut(const std::string& unitsOut);
+
+	// Set order in filter chain
+	void setSequenceNumber(const int sequenceNumber);
+
+	// Get frequency response functions using the requency response functions of filter
+	virtual  std::complex<double> getFrequencyResponse(const double freq) const;
+
+protected:
+	
+	// Filter name
+	std::string m_name;
+
+	// Filter type (zpk, coefficient, time_delay, fap, fir)
+	std::string m_type;
+
+	// Input units
+	std::string m_unitsIn;
+
+	// Output units
+	std::string m_unitsOut;
+
+	// Order in filter chain
+	int m_sequenceNumber;
+
+	// Filter-specific data (usage depends on filter type)
+	std::vector<double> m_data;
 
 };
 

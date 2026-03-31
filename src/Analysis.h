@@ -35,6 +35,7 @@
 #include "RobustWeightThomson.h"
 #include "RobustWeightTukeysBiweights.h"
 #include <vector>
+#include <map>
 
 // Class of analysis
 class Analysis{
@@ -257,10 +258,6 @@ private:
 	void selectSegmentsToBeExcludedBySquareCoherenceCriteriaWithRandomSampling( const int numSegmentsTotal, std::complex<double>** ftval,
 		std::vector<bool>& remainingSegments ) const;
 
-	// Auxiliary function for selecting segments to be excluded by square coherence criteria with random sampling
-	bool selectSegmentsToBeExcludedBySquareCoherenceCriteriaWithRandomSamplingAux( const std::vector<int>& segmentIndexes, std::complex<double>** ftval,
-		const std::vector< std::pair<std::string, std::string> >& times, const double timeLength ) const;
-
 	// Write header to the output file for apparent resistivity and phase
 	void writeHeaderToOutputFileForApparentResistivityAndPhase( std::ofstream& ofs ) const;
 
@@ -275,6 +272,11 @@ private:
 
 	// M-estimators
 	RobustWeight* m_robustWeight[2];
+
+#ifdef _MTH5
+	// Map segment index to sectionindex
+	std::map<int, int> m_segmentIndexToSectionIndex;
+#endif
 
 };
 

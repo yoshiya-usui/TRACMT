@@ -26,55 +26,62 @@
 // OR TORT(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //--------------------------------------------------------------------------
-#ifndef DBLDEF_MTH5
-#define DBLDEF_MTH5
+#ifndef DBLDEF_MTH5_FREQ_RESP_TABLE_FILTER
+#define DBLDEF_MTH5_FREQ_RESP_TABLE_FILTER
 
-#include <string>
-#include <vector>
-#include <H5Cpp.h>
+#include "MTH5Filter.h"
 
-#include "MTH5ChannelResponse.h"
-#include "CommonParameters.h"
-
-// Class of MTH5 file
-class MTH5{
+// Class to hold filter information for MTH5 frequency responsee table files
+class MTH5FrequencyResponseTableFilter : public MTH5Filter {
 
 public:
 
-	// Return the the instance of the class
-    static MTH5* getInstance();
+	// Constructer
+	MTH5FrequencyResponseTableFilter();
 
-	// Read MTH5 file
-	void readMTH5File( const std::string& fileName, const std::string groupName, const int numSkipData, const int numDataPoints, double* data ) const;
+	// Destructer
+	~MTH5FrequencyResponseTableFilter();
 
-	// Get name of the calibration file name made from the channel responses 
-	static std::string getCalibrationFileName(const int channelIndex);
+	// Set frequencies
+	void setFrequencies( const std::vector<double>& frequencies );
 
-	// Read filters for indivial sections and channels
-	void readFiltersAll(const int numChannels, const std::vector<CommonParameters::DataFileSet>& dataFileSets);
+	// Set amplitudes
+	void setAmplitude( const std::vector<double>& amplitudes );
 
-	// Calculate frequency response functions using the frequency response functions of all filter
-	std::complex<double> calcResponse(const int sectionIndex, const int channelIndex, const double freq) const;
+	// Set phases
+	void setPhases( const std::vector<double>& phases );
+
+	// Get frequency response functions using the requency response functions of filter
+	virtual std::complex<double> getFrequencyResponse(const double freq) const;
 
 private:
 
-	// Number of channel responses
-	int m_numOfChannelRespones;
+	// Frequencies
+	std::vector<double> m_frequencies;
 
-	// List of channel response (combination of all filters)
-	std::vector<MTH5ChannelResponse*> m_channelResponses;
+	// Amplitudes
+	std::vector<double> m_amplitudes;
 
-	// Constructer
-	MTH5();
+	// Phases
+	std::vector<double> m_phases;
 
-	// Destructer
-	~MTH5();
+	// Array of log10(frequency)
+	double* m_log10Frequencies;
+
+	// Array of log10(amplitude)
+	double* m_log10Amplitudes;
+
+	// Array of Phases
+	double* m_phaseArray;
+
+	// Calculate frequency response functions of filter
+	std::complex<double> calcResponse(const double freq) const;
 
 	// Copy constructer
-	MTH5(const MTH5& rhs);
+	MTH5FrequencyResponseTableFilter(const MTH5FrequencyResponseTableFilter& rhs);
 
 	// Assignment operator
-	MTH5& operator=(const MTH5& rhs);
+	MTH5FrequencyResponseTableFilter& operator=(const MTH5FrequencyResponseTableFilter& rhs);
 
 };
 

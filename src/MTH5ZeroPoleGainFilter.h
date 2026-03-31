@@ -26,55 +26,53 @@
 // OR TORT(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //--------------------------------------------------------------------------
-#ifndef DBLDEF_MTH5
-#define DBLDEF_MTH5
+#ifndef DBLDEF_MTH5_POLE_ZERO_FILTER
+#define DBLDEF_MTH5_POLE_ZERO_FILTER
 
-#include <string>
-#include <vector>
-#include <H5Cpp.h>
+#include "MTH5Filter.h"
 
-#include "MTH5ChannelResponse.h"
-#include "CommonParameters.h"
-
-// Class of MTH5 file
-class MTH5{
+// Class to hold filter information for MTH5 pole-zero files
+class MTH5ZeroPoleGainFilter : public MTH5Filter {
 
 public:
 
-	// Return the the instance of the class
-    static MTH5* getInstance();
+	// Constructer
+	MTH5ZeroPoleGainFilter();
 
-	// Read MTH5 file
-	void readMTH5File( const std::string& fileName, const std::string groupName, const int numSkipData, const int numDataPoints, double* data ) const;
+	// Destructer
+	~MTH5ZeroPoleGainFilter();
 
-	// Get name of the calibration file name made from the channel responses 
-	static std::string getCalibrationFileName(const int channelIndex);
+	// Set normalization factor
+	void setNormalizationFactor(const double normalizationFactor);
 
-	// Read filters for indivial sections and channels
-	void readFiltersAll(const int numChannels, const std::vector<CommonParameters::DataFileSet>& dataFileSets);
+	// Set poles
+	void setPoles( const std::vector< std::complex<double> >& poles );
 
-	// Calculate frequency response functions using the frequency response functions of all filter
-	std::complex<double> calcResponse(const int sectionIndex, const int channelIndex, const double freq) const;
+	// Set zeros
+	void setZeros(const std::vector< std::complex<double> >& zeros);
+
+	// Get frequency response functions using the requency response functions of filter
+	virtual std::complex<double> getFrequencyResponse(const double freq) const;
 
 private:
 
-	// Number of channel responses
-	int m_numOfChannelRespones;
+	// Normalization factor
+	double m_normalizationFactor;
 
-	// List of channel response (combination of all filters)
-	std::vector<MTH5ChannelResponse*> m_channelResponses;
+	// Poles
+	std::vector< std::complex<double> > m_poles;
 
-	// Constructer
-	MTH5();
+	// Zeros
+	std::vector< std::complex<double> > m_zeros;
 
-	// Destructer
-	~MTH5();
+	// Calculate frequency response functions of filter
+	std::complex<double> calcResponse(const double freq, const double samplingFreq, const std::complex<double>& respones) const;
 
 	// Copy constructer
-	MTH5(const MTH5& rhs);
+	MTH5ZeroPoleGainFilter(const MTH5ZeroPoleGainFilter& rhs);
 
 	// Assignment operator
-	MTH5& operator=(const MTH5& rhs);
+	MTH5ZeroPoleGainFilter& operator=(const MTH5ZeroPoleGainFilter& rhs);
 
 };
 

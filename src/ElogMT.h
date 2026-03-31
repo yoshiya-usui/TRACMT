@@ -26,8 +26,8 @@
 // OR TORT(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //--------------------------------------------------------------------------
-#ifndef DBLDEF_ElogMT
-#define DBLDEF_ElogMT
+#ifndef DBLDEF_ELOG_MT
+#define DBLDEF_ELOG_MT
 
 #include <stdio.h>
 #include <stdint.h>
@@ -86,11 +86,13 @@ public:
 	// Get calibration file name
 	std::string getCalibrationFileName( const int channelIndex ) const;
 
-	// Make calibration file
-	void makeCalibrationFile( const std::string& fileName, const double unitGroupDelay, const std::vector<int>& channelIndexes,
-		const double dipoleLengthX, const double dipoleLengthY, const std::vector<double>& freq ) const;
+	// Calculate calibration function
+	std::complex<double> calculateCalibrationFunction(const std::string& elogCalFileName, const double freq, const double unitGroupDelay, const int channelIndex) const;
 
 private:
+
+	// Calculate calibration function of all channels of ELOG-MT itself
+	void calculateCalibrationFunctionAllChannels(const std::string& elogCalFileName, const double freq, const double unitGroupDelay, std::complex<double>* calElog) const;
 
 	// Calculate calibration function for analog filter
 	void calculateCalibrationFunctionForAnalogFilter( const std::string& fileName, const double freq, std::complex<double>* calElog ) const;

@@ -556,118 +556,194 @@ std::string ElogMT::getCalibrationFileName( const int channelIndex ) const{
 
 }
 
-// Make calibration file
-void ElogMT::makeCalibrationFile( const std::string& fileName, const double unitGroupDelay, 	const std::vector<int>& channelIndexes,
-	const double dipoleLengthX, const double dipoleLengthY, const std::vector<double>& freq ) const{
+// Calculate calibration function
+std::complex<double> ElogMT::calculateCalibrationFunction(const std::string& elogCalFileName, const double freq, const double unitGroupDelay, const int channelIndex) const {
 
-	OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
-
-	const int numFreq = static_cast<int>(freq.size());
-	if( numFreq < 1 ){
-		ptrOutputFiles->writeErrorMessage( "Number of the frequencies for which calibrations are estimated is less than 1 : " + Util::toString(numFreq) );
+	if (channelIndex < 0 || channelIndex > 4) {
+		return 1.0;
 	}
 
-	std::ofstream ofs[AD_CH];
-	for( std::vector<int>::const_iterator itr = channelIndexes.begin(); itr != channelIndexes.end(); ++itr ){
-		const int iCh = *itr;
-		const std::string outputFileName = getCalibrationFileName(iCh);
-		ofs[iCh].open( outputFileName.c_str(), std::ios::out );
-		if( ofs[iCh].fail() ){
-			ptrOutputFiles->writeErrorMessage( "File open error : " + outputFileName );
-		}
-		if( iCh == 0 ){
-			const double dipoleLength = dipoleLengthX / -1000.0;// [m] -> [km] and invert sign
-			ofs[iCh] << std::setw(20) << std::scientific << std::setprecision(9) << 1.0/dipoleLength << std::endl;
-		}else if( iCh == 1 ){
-			const double dipoleLength = dipoleLengthY / -1000.0;// [m] -> [km] and invert sign
-			ofs[iCh] << std::setw(20) << std::scientific << std::setprecision(9) << 1.0/dipoleLength << std::endl;
-		}else{
-			ofs[iCh] << std::setw(20) << std::scientific << std::setprecision(9) << 1.0 << std::endl;
-		}
-		ofs[iCh] << std::setw(10) << numFreq << std::endl;
-	}
+	std::complex<double> calElog[AD_CH];
+	calculateCalibrationFunctionAllChannels(elogCalFileName, freq, unitGroupDelay, calElog);
 
 	const Control* const ptrControl = Control::getInstance();
-	for( int iFreq = 0; iFreq < numFreq; ++iFreq ){
-		std::complex<double> calElog[AD_CH];
-		for( int iCh = 0; iCh < AD_CH; ++iCh ){
-			calElog[iCh] = std::complex<double>(1.0, 0.0);
-		}
-		calculateCalibrationFunctionForAnalogFilter(fileName, freq[iFreq], calElog);
+	switch (ptrControl->getElogMTReadingOption())
+	{
+	case Control::READ_EX_EY_HX_HY_HZ_HRX_HRY_FROM_ELOGMT_DATA:
+		// Go through
+	case Control::READ_EX_EY_HX_HY_HZ_FROM_ELOGMT_DATA:
+		switch (channelIndex)
 		{
-			//------- 1st fir filer from measured calibration table
-			std::string path = "";
-			if (!ptrControl->getDirectoryOfLoggerCalibrationFiles().empty()) {
-#ifdef _LINUX
-				path = ptrControl->getDirectoryOfLoggerCalibrationFiles() + "\/";
-#else
-				path = ptrControl->getDirectoryOfLoggerCalibrationFiles() + "\\";
-#endif
-			}
-			std::string fileName = "firh.txt";
-			if (ptrControl->getTypeOfElogMT() == Control::ELOGMT_ADU_MODE) {
-				fileName = "firh_adu.txt";
-			}
-			else if (ptrControl->getTypeOfElogMT() == Control::ELOGMT_PHX_MODE) {
-				fileName = "firh_phx.txt";
-			}
-			const std::complex<double> firh = Util::calculateCalibrationForFIRFilterType1(path + fileName, 9, 14336.0, freq[iFreq], true);
-			for( int iCh = 0; iCh < AD_CH; ++iCh ){
-				calElog[iCh] *= firh;
-			}
+		case 0:
+			return calElog[0];
+			break;
+		case 1:
+			return calElog[1];
+			break;
+		case 2:
+			return calElog[4];
+			break;
+		case 3:
+			return calElog[2];
+			break;
+		case 4:
+			return calElog[3];
+			break;
+		default:
+			return 1.0;
+			break;
 		}
+		break;
+	case Control::READ_EX_EY_HX_HY_HRX_HRY_FROM_ELOGMT_DATA:
+		// Go through
+	case Control::READ_EX_EY_HX_HY_FROM_ELOGMT_DATA:
+		switch (channelIndex)
 		{
-			//------ 2nd fir filter ---
-			// 4900 is described in elog cal file (4.9 Vpp input)
-			for( int iCh = 0; iCh < AD_CH; ++iCh ){
-				calElog[iCh] /= 4900.0;
-			}
+		case 0:
+			return calElog[0];
+			break;
+		case 1:
+			return calElog[1];
+			break;
+		case 2:
+			return calElog[2];
+			break;
+		case 3:
+			return calElog[3];
+			break;
+		default:
+			return 1.0;
+			break;
 		}
+		break;
+	case Control::READ_HZ_HX_HY_HRX_HRY_FROM_ELOGMT_DATA:
+		// Go through
+	case Control::READ_HZ_HX_HY_FROM_ELOGMT_DATA:
+		switch (channelIndex)
 		{
-			//------ Gain correction ---
-			const double tsGroupDelay = 1.0 / 14336.0 * unitGroupDelay;
-			const double angle = 2.0 * CommonParameters::PI * freq[iFreq] * tsGroupDelay;
-			const std::complex<double> groupDelay = std::complex<double>(cos(angle), sin(angle));
-			for( int iCh = 0; iCh < AD_CH; ++iCh ){
-				calElog[iCh] /= groupDelay;
-			}
+		case 0:
+			return calElog[4];
+			break;
+		case 1:
+			return calElog[2];
+			break;
+		case 2:
+			return calElog[3];
+			break;
+		default:
+			return 1.0;
+			break;
 		}
-		if( fabs(ptrControl->getSamplingFrequencyOrg() - 32.0) < CommonParameters::EPS ) {
-			//------ Group delay correction ---
-			std::string path = "";
-			if (!ptrControl->getDirectoryOfLoggerCalibrationFiles().empty()) {
-#ifdef _LINUX
-				path = ptrControl->getDirectoryOfLoggerCalibrationFiles() + "\/";
-#else
-				path = ptrControl->getDirectoryOfLoggerCalibrationFiles() + "\\";
-#endif
-			}
-			std::string fileName = "firl.txt";
-			if (ptrControl->getTypeOfElogMT() == Control::ELOGMT_ADU_MODE) {
-				fileName = "firl_adu.txt";
-			}
-			else if (ptrControl->getTypeOfElogMT() == Control::ELOGMT_PHX_MODE) {
-				fileName = "firl_phx.txt";
-			}
-			const std::complex<double> firl = Util::calculateCalibrationForFIRFilterType2(path + fileName, 9, 1024.0, freq[iFreq], -396, 0);
-			for( int iCh = 0; iCh < AD_CH; ++iCh ){
-				calElog[iCh] *= firl;
-			}
+		break;
+	case Control::READ_EX_EY_FROM_ELOGMT_DATA:
+		switch (channelIndex)
+		{
+		case 0:
+			return calElog[0];
+			break;
+		case 1:
+			return calElog[1];
+			break;
+		default:
+			return 1.0;
+			break;
 		}
-		for( std::vector<int>::const_iterator itr = channelIndexes.begin(); itr != channelIndexes.end(); ++itr ){
-			const int iCh = *itr;
-			const std::complex<double> invCal = 1.0 / calElog[iCh];
-			ofs[iCh] << std::setw(20) << std::scientific << std::setprecision(9) << freq[iFreq];
-			ofs[iCh] << std::setw(20) << std::scientific << std::setprecision(9) << invCal.real();
-			ofs[iCh] << std::setw(20) << std::scientific << std::setprecision(9) << invCal.imag() << std::endl;
+		break;
+	case Control::READ_HX_HY_HRX_HRY_FROM_ELOGMT_DATA:
+		// Go through
+	case Control::READ_HX_HY_FROM_ELOGMT_DATA:
+		if (channelIndex == ptrControl->getNumOutputVariables() ){
+			return calElog[2];
 		}
+		else if (channelIndex == ptrControl->getNumOutputVariables() + 1) {
+			return calElog[3];
+		}
+		else{
+			return 1.0;
+		}
+		break;
+	default:
+		OutputFiles* ptrOutputFiles = OutputFiles::getInstance();
+		ptrOutputFiles->writeErrorMessage("Unsupported type of ELOG-MT reading option: " + Util::toString(ptrControl->getElogMTReadingOption()));
+		return 0.0;
+		break;
 	}
 
-	for( std::vector<int>::const_iterator itr = channelIndexes.begin(); itr != channelIndexes.end(); ++itr ){
-		const int iCh = * itr;
-		ofs[iCh].close();
-	}
+}
 
+// Calculate calibration function of all channels of ELOG-MT itself
+void ElogMT::calculateCalibrationFunctionAllChannels(const std::string& elogCalFileName, const double freq, const double unitGroupDelay,  std::complex<double>* calElog) const {
+
+	for (int iCh = 0; iCh < AD_CH; ++iCh) {
+		// Initialization
+		calElog[iCh] = std::complex<double>(1.0, 0.0);
+	}
+	calculateCalibrationFunctionForAnalogFilter(elogCalFileName, freq, calElog);
+	const Control* const ptrControl = Control::getInstance();
+	{
+		//------- 1st fir filer from measured calibration table
+		std::string path = "";
+		if (!ptrControl->getDirectoryOfLoggerCalibrationFiles().empty()) {
+#ifdef _LINUX
+			path = ptrControl->getDirectoryOfLoggerCalibrationFiles() + "\/";
+#else
+			path = ptrControl->getDirectoryOfLoggerCalibrationFiles() + "\\";
+#endif
+		}
+		std::string fileName = "firh.txt";
+		if (ptrControl->getTypeOfElogMT() == Control::ELOGMT_ADU_MODE) {
+			fileName = "firh_adu.txt";
+		}
+		else if (ptrControl->getTypeOfElogMT() == Control::ELOGMT_PHX_MODE) {
+			fileName = "firh_phx.txt";
+		}
+		const std::complex<double> firh = Util::calculateCalibrationForFIRFilterType1(path + fileName, 14336.0, freq, true);
+		for (int iCh = 0; iCh < AD_CH; ++iCh) {
+			calElog[iCh] *= firh;
+		}
+	}
+	{
+		//------ 2nd fir filter ---
+		// 4900 is described in elog cal file (4.9 Vpp input)
+		for (int iCh = 0; iCh < AD_CH; ++iCh) {
+			calElog[iCh] /= 4900.0;
+		}
+	}
+	{
+		//------ Gain correction ---
+		const double tsGroupDelay = 1.0 / 14336.0 * unitGroupDelay;
+		const double angle = 2.0 * CommonParameters::PI * freq * tsGroupDelay;
+		const std::complex<double> groupDelay = std::complex<double>(cos(angle), sin(angle));
+		for (int iCh = 0; iCh < AD_CH; ++iCh) {
+			calElog[iCh] /= groupDelay;
+		}
+	}
+	if (fabs(ptrControl->getSamplingFrequencyOrg() - 32.0) < CommonParameters::EPS) {
+		//------ Group delay correction ---
+		std::string path = "";
+		if (!ptrControl->getDirectoryOfLoggerCalibrationFiles().empty()) {
+#ifdef _LINUX
+			path = ptrControl->getDirectoryOfLoggerCalibrationFiles() + "\/";
+#else
+			path = ptrControl->getDirectoryOfLoggerCalibrationFiles() + "\\";
+#endif
+		}
+		std::string fileName = "firl.txt";
+		if (ptrControl->getTypeOfElogMT() == Control::ELOGMT_ADU_MODE) {
+			fileName = "firl_adu.txt";
+		}
+		else if (ptrControl->getTypeOfElogMT() == Control::ELOGMT_PHX_MODE) {
+			fileName = "firl_phx.txt";
+		}
+		const std::complex<double> firl = Util::calculateCalibrationForFIRFilterType2(path + fileName, 1024.0, freq, true, 0, 0);
+		for (int iCh = 0; iCh < AD_CH; ++iCh) {
+			calElog[iCh] *= firl;
+		}
+	}
+	for (int iCh = 0; iCh < AD_CH; ++iCh) {
+		// Calculate the inverse
+		calElog[iCh] = 1.0 / calElog[iCh];
+	}
 }
 
 // Calculate calibration function for analog filter
