@@ -1,0 +1,92 @@
+NUM_OUT
+2
+SAMPLING_FREQ
+256
+NUM_SECTION
+4
+SEGMENT
+13
+131072 2 12 16 
+65536 2 12 16
+32768 2 12 16
+16384 2 12 16
+8192 2 12 16
+4096 2 12 16
+2048 2 12 16
+1024 2 12 16
+512 2 12 16
+256 2 12 16
+128 2 12 16
+64 2 12 16
+32 2 12 16
+ROTATION
+0.0
+AZIMUTH
+0.0 90.0
+0.0 90.0
+0.0 90.0
+PROCEDURE
+1
+ERROR_ESTIMATION
+3
+PREWHITENING
+0
+10
+5
+MTH5
+MTH5_FILTERS
+OUTPUT_RHOA_PHS
+DATA_FILES
+3221504
+../cl043.h5 /Experiment/Surveys/Clearlake2022/Stations/cl043/sr256_0001/ex
+1305600
+../cl043.h5 /Experiment/Surveys/Clearlake2022/Stations/cl043/sr256_0001/ey
+1305600
+../cl043.h5 /Experiment/Surveys/Clearlake2022/Stations/cl043/sr256_0001/hx
+1305600
+../cl043.h5 /Experiment/Surveys/Clearlake2022/Stations/cl043/sr256_0001/hy
+1305600
+../cl090.h5 /Experiment/Surveys/Clearlake2022/Stations/cl090/sr256_0001/hx
+0
+../cl090.h5 /Experiment/Surveys/Clearlake2022/Stations/cl090/sr256_0001/hy
+0
+5372153
+../cl043.h5 /Experiment/Surveys/Clearlake2022/Stations/cl043/sr256_0003/ex
+0
+../cl043.h5 /Experiment/Surveys/Clearlake2022/Stations/cl043/sr256_0003/ey
+0
+../cl043.h5 /Experiment/Surveys/Clearlake2022/Stations/cl043/sr256_0003/hx
+0
+../cl043.h5 /Experiment/Surveys/Clearlake2022/Stations/cl043/sr256_0003/hy
+0
+../cl090.h5 /Experiment/Surveys/Clearlake2022/Stations/cl090/sr256_0003/hx
+0
+../cl090.h5 /Experiment/Surveys/Clearlake2022/Stations/cl090/sr256_0003/hy
+0
+5372153
+../cl043.h5 /Experiment/Surveys/Clearlake2022/Stations/cl043/sr256_0005/ex
+0
+../cl043.h5 /Experiment/Surveys/Clearlake2022/Stations/cl043/sr256_0005/ey
+0
+../cl043.h5 /Experiment/Surveys/Clearlake2022/Stations/cl043/sr256_0005/hx
+0
+../cl043.h5 /Experiment/Surveys/Clearlake2022/Stations/cl043/sr256_0005/hy
+0
+../cl090.h5 /Experiment/Surveys/Clearlake2022/Stations/cl090/sr256_0005/hx
+0
+../cl090.h5 /Experiment/Surveys/Clearlake2022/Stations/cl090/sr256_0005/hy
+0
+2299648
+../cl043.h5 /Experiment/Surveys/Clearlake2022/Stations/cl043/sr256_0007/ex
+0
+../cl043.h5 /Experiment/Surveys/Clearlake2022/Stations/cl043/sr256_0007/ey
+0
+../cl043.h5 /Experiment/Surveys/Clearlake2022/Stations/cl043/sr256_0007/hx
+0
+../cl043.h5 /Experiment/Surveys/Clearlake2022/Stations/cl043/sr256_0007/hy
+0
+../cl090.h5 /Experiment/Surveys/Clearlake2022/Stations/cl090/sr256_0007/hx
+0
+../cl090.h5 /Experiment/Surveys/Clearlake2022/Stations/cl090/sr256_0007/hy
+0
+END
